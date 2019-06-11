@@ -1,10 +1,11 @@
 package com.easylinker.framework.common.config.shiro
 
 import com.easylinker.framework.common.config.jwt.JWTToken
-import com.easylinker.framework.common.web.R
+import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.AuthenticationToken
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter
 import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.RequestMethod
 
 import javax.servlet.ServletRequest
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse
 /**
  * 认证的过滤器
  */
+@Component
 class AuthFilter extends BasicHttpAuthenticationFilter {
     /**
      * 判断用户是否想要登入。
@@ -35,8 +37,14 @@ class AuthFilter extends BasicHttpAuthenticationFilter {
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
 
         if (isLoginAttempt(request, response)) {
-            executeLogin(request, response)
-            true
+            try {
+                executeLogin(request, response)
+                true
+            } catch (e) {
+                throw e
+                //false
+            }
+
         } else {
             false
         }
@@ -66,16 +74,11 @@ class AuthFilter extends BasicHttpAuthenticationFilter {
      */
 
     @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse servletResponse) {
+    protected boolean executeLogin(ServletRequest request, ServletResponse servletResponse) throws AuthenticationException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request
         JWTToken token = new JWTToken(httpServletRequest.getHeader("token"))
-        try {
-            getSubject(request, servletResponse).login(token)
-            true
-        } catch (e) {
-
-            false
-        }
+        getSubject(request, servletResponse).login(token)
+        true
 
     }
 
@@ -93,8 +96,9 @@ class AuthFilter extends BasicHttpAuthenticationFilter {
         if (httpServletRequest.getMethod() == RequestMethod.OPTIONS.name()) {
             httpServletResponse.setStatus(HttpStatus.OK.value())
             false
+        } else {
+            true
         }
-        super.preHandle(request, response)
     }
 }
 

@@ -59,23 +59,28 @@ class AuthRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
         String token = (String) authenticationToken.getCredentials()
+        try {
+            Map<String, Object> map = JwtUtils.getMap(token)
+            if (map.containsKey("principle")) {
+                String principle = map.get("principle") as String
+                if (!principle) {
+                    throw new AuthenticationException("请求token不合法")
+                }
 
+                AppUser appUser = userService.findByPrinciple(principle)
+                if (!appUser) {
+                    throw new AuthenticationException("用户不存在!")
+                }
 
-        Map<String, Object> map = JwtUtils.getPrinciple(token)
-        if (map.containsKey("principle")) {
-            String principle = map.get("principle") as String
-            if (!principle) {
+                new SimpleAuthenticationInfo(principle, authenticationToken.getCredentials(), "BASE_REALM")
+            } else {
                 throw new AuthenticationException("请求token不合法")
+
             }
 
-            AppUser appUser = userService.findByPrinciple(principle)
-            if (!appUser) {
-                throw new AuthenticationException("用户不存在!")
-            }
-
-            new SimpleAuthenticationInfo(principle, authenticationToken.getCredentials(), "BASE_REALM")
-        } else {
-            null
+        } catch (e) {
+            e.printStackTrace()
+            throw e
         }
 
 

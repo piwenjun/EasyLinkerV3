@@ -55,7 +55,7 @@ class JwtUtils {
      * 获得token中的信息无需secret解密也能获得
      * @return token中包含的用户名
      */
-    static Map<String, Object> getPrinciple(String token) throws Exception {
+    static Map<String, Object> getMap(String token) throws Exception {
 
 
         Jwts.parser()

@@ -36,7 +36,7 @@ class ShiroConfig {
 
     //Filter工厂，设置对应的过滤条件和跳转条件
     @Bean
-    ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+    ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean()
         shiroFilter.setSecurityManager(securityManager)
         Map<String, Filter> filters = new HashMap<>()

@@ -32,24 +32,29 @@ class GlobalExceptionHandler {
      * @param e
      * @
      */
+    @ResponseBody
     @ExceptionHandler(Exception.class)
     R handleException(Exception e) {
+        e.printStackTrace()
         logger.error(e.getClass().toGenericString() + e.getMessage())
         R.error("未知错误，请检查堆栈异常日志！")
     }
 
+    @ResponseBody
     @ExceptionHandler(NoHandlerFoundException.class)
     R handlerNoFoundException(NoHandlerFoundException e) {
         logger.error(e.getMessage())
         R.error(404, "经典404，请检查路径是否正确!")
     }
 
+    @ResponseBody
     @ExceptionHandler(DuplicateKeyException.class)
     R handleDuplicateKeyException(DuplicateKeyException e) {
         logger.error(e.getMessage())
         R.error("数据库中已存在该记录")
     }
 
+    @ResponseBody
     @ExceptionHandler(AuthorizationException.class)
     R handleAuthorizationException(AuthorizationException e) {
         logger.error(e.getMessage())
@@ -57,27 +62,28 @@ class GlobalExceptionHandler {
     }
 
 
-    //UnknownAccountException
+    @ResponseBody
     @ExceptionHandler(UnknownAccountException.class)
     R handleUnknownAccountException(UnknownAccountException e) {
         logger.error(e.getMessage())
         R.error("账户不存在!")
     }
 
-
+    @ResponseBody
     @ExceptionHandler(HttpMessageNotReadableException.class)
     R handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         logger.error(e.getMessage())
         R.error("缺少请求参数!")
     }
 
+    @ResponseBody
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     R handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         logger.error(e.getMessage())
         R.error("HTTP请求方法不支持!")
     }
 
-    //MethodArgumentNotValidException
+    @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     R handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         logger.error(e.getMessage())

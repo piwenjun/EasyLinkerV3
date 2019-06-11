@@ -45,7 +45,7 @@ class EntryController {
         }
 
         AppUser appUser = userService.findByPrinciple(loginForm.getPrinciple())
-        if (appUser && appUser.getPassword().equals(DigestUtils.sha256Hex(loginForm.getPassword()))) {
+        if (appUser && appUser.getPassword() == DigestUtils.sha256Hex(loginForm.getPassword())) {
             Map<String, Object> map = new HashMap<>()
             map.put("principle", appUser.principle)
             map.put("userId", appUser.id)
