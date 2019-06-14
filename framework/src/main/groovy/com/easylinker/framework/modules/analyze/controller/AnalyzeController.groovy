@@ -1,4 +1,4 @@
-package com.easylinker.framework.modules.message.controller
+package com.easylinker.framework.modules.analyze.controller
 
 import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.web.R
@@ -8,13 +8,19 @@ import org.springframework.web.bind.annotation.RestController
 import javax.servlet.http.HttpServletRequest
 
 /**
- * Created by admin on 2019/6/11 10:19
+ * 统计数据用的
+ * @author wwhai* @date 2019/6/12 22:29
+ * @email:751957846 @qq.com
+ * 瞅啥瞅？代码拿过来我看看有没有BUG。
  *
  */
-
 @RestController
-@RequestMapping("/msg")
-class MessageController extends AbstractController{
+@RequestMapping("/analyze")
+class AnalyzeController extends AbstractController {
+    AnalyzeController(HttpServletRequest httpServletRequest) {
+        super(httpServletRequest)
+    }
+
     @Override
     R getById(int id) {
         return null
@@ -30,7 +36,5 @@ class MessageController extends AbstractController{
         return null
     }
 
-    MessageController(HttpServletRequest httpServletRequest) {
-        super(httpServletRequest)
-    }
+
 }
