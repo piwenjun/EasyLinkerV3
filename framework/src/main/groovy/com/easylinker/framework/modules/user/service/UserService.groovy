@@ -32,7 +32,7 @@ class UserService extends AbstractService<AppUser> {
 
     @Override
     AppUser getById(long id) {
-        return userRepository.findTop1ById(id)
+        return userRepository.findById(id).get()
     }
 
     @Override
