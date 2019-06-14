@@ -5,6 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface UserRepository extends JpaRepository<AppUser, Long> {
     AppUser findByPrinciple(String principle)
-    AppUser findTop1ById(long id)
 
 }

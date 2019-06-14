@@ -1,6 +1,7 @@
 package com.easylinker.framework.common.config.shiro
 
 import com.easylinker.framework.common.config.jwt.JWTToken
+import com.easylinker.framework.common.web.R
 import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.AuthenticationToken
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter
