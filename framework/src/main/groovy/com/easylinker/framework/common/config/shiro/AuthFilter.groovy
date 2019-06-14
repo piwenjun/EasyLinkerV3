@@ -67,7 +67,6 @@ class AuthFilter extends BasicHttpAuthenticationFilter {
         httpServletResponse.setHeader("Content-Type", "application/json;charset=utf-8")
         servletResponse.getWriter().write(R.error("请求失败，缺少Token!").toJSONString())
         servletResponse.getWriter().flush()
-
         false
     }
     /**
