@@ -21,6 +21,8 @@ abstract class AbstractController {
     abstract R list(int page ,int size)
 
 
+
+
     AbstractController(HttpServletRequest httpServletRequest) {
         this.httpServletRequest = httpServletRequest
     }

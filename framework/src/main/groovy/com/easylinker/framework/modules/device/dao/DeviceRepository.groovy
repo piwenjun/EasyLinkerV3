@@ -16,5 +16,4 @@ interface DeviceRepository extends JpaRepository<Device, Long> {
 
     Device findTop1ById(long id)
 
-    Page<Device> findAllByAppUser(AppUser appUser, Pageable page)
 }

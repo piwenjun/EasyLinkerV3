@@ -146,7 +146,7 @@ class R extends JSONObject{
 ```java
     @GetMapping("/hello")
     String hello() {
-        R.data("world")
+        R.okWithData("world")
     }
 ```
 
@@ -182,7 +182,7 @@ class TestController   {
 
     @GetMapping("/hello")
     String hello() {
-        R.data("world")
+        R.okWithData("world")
 
     }
 }

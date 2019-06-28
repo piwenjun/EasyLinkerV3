@@ -5,9 +5,11 @@ package com.easylinker.framework.common.web
  * @email:751957846 @qq.com瞅啥瞅？代码拿过来我看看有没有BUG。
  */
 enum ReturnEnum {
-    UN_LOGIN(2, "未登录"),
+    SUCCESS(0, "操作成功"),
     FAIL(1, "系统异常,请联系管理员"),
-    SUCCESS(0, "操作成功")
+    UN_LOGIN(2, "未登录"),
+    INVALID_TOKEN(3, "Token异常"),
+    UN_KNOW_ERROR(4, "未知异常")
 
 
     private Integer code

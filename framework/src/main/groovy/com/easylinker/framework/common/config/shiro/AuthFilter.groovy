@@ -66,7 +66,7 @@ class AuthFilter extends BasicHttpAuthenticationFilter {
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
         HttpServletResponse httpServletResponse = ((HttpServletResponse) servletResponse)
         httpServletResponse.setHeader("Content-Type", "application/json;charset=utf-8")
-        servletResponse.getWriter().write(R.error(100,"请求失败，缺少Token!").toJSONString())
+        servletResponse.getWriter().write(R.error(0, "请求失败,缺少Token!").toJSONString())
         servletResponse.getWriter().flush()
 
         false

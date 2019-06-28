@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest
  *
  */
 abstract class AbstractDAO<T> {
-    abstract def add(T t)
+    abstract void add(T t)
 
     abstract T getById(int id)
 

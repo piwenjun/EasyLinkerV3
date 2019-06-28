@@ -16,7 +16,13 @@ class UserService extends AbstractService<AppUser> {
 
     AppUser findByPrinciple(String principle) {
 
-        return userRepository.findByPrinciple(principle)
+        return userRepository.findTopByPrinciple(principle)
+
+    }
+
+    AppUser findByEmail(String email) {
+
+        return userRepository.findTopByEmail(email)
 
     }
 

@@ -50,7 +50,7 @@ class EntryController {
             map.put("principle", appUser.principle)
             map.put("userId", appUser.id)
 
-            R.data(JwtUtils.token(map))
+            R.okWithData(JwtUtils.token(map))
         } else {
             throw new XException(0, "登陆失败!")
         }
@@ -64,6 +64,15 @@ class EntryController {
 
     @PostMapping("/signUp")
     R signUp(@Valid @RequestBody SignUpForm signUpForm) {
+
+        if (userService.findByPrinciple(signUpForm.principle)) {
+            R.error(0, "用户名已经存在!")
+        }
+
+        if (userService.findByEmail(signUpForm.email)) {
+            R.error(0, "该邮箱已经被注册!")
+
+        }
         AppUser appUser = new AppUser(principle: signUpForm.principle,
                 password: DigestUtils.sha256Hex(signUpForm.password),
                 email: signUpForm.email,
@@ -72,7 +81,7 @@ class EntryController {
         userService.save(appUser)
         roleService.save(new Role(name: "BASE_ROLE", info: "基本权限", appUser: appUser))
 
-        R.ok("注册成功!")
+        R.ok()
 
     }
 }

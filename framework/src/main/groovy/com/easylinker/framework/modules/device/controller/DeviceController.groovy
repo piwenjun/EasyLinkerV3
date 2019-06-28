@@ -33,7 +33,7 @@ class DeviceController extends AbstractController {
     @Override
     @GetMapping("/getById")
     R getById(@RequestParam int id) {
-        R.data(deviceService.getById(id))
+        R.okWithData(deviceService.getById(id))
     }
 
     @Override
@@ -48,31 +48,17 @@ class DeviceController extends AbstractController {
     @GetMapping(value = "/list")
 
     R list(@RequestParam int page, @RequestParam int size) {
-        R.data(deviceService.page(PageRequest.of(page, size)))
+        R.okWithData(deviceService.page(PageRequest.of(page, size)))
     }
 
     @GetMapping(value = "/findAllByAppUser")
     R findAllByAppUser(@RequestParam int page, @RequestParam int size) {
-        R.data(deviceService.findAllByAppUser(getCurrentUser(), PageRequest.of(page, size, Sort.Direction.DESC, "id")))
+        R.okWithData(deviceService.findAllByAppUser(getCurrentUser(), PageRequest.of(page, size, Sort.Direction.DESC, "id")))
     }
 
     @PostMapping(value = "/add")
     R add(@Valid @RequestBody AddDeviceForm addDeviceForm) {
-        AppUser appUser = getCurrentUser()
-        deviceService.save(new Device(
-                name: addDeviceForm.name,
-                info: addDeviceForm.info,
-                type: addDeviceForm.type,
-                mqttServerHost: addDeviceForm.mqttServerHost,
-                mqttPort: addDeviceForm.mqttPort,
-                mqttUsername: DigestUtils.sha256Hex(System.nanoTime().toString()),
-                mqttPassword: DigestUtils.sha256Hex(System.nanoTime().toString()),
-                topicKey: DigestUtils.sha256Hex(System.nanoTime().toString()),
-                echoTopic: DigestUtils.sha256Hex(System.nanoTime().toString()),
-                sshUser: addDeviceForm.sshUser,
-                sshPassword: addDeviceForm.sshPassword,
-                appUser: appUser
-        ))
+
         R.ok()
     }
 }

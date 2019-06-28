@@ -18,13 +18,10 @@ import org.springframework.web.bind.annotation.RestController
 class NotFoundController implements ErrorController {
 
 
-    private static final int NOT_FOUND = 404
-    private static final String ERROR_PATH = "/error"
-
     @RequestMapping(value = "/error")
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     R handleError() {
-        R.error(404, "经典404")
+        R.error(404, "404")
     }
 
     @Override

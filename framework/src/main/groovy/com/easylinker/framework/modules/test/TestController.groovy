@@ -21,7 +21,7 @@ class TestController {
         } catch (e) {
             throw new XException(100, "被除数不能0")
         }
-        R.ok("测试成功:" + new Date())
+        R.okWithData("测试成功:" + new Date())
     }
     @RequestMapping("/testRole1")
     @RequiresAuthentication
@@ -32,7 +32,7 @@ class TestController {
         } catch (e) {
             throw new XException(100, "被除数不能0")
         }
-        R.ok("测试成功:" + new Date())
+        R.okWithData("测试成功:" + new Date())
     }
     @RequiresRoles("USER")
     @RequestMapping("/testRole2")
@@ -42,6 +42,6 @@ class TestController {
         } catch (e) {
             throw new XException(100, "被除数不能0")
         }
-        R.ok("测试成功:" + new Date())
+        R.okWithData("测试成功:" + new Date())
     }
 }

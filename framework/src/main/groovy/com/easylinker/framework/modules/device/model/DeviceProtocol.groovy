@@ -1,18 +1,20 @@
-package com.easylinker.framework.modules.user.model
+package com.easylinker.framework.modules.device.model
 
 import com.easylinker.framework.common.model.AbstractModel
 
 import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.ManyToOne
 
+/**
+ * 协议类型表
+ * @author wwhai* @date 2019/6/28 23:10
+ * @email:751957846 @qq.com
+ * 瞅啥瞅？代码拿过来我看看有没有BUG。
+ *
+ */
 @Entity
-class Role extends AbstractModel {
+class DeviceProtocol extends AbstractModel {
     private String name
     private String info
-    @ManyToOne(fetch = FetchType.LAZY)
-    private AppUser appUser
-
 
     String getName() {
         return name
@@ -28,13 +30,5 @@ class Role extends AbstractModel {
 
     void setInfo(String info) {
         this.info = info
-    }
-
-    AppUser getAppUser() {
-        return appUser
-    }
-
-    void setAppUser(AppUser appUser) {
-        this.appUser = appUser
     }
 }

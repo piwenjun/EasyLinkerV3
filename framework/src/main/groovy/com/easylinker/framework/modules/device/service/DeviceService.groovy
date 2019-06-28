@@ -31,9 +31,9 @@ class DeviceService extends AbstractService<Device> {
         return deviceRepository.findAll(pageable)
     }
 
-    Page<Device> findAllByAppUser(AppUser user, Pageable pageable) {
-        return deviceRepository.findAllByAppUser(user, pageable)
-    }
+//    Page<Device> findAllByAppUser(AppUser user, Pageable pageable) {
+//        return deviceRepository.findAllByAppUser(user, pageable)
+//    }
 
     @Override
     Device getById(long id) {

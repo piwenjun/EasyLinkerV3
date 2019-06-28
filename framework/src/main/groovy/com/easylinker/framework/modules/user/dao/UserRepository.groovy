@@ -4,6 +4,7 @@ import com.easylinker.framework.modules.user.model.AppUser
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface UserRepository extends JpaRepository<AppUser, Long> {
-    AppUser findByPrinciple(String principle)
+    AppUser findTopByPrinciple(String principle)
+    AppUser findTopByEmail(String email)
 
 }

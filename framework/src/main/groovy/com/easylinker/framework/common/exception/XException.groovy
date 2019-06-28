@@ -5,7 +5,7 @@ package com.easylinker.framework.common.exception
  */
 
 class XException extends Exception {
-    private int code = 0
+    private int code = 1
     private String message = "ERROR"
 
     XException(int code, String message) {
