@@ -19,7 +19,9 @@ class TestController {
         try {
             1 / 0
         } catch (e) {
-            throw new XException(100, "被除数不能0")
+            //throw new XException(100, "被除数不能0")
+            throw new XException(e)
+
         }
         R.okWithData("测试成功:" + new Date())
     }
@@ -30,7 +32,7 @@ class TestController {
         try {
             1 / 0
         } catch (e) {
-            throw new XException(100, "被除数不能0")
+            throw new XException(e)
         }
         R.okWithData("测试成功:" + new Date())
     }

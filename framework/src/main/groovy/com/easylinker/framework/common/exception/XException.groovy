@@ -17,6 +17,10 @@ class XException extends Exception {
     XException() {
     }
 
+    XException(Throwable var1) {
+        super(var1.message)
+    }
+
     XException(String message) {
         super(message)
         this.code = 0
