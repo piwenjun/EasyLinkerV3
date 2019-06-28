@@ -1,6 +1,7 @@
 package com.easylinker.framework.common.config.shiro
 
 import com.easylinker.framework.common.config.jwt.JWTToken
+import com.easylinker.framework.common.exception.XException
 import com.easylinker.framework.common.web.R
 import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.AuthenticationToken
@@ -42,7 +43,7 @@ class AuthFilter extends BasicHttpAuthenticationFilter {
                 executeLogin(request, response)
                 true
             } catch (e) {
-                throw e
+                throw new XException(0, e.message)
                 //false
             }
 
@@ -65,8 +66,9 @@ class AuthFilter extends BasicHttpAuthenticationFilter {
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
         HttpServletResponse httpServletResponse = ((HttpServletResponse) servletResponse)
         httpServletResponse.setHeader("Content-Type", "application/json;charset=utf-8")
-        servletResponse.getWriter().write(R.error("请求失败，缺少Token!").toJSONString())
+        servletResponse.getWriter().write(R.error(100,"请求失败，缺少Token!").toJSONString())
         servletResponse.getWriter().flush()
+
         false
     }
     /**

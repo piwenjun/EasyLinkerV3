@@ -24,7 +24,15 @@ abstract class AbstractController {
     AbstractController(HttpServletRequest httpServletRequest) {
         this.httpServletRequest = httpServletRequest
     }
-    /**
+
+    HttpServletRequest getHttpServletRequest() {
+        return httpServletRequest
+    }
+
+    void setHttpServletRequest(HttpServletRequest httpServletRequest) {
+        this.httpServletRequest = httpServletRequest
+    }
+/**
      * 获取用户ID
      * @return
      */

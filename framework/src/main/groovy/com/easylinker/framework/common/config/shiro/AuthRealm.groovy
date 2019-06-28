@@ -1,6 +1,7 @@
 package com.easylinker.framework.common.config.shiro
 
 import com.easylinker.framework.common.config.jwt.JWTToken
+import com.easylinker.framework.common.exception.XException
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.framework.modules.user.model.Role
 import com.easylinker.framework.modules.user.service.RoleService
@@ -32,7 +33,11 @@ class AuthRealm extends AuthorizingRealm {
     @Autowired
     private RoleService roleService
 
-    //角色权限和对应权限添加
+    /**
+     * 这里是添加角色和权限的接口，
+     * @param principalCollection
+     * @return
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo()
@@ -55,7 +60,11 @@ class AuthRealm extends AuthorizingRealm {
         return token instanceof JWTToken
     }
 
-    //用户认证
+    /**
+     * 这里是获取认证信息的接口，其实就是登陆以后验证数据库的密码是否匹配
+     * @param authenticationToken
+     * @return
+     */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
         String token = (String) authenticationToken.getCredentials()
@@ -63,24 +72,20 @@ class AuthRealm extends AuthorizingRealm {
             Map<String, Object> map = JwtUtils.getMap(token)
             if (map.containsKey("principle")) {
                 String principle = map.get("principle") as String
-                if (!principle) {
-                    throw new AuthenticationException("请求token不合法")
+                if (principle) {
+                    AppUser appUser = userService.findByPrinciple(principle)
+                    if (!appUser) {
+                        throw new XException("用户不存在!")
+                    }
+
+                    new SimpleAuthenticationInfo(principle, authenticationToken.getCredentials(), "BASE_REALM")
                 }
-
-                AppUser appUser = userService.findByPrinciple(principle)
-                if (!appUser) {
-                    throw new AuthenticationException("用户不存在!")
-                }
-
-                new SimpleAuthenticationInfo(principle, authenticationToken.getCredentials(), "BASE_REALM")
-            } else {
-                throw new AuthenticationException("请求token不合法")
-
             }
+            throw new XException(500, "请求token不合法")
 
         } catch (e) {
             e.printStackTrace()
-            throw e
+            throw new XException(500, "请求token不合法")
         }
 
 

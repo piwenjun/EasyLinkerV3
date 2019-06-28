@@ -83,6 +83,16 @@ class R extends JSONObject {
         r
     }
 
+    static R ok(ReturnEnum returnEnum) {
+        R r = new R()
+        r.put("code", returnEnum.code)
+        r.put("data", [])
+        r.put("msg", returnEnum.message)
+        r
+
+
+    }
+
     static void main(String[] args) {
         println(ok("ok").toJSONString())
     }
