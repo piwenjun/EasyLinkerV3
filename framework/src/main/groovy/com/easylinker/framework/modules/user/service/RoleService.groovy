@@ -41,10 +41,10 @@ class RoleService extends AbstractService<Role> {
 
     }
 /**
-     * 获取用户的角色
-     * @param appUser
-     * @return
-     */
+ * 获取用户的角色
+ * @param appUser
+ * @return
+ */
     List<Role> getByUser(AppUser appUser) {
         roleRepository.findAllByAppUser(appUser)
     }

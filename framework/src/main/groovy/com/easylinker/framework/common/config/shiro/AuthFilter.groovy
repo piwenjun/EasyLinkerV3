@@ -37,6 +37,7 @@ class AuthFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        println("--->进入拦截器")
 
         if (isLoginAttempt(request, response)) {
             try {

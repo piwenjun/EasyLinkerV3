@@ -1,9 +1,8 @@
 package com.easylinker.framework.common.controller
 
-import com.easylinker.framework.common.web.R
+
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.framework.utils.JwtUtils
-import org.springframework.data.domain.PageRequest
 
 import javax.servlet.http.HttpServletRequest
 
@@ -13,15 +12,6 @@ import javax.servlet.http.HttpServletRequest
  */
 abstract class AbstractController {
     private HttpServletRequest httpServletRequest
-
-    abstract R getById(int id)
-
-    abstract R deleteById(long id)
-
-    abstract R list(int page ,int size)
-
-
-
 
     AbstractController(HttpServletRequest httpServletRequest) {
         this.httpServletRequest = httpServletRequest
@@ -35,9 +25,9 @@ abstract class AbstractController {
         this.httpServletRequest = httpServletRequest
     }
 /**
-     * 获取用户ID
-     * @return
-     */
+ * 获取用户ID
+ * @return
+ */
     long getUserId() {
 
         JwtUtils.getMap(httpServletRequest.getHeader("token")).get("userId") as long

@@ -39,13 +39,6 @@ class GlobalExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler(Exception.class)
-    R handleException(Exception e) {
-        e.printStackTrace()
-        R.error(500, "未知异常")
-    }
-
-    @ResponseBody
     @ExceptionHandler(NoHandlerFoundException.class)
     R handlerNoFoundException(NoHandlerFoundException e) {
         logger.error(e.getMessage())
