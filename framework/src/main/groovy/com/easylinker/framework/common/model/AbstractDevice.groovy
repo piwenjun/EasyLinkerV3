@@ -2,7 +2,6 @@ package com.easylinker.framework.common.model
 
 import lombok.Data
 
-import javax.persistence.Column
 import javax.persistence.MappedSuperclass
 
 /**
@@ -18,7 +17,24 @@ class AbstractDevice extends AbstractModel {
 
     private String name
     private String info
-    private String type
+    private DeviceProtocol deviceProtocol
+    private DeviceType deviceType
+
+    DeviceType getDeviceType() {
+        return deviceType
+    }
+
+    void setDeviceType(DeviceType deviceType) {
+        this.deviceType = deviceType
+    }
+
+    DeviceProtocol getDeviceProtocol() {
+        return deviceProtocol
+    }
+
+    void setDeviceProtocol(DeviceProtocol deviceProtocol) {
+        this.deviceProtocol = deviceProtocol
+    }
 
     String getName() {
         return name
@@ -35,12 +51,16 @@ class AbstractDevice extends AbstractModel {
     void setInfo(String info) {
         this.info = info
     }
-
-    String getType() {
-        return type
-    }
-
-    void setType(String type) {
-        this.type = type
-    }
+}
+/**
+ * 协议类型枚举
+ */
+enum DeviceProtocol {
+    HTTP, COAP, MQTT, UDP, TCP
+}
+/**
+ * 设备类型
+ */
+enum DeviceType {
+    VALUE, TEXT, BOOLEAN, FILE, STREAM
 }

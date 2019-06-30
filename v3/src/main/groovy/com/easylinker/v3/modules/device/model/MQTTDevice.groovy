@@ -1,8 +1,11 @@
 package com.easylinker.v3.modules.device.model
 
 import com.easylinker.framework.common.model.AbstractDevice
+import com.easylinker.framework.modules.user.model.AppUser
 
 import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.ManyToOne
 
 /**
  * @author wwhai* @date 2019/6/29 22:58
@@ -11,10 +14,20 @@ import javax.persistence.Entity
  *
  */
 @Entity
-class MQTTDevice extends AbstractDevice{
+class MQTTDevice extends AbstractDevice {
     private String username
     private String password
     private String topic
+    @ManyToOne(fetch = FetchType.LAZY)
+    private AppUser appUser
+
+    AppUser getAppUser() {
+        return appUser
+    }
+
+    void setAppUser(AppUser appUser) {
+        this.appUser = appUser
+    }
 
     String getUsername() {
         return username

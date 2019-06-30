@@ -1,6 +1,5 @@
 package com.easylinker.framework.common.model
 
-import org.hibernate.annotations.GenericGenerator
 
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
@@ -8,12 +7,11 @@ import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
 abstract class AbstractModel {
+
     @Id
-    @GenericGenerator(name = "idGenerator", strategy = "uuid")
-    //这个是hibernate的注解/生成32位UUID
-    @GeneratedValue(generator = "idGenerator")
+    @GeneratedValue
     //基本信息
-    String id
+    Long id
     /**
      * 安全ID，对外如果用到数据库id的时候用词ID代替
      * 主要是为了考虑被人猜测破解规律
@@ -28,11 +26,11 @@ abstract class AbstractModel {
      */
     private Date updateTime
 
-    String getId() {
+    Long getId() {
         return id
     }
 
-    void setId(String id) {
+    void setId(Long id) {
         this.id = id
     }
 
@@ -59,4 +57,5 @@ abstract class AbstractModel {
     void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime
     }
+
 }

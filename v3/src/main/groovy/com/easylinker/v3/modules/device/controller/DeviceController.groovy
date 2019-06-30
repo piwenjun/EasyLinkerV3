@@ -1,12 +1,21 @@
 package com.easylinker.v3.modules.device.controller
 
+import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.controller.AbstractController
+import com.easylinker.framework.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
-import org.apache.shiro.authz.annotation.RequiresAuthentication
+import com.easylinker.v3.modules.device.form.HTTPDeviceForm
+import com.easylinker.v3.modules.device.model.HTTPDevice
+import com.easylinker.v3.modules.device.service.DeviceService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 import javax.servlet.http.HttpServletRequest
+import javax.validation.Valid
 
 /**
  * @author wwhai* @date 2019/6/29 23:00
@@ -16,33 +25,41 @@ import javax.servlet.http.HttpServletRequest
  */
 @RestController
 @RequestMapping("/device")
-@RequiresAuthentication
+//@RequiresAuthentication
 class DeviceController extends AbstractController {
+    @Autowired
+    DeviceService deviceService
+
     DeviceController(HttpServletRequest httpServletRequest) {
         super(httpServletRequest)
     }
 
-    @RequestMapping("/addHttp")
-    R addHTTP() {
+    @PostMapping("/addHttp")
+    R addHTTP(@RequestBody @Valid HTTPDeviceForm httpDeviceForm) {
+        HTTPDevice httpDevice = new HTTPDevice(name: httpDeviceForm.name,
+                info: httpDeviceForm.info,
+                deviceType: httpDeviceForm.deviceType, deviceProtocol: DeviceProtocol.HTTP)
+        deviceService.add(httpDevice, DeviceProtocol.HTTP)
         R.ok()
 
     }
 
-    @RequestMapping("/addCoap")
+    @PostMapping("/addCoap")
     R addCOAP() {
         R.ok()
 
     }
 
-    @RequestMapping("/addMqtt")
+    @PostMapping("/addMqtt")
     R addMQTT() {
         R.ok()
 
     }
-    /**
-     * 协议类型枚举
-     */
-    enum DeviceProtocol {
-        HTTP, COAP, MQTT, UDP, TCP
+
+    static void main(String[] args) {
+        println(JSONObject.toJSONString(new HTTPDevice(name: "树莓派",
+                info: "测试用的数据",
+                deviceType: DeviceType.VALUE,
+                deviceProtocol: DeviceProtocol.HTTP)))
     }
 }
