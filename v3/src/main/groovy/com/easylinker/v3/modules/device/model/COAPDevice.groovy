@@ -2,6 +2,7 @@ package com.easylinker.v3.modules.device.model
 
 import com.easylinker.framework.common.model.AbstractDevice
 import com.easylinker.framework.modules.user.model.AppUser
+import com.easylinker.v3.modules.scene.model.Scene
 
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -14,10 +15,20 @@ import javax.persistence.ManyToOne
  *
  */
 @Entity
-class COAPDevice extends AbstractDevice{
+class COAPDevice extends AbstractDevice {
     private String token
     @ManyToOne(fetch = FetchType.LAZY)
     private AppUser appUser
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Scene scene
+
+    Scene getScene() {
+        return scene
+    }
+
+    void setScene(Scene scene) {
+        this.scene = scene
+    }
 
     AppUser getAppUser() {
         return appUser

@@ -7,7 +7,6 @@ import com.easylinker.framework.modules.user.model.Role
 import com.easylinker.framework.modules.user.service.RoleService
 import com.easylinker.framework.modules.user.service.UserService
 import com.easylinker.framework.utils.JwtUtils
-import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.AuthenticationInfo
 import org.apache.shiro.authc.AuthenticationToken
 import org.apache.shiro.authc.SimpleAuthenticationInfo
@@ -15,8 +14,6 @@ import org.apache.shiro.authz.AuthorizationInfo
 import org.apache.shiro.authz.SimpleAuthorizationInfo
 import org.apache.shiro.realm.AuthorizingRealm
 import org.apache.shiro.subject.PrincipalCollection
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 /**
@@ -25,20 +22,23 @@ import org.springframework.transaction.annotation.Transactional
  * 瞅啥瞅？代码拿过来我看看有没有BUG。
  *
  */
-@Component
-@Transactional
 class AuthRealm extends AuthorizingRealm {
-    @Autowired
+
     private UserService userService
-    @Autowired
     private RoleService roleService
 
-    /**
-     * 这里是添加角色和权限的接口，
-     * @param principalCollection
-     * @return
-     */
+    AuthRealm(UserService userService, RoleService roleService) {
+        this.userService = userService
+        this.roleService = roleService
+    }
+/**
+ * 这里是添加角色和权限的接口，
+ * @param principalCollection
+ * @return
+ */
     @Override
+    @Transactional
+
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo()
         AppUser appUser = userService.findByPrinciple(principalCollection.getPrimaryPrincipal() as String)
@@ -50,7 +50,7 @@ class AuthRealm extends AuthorizingRealm {
 //                simpleAuthorizationInfo.addStringPermission(permission.getPermission());
 //            }
         }
-        simpleAuthorizationInfo
+        return simpleAuthorizationInfo
     }
     /**
      * 必须重写此方法，不然会报错
@@ -78,13 +78,13 @@ class AuthRealm extends AuthorizingRealm {
                         throw new XException("用户不存在!")
                     }
 
-                    new SimpleAuthenticationInfo(principle, authenticationToken.getCredentials(), "BASE_REALM")
+                    return new SimpleAuthenticationInfo(principle, authenticationToken.getCredentials(), "BASE_REALM")
                 }
             }
             throw new XException(500, "请求token不合法")
 
         } catch (e) {
-            e.printStackTrace()
+            //e.printStackTrace()
             throw new XException(500, "请求token不合法")
         }
 

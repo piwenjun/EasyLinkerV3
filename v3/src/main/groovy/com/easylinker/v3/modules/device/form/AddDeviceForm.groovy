@@ -11,10 +11,13 @@ import com.easylinker.v3.modules.device.model.MQTTDevice
  *
  */
 class HTTPDeviceForm extends HTTPDevice {
+    private String sceneId
 }
 
 class COAPDeviceForm extends COAPDevice {
+    private String sceneId
 }
 
 class MQTTDeviceForm extends MQTTDevice {
+    private String sceneId
 }

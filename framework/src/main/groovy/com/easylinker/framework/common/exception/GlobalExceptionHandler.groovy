@@ -56,6 +56,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(AuthorizationException.class)
     R handleAuthorizationException(AuthorizationException e) {
         logger.error(e.getMessage())
+        e.printStackTrace()
         R.error(0, "没有权限，请联系管理员授权")
     }
 

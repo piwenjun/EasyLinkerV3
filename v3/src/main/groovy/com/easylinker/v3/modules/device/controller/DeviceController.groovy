@@ -1,12 +1,17 @@
 package com.easylinker.v3.modules.device.controller
 
+import cn.hutool.crypto.digest.DigestUtil
 import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
+import com.easylinker.v3.modules.device.form.COAPDeviceForm
 import com.easylinker.v3.modules.device.form.HTTPDeviceForm
+import com.easylinker.v3.modules.device.form.MQTTDeviceForm
+import com.easylinker.v3.modules.device.model.COAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
+import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
@@ -34,24 +39,39 @@ class DeviceController extends AbstractController {
         super(httpServletRequest)
     }
 
+
     @PostMapping("/addHttp")
     R addHTTP(@RequestBody @Valid HTTPDeviceForm httpDeviceForm) {
         HTTPDevice httpDevice = new HTTPDevice(name: httpDeviceForm.name,
                 info: httpDeviceForm.info,
-                deviceType: httpDeviceForm.deviceType, deviceProtocol: DeviceProtocol.HTTP)
+                deviceType: httpDeviceForm.deviceType,
+                deviceProtocol: DeviceProtocol.HTTP)
         deviceService.add(httpDevice, DeviceProtocol.HTTP)
         R.ok()
 
     }
 
     @PostMapping("/addCoap")
-    R addCOAP() {
+    R addCOAP(@RequestBody @Valid COAPDeviceForm coapDeviceForm) {
+        COAPDevice coapDevice = new COAPDevice(name: coapDeviceForm.name,
+                info: coapDeviceForm.info,
+                token: UUID.randomUUID().toString().replace("-", ""),
+                deviceType: coapDeviceForm.deviceType,
+                deviceProtocol: DeviceProtocol.COAP)
+        deviceService.add(coapDevice, DeviceProtocol.COAP)
         R.ok()
 
     }
 
     @PostMapping("/addMqtt")
-    R addMQTT() {
+    R addMQTT(@RequestBody @Valid MQTTDeviceForm mqttDeviceForm) {
+        MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.name,
+                info: mqttDeviceForm.info,
+                password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                username: UUID.randomUUID().toString().replace("-", ""),
+                deviceType: mqttDeviceForm.deviceType,
+                deviceProtocol: DeviceProtocol.COAP)
+        deviceService.add(mqttDevice, DeviceProtocol.MQTT)
         R.ok()
 
     }

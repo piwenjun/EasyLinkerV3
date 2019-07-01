@@ -3,12 +3,8 @@ package com.easylinker.framework.common.config.shiro
 import com.easylinker.framework.common.config.jwt.JWTToken
 import com.easylinker.framework.common.exception.XException
 import com.easylinker.framework.common.web.R
-import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.AuthenticationToken
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter
-import org.springframework.http.HttpStatus
-import org.springframework.stereotype.Component
-import org.springframework.web.bind.annotation.RequestMethod
 
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
@@ -18,17 +14,25 @@ import javax.servlet.http.HttpServletResponse
 /**
  * 认证的过滤器
  */
-@Component
-class AuthFilter extends BasicHttpAuthenticationFilter {
-    /**
-     * 判断用户是否想要登入。
-     * 检测header里面是否包含Authorization字段即可
-     */
+
+class ShiroAuthFilter extends BasicHttpAuthenticationFilter {
     @Override
-    protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
+    protected void postHandle(ServletRequest request, ServletResponse response) throws Exception {
+        super.postHandle(request, response)
+        println("拦截器开始作用")
+    }
+
+/**
+ * 判断用户是否想要登入。
+ * 检测header里面是否包含Authorization字段即可
+ */
+    //@Override
+    boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
+        println("isLoginAttempt拦截器开始作用")
+
         HttpServletRequest req = (HttpServletRequest) request
         String authorization = req.getHeader("token")
-        authorization != null
+        return authorization != null
     }
 
     /**
@@ -37,19 +41,19 @@ class AuthFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        println("--->进入拦截器")
+        println("isAccessAllowed")
 
         if (isLoginAttempt(request, response)) {
             try {
                 executeLogin(request, response)
-                true
+                return true
             } catch (e) {
                 throw new XException(0, e.message)
                 //false
             }
 
         } else {
-            false
+            return false
         }
     }
 
@@ -65,23 +69,33 @@ class AuthFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
+        println("onAccessDenied")
+
         HttpServletResponse httpServletResponse = ((HttpServletResponse) servletResponse)
         httpServletResponse.setHeader("Content-Type", "application/json;charset=utf-8")
         servletResponse.getWriter().write(R.error(0, "请求失败,缺少Token!").toJSONString())
         servletResponse.getWriter().flush()
 
-        false
+        return false
     }
     /**
      *  如果Shiro Login认证成功，会进入该方法，等同于用户名密码登录成功，我们这里还判断了是否要刷新Token
      */
 
     @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse servletResponse) throws AuthenticationException {
+    protected boolean executeLogin(ServletRequest request, ServletResponse servletResponse) {
+        println("executeLogin")
+
         HttpServletRequest httpServletRequest = (HttpServletRequest) request
         JWTToken token = new JWTToken(httpServletRequest.getHeader("token"))
-        getSubject(request, servletResponse).login(token)
-        true
+        try {
+            getSubject(request, servletResponse).login(token)
+            return true
+
+        } catch (e) {
+            e.printStackTrace()
+            return false
+        }
 
     }
 
@@ -96,12 +110,13 @@ class AuthFilter extends BasicHttpAuthenticationFilter {
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE")
         httpServletResponse.setHeader("Access-Control-Allow-Headers", httpServletRequest.getHeader("Access-Control-Request-Headers"))
         // 跨域时会首先发送一个option请求，这里我们给option请求直接返回正常状态
-        if (httpServletRequest.getMethod() == RequestMethod.OPTIONS.name()) {
-            httpServletResponse.setStatus(HttpStatus.OK.value())
-            false
-        } else {
-            true
-        }
+//        if (httpServletRequest.getMethod() == RequestMethod.OPTIONS.name()) {
+//            httpServletResponse.setStatus(HttpStatus.OK.value())
+//            return false
+//        } else {
+//            return true
+//        }
+        return true
     }
 }
 

@@ -2,29 +2,31 @@ package com.easylinker.framework.common.model
 
 
 import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
+import java.sql.Date
 
 @MappedSuperclass
 abstract class AbstractModel {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     //基本信息
     Long id
     /**
      * 安全ID，对外如果用到数据库id的时候用词ID代替
      * 主要是为了考虑被人猜测破解规律
      */
-    private String securityId
+    private String securityId = UUID.randomUUID().toString().replace("-", "")
     /**
      * 项目创建时间
      */
-    private Date createTime
+    private Date createTime = new Date(System.currentTimeMillis())
     /**
      * 项目更新时间
      */
-    private Date updateTime
+    private Date updateTime = new Date(System.currentTimeMillis())
 
     Long getId() {
         return id
