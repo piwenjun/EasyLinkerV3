@@ -35,6 +35,7 @@ class R extends JSONObject {
      * @return
      */
 
+
     static R errorWithData(Object data) {
         R r = new R()
         r.put("code", ReturnEnum.SUCCESS.code)
