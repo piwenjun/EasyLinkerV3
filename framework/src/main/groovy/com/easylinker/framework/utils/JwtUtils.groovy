@@ -2,11 +2,13 @@
 
 package com.easylinker.framework.utils
 
-
+import com.easylinker.framework.modules.user.model.AppUser
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import javax.servlet.http.HttpServletRequest
 
 /**
  * jwt工具类
@@ -27,7 +29,6 @@ class JwtUtils {
         Jwts.builder()
                 .setHeaderParam("type", "JWT")
                 .setClaims(map)
-
                 .setIssuedAt(nowDate)
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, secret)
@@ -66,5 +67,26 @@ class JwtUtils {
 
     }
 
+    static Map<String, Object> getMap(HttpServletRequest httpServletRequest) throws Exception {
+
+
+        Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(httpServletRequest.getHeader("token"))
+                .getBody()
+
+
+    }
+    /**
+     * 获取当前User
+     * @param request
+     * @return
+     */
+    static AppUser getCurrentUser(HttpServletRequest request) {
+
+        String principle = getMap(request.getHeader("token")).get("principle") as String
+
+        return new AppUser(principle: principle)
+    }
 
 }

@@ -42,5 +42,30 @@ abstract class AbstractController {
     String getIp() {
         httpServletRequest.getRemoteHost()
     }
+    /**
+     * 获取Token
+     * @param httpServletRequest
+     * @return
+     */
 
+    String getToken() {
+        if (httpServletRequest.getHeader("token")) {
+            return httpServletRequest.getHeader("token")
+
+        } else {
+            return ""
+        }
+    }
+    /**
+     * 获取当前的jwt
+     * @return
+     */
+    Map<String, Object> getJwtMap() {
+        if (JwtUtils.verify(getToken())) {
+            return JwtUtils.getMap(getToken())
+
+        } else {
+            return null
+        }
+    }
 }

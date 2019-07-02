@@ -1,6 +1,6 @@
 package com.easylinker.framework.modules.entry.controller
 
-
+import cn.hutool.json.JSONArray
 import com.easylinker.framework.common.exception.XException
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.modules.entry.form.LoginForm
@@ -13,6 +13,7 @@ import com.easylinker.framework.utils.CaptchaUtils
 import com.easylinker.framework.utils.JwtUtils
 import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -38,6 +39,7 @@ class EntryController {
     RoleService roleService
 
     @PostMapping("/login")
+    @Transactional
     R login(@Valid @RequestBody LoginForm loginForm) {
         if (!captchaUtils.validate(loginForm.uuid, loginForm.captchaCode)) {
 
@@ -45,12 +47,23 @@ class EntryController {
         }
 
         AppUser appUser = userService.findByPrinciple(loginForm.getPrinciple())
-        if (appUser && appUser.getPassword() == DigestUtils.sha256Hex(loginForm.getPassword())) {
-            Map<String, Object> map = new HashMap<>()
-            map.put("principle", appUser.principle)
-            map.put("userId", appUser.id)
 
-            return R.okWithData(JwtUtils.token(map))
+        if (appUser && appUser.getPassword() == DigestUtils.sha256Hex(loginForm.getPassword())) {
+            Map<String, Object> jwtMap = new HashMap<>()
+            jwtMap.put("principle", appUser.principle)
+            JSONArray roleArray = new JSONArray()
+            List<Role> roles = appUser.roles
+            for (Role role : roles) {
+                roleArray.add(role.name)
+            }
+
+            jwtMap.put("roles", roleArray)
+            jwtMap.put("userId", appUser.id)
+            Map<String, Object> dataMap = new HashMap<>()
+            dataMap.put("roles", roleArray)
+            dataMap.put("principle", appUser.principle)
+            dataMap.put("token", JwtUtils.token(jwtMap))
+            return R.okWithData(dataMap)
         } else {
             throw new XException(0, "登陆失败!")
         }

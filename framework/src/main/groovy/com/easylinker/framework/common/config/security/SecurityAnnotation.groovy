@@ -15,17 +15,8 @@ import java.lang.annotation.*
 @Target([ElementType.TYPE, ElementType.METHOD])
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@interface RequireRole {
+@interface RequireAuthRoles {
     String[] roles() default []
-}
-/**
- * 认证权限
- */
-@Target([ElementType.TYPE, ElementType.METHOD])
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@interface RequirePermission {
-    String[] permissions() default []
 }
 /**
  * 强制认证

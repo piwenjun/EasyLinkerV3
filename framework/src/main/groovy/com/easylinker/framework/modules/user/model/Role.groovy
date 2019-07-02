@@ -2,9 +2,7 @@ package com.easylinker.framework.modules.user.model
 
 import com.easylinker.framework.common.model.AbstractModel
 
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 @Entity
 class Role extends AbstractModel {
@@ -13,6 +11,16 @@ class Role extends AbstractModel {
     @ManyToOne(fetch = FetchType.LAZY)
     private AppUser appUser
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "role")
+    private List<Permission> permissions
+
+    List<Permission> getPermissions() {
+        return permissions
+    }
+
+    void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions
+    }
 
     String getName() {
         return name

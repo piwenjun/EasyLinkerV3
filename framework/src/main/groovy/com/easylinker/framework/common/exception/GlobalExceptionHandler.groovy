@@ -4,9 +4,6 @@ import com.easylinker.framework.common.web.R
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureException
-import org.apache.shiro.authc.UnknownAccountException
-import org.apache.shiro.authz.AuthorizationException
-import org.apache.shiro.authz.UnauthorizedException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DuplicateKeyException
@@ -52,22 +49,6 @@ class GlobalExceptionHandler {
         R.error(0, "数据库中已存在该记录")
     }
 
-    @ResponseBody
-    @ExceptionHandler(AuthorizationException.class)
-    R handleAuthorizationException(AuthorizationException e) {
-        logger.error(e.getMessage())
-        e.printStackTrace()
-        R.error(0, "没有权限，请联系管理员授权")
-    }
-
-
-    @ResponseBody
-    @ExceptionHandler(UnknownAccountException.class)
-    R handleUnknownAccountException(UnknownAccountException e) {
-        logger.error(e.getMessage())
-        R.error(0, "账户不存在")
-
-    }
 
     @ResponseBody
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -93,14 +74,6 @@ class GlobalExceptionHandler {
 
     }
 
-
-    @ResponseBody
-    @ExceptionHandler(value = UnauthorizedException.class)
-    R unauthorizedExceptionHandler(UnauthorizedException e) {
-        logger.error(e.getMessage())
-        R.error(0, "没有权限访问")
-
-    }
 
     @ResponseBody
     @ExceptionHandler(value = NullPointerException.class)
