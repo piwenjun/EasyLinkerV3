@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.support.WebExchangeBindException
 import org.springframework.web.servlet.NoHandlerFoundException
 
+import java.sql.SQLIntegrityConstraintViolationException
+
 /**
  * @author wwhai* @date 2019/6/4 22:10
  * @email:751957846 @qq.com瞅啥瞅？代码拿过来我看看有没有BUG。
@@ -123,6 +125,14 @@ class GlobalExceptionHandler {
     R missingServletRequestParameterExceptionRequired(MissingServletRequestParameterException e) {
         logger.error(e.getMessage())
         R.error(0, "缺少必需参数")
+
+    }
+    //SQLIntegrityConstraintViolationException
+    @ResponseBody
+    @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
+    R SQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
+        logger.error(e.getMessage())
+        R.error(0, "数据库异常")
 
     }
 

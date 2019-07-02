@@ -37,6 +37,12 @@ class RoleService extends AbstractService<Role> {
     }
 
     @Override
+    void delete(Role role) {
+        roleRepository.delete(role)
+
+    }
+
+    @Override
     void deleteById(long id) {
 
     }

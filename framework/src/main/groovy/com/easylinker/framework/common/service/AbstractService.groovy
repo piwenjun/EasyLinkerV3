@@ -16,6 +16,8 @@ abstract class AbstractService<T> {
 
     abstract T getById(long id)
 
+    abstract void delete(T t)
+
     abstract void deleteById(long id)
 
 }

@@ -15,7 +15,7 @@ class AppUser extends AbstractModel {
     private String email
     private String name
     private Integer state
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "appUser")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "appUser")
     private List<Role> roles
 
 

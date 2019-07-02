@@ -2,6 +2,7 @@ package com.easylinker.framework.modules.user.model
 
 import com.easylinker.framework.common.model.AbstractModel
 
+import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.ManyToOne
@@ -10,7 +11,7 @@ import javax.persistence.ManyToOne
 class Permission extends AbstractModel {
     private String name
     private String info
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     private Role role
 
     String getName() {

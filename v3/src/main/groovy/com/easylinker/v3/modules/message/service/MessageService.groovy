@@ -29,6 +29,11 @@ class MessageService extends AbstractService<Message> {
     }
 
     @Override
+    void delete(Message message) {
+
+    }
+
+    @Override
     void deleteById(long id) {
 
     }

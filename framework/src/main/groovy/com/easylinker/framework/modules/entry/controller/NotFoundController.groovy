@@ -21,7 +21,7 @@ class NotFoundController implements ErrorController {
     @RequestMapping(value = "/error")
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     R handleError() {
-        R.error(404, "404")
+        R.error(404, "请求失败")
     }
 
     @Override

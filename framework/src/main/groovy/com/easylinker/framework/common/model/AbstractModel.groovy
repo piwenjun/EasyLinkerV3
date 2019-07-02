@@ -1,11 +1,9 @@
 package com.easylinker.framework.common.model
 
-
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
-import java.sql.Date
 
 @MappedSuperclass
 abstract class AbstractModel {
@@ -22,11 +20,11 @@ abstract class AbstractModel {
     /**
      * 项目创建时间
      */
-    private Date createTime = new Date(System.currentTimeMillis())
+    private Date createTime = new Date()
     /**
      * 项目更新时间
      */
-    private Date updateTime = new Date(System.currentTimeMillis())
+    private Date updateTime = new Date()
 
     Long getId() {
         return id

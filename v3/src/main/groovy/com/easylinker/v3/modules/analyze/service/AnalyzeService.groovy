@@ -33,6 +33,11 @@ class AnalyzeService extends AbstractService<AnalyzeResult> {
     }
 
     @Override
+    void delete(AnalyzeResult analyzeResult) {
+
+    }
+
+    @Override
     void deleteById(long id) {
         analyzeRepository.deleteById(id)
     }

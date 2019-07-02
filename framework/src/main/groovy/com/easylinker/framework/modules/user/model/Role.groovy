@@ -8,10 +8,10 @@ import javax.persistence.*
 class Role extends AbstractModel {
     private String name
     private String info
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private AppUser appUser
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "role")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "role")
     private List<Permission> permissions
 
     List<Permission> getPermissions() {

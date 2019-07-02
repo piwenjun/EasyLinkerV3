@@ -4,6 +4,7 @@ import com.easylinker.framework.common.model.AbstractModel
 import com.easylinker.framework.modules.user.model.AppUser
 import org.apache.commons.codec.digest.DigestUtils
 
+import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.ManyToOne
@@ -25,7 +26,7 @@ class Developer extends AbstractModel {
     void setSecretKey(String secretKey) {
         this.secretKey = secretKey
     }
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     private AppUser appUser
 
     int getLevel() {
@@ -53,7 +54,7 @@ class DevelopApp extends AbstractModel {
     private String appInfo
     private String appKey = DigestUtils.sha256Hex(UUID.randomUUID().toString())
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     private Developer developer
 
     String getAppKey() {

@@ -4,6 +4,7 @@ import com.easylinker.framework.common.model.AbstractDevice
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.scene.model.Scene
 
+import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.ManyToOne
@@ -19,9 +20,9 @@ class MQTTDevice extends AbstractDevice {
     private String username
     private String password
     private String topic
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     private AppUser appUser
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     private Scene scene
 
     Scene getScene() {

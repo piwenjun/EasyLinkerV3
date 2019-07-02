@@ -42,6 +42,12 @@ class UserService extends AbstractService<AppUser> {
     }
 
     @Override
+    void delete(AppUser appUser) {
+        userRepository.delete(appUser)
+
+    }
+
+    @Override
     void deleteById(long id) {
         userRepository.deleteById(id)
 
