@@ -2,6 +2,7 @@ package com.easylinker.v3.modules.scene.model
 
 import com.easylinker.framework.common.model.AbstractModel
 import com.easylinker.framework.modules.user.model.AppUser
+import com.fasterxml.jackson.annotation.JsonIgnore
 
 import javax.persistence.CascadeType
 import javax.persistence.Entity
@@ -12,6 +13,7 @@ import javax.persistence.ManyToOne
 class Scene extends AbstractModel {
     private String name
     private String info
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private AppUser appUser
 

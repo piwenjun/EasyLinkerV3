@@ -41,8 +41,26 @@ class SceneService extends AbstractService<Scene> {
     void deleteById(long id) {
         sceneRepository.deleteById(id)
     }
+    /**
+     * 计算用户有多少个场景
+     * @param appUser
+     * @return
+     */
 
     long countByAppuser(AppUser appUser) {
         return sceneRepository.countByAppUser(appUser)
     }
+    /**
+     * 根据安全ID查找
+     * @param securityId
+     * @return
+     */
+    Scene findBySecurityId(String securityId) {
+        return sceneRepository.findBySecurityId(securityId)
+    }
+
+    Page<Scene> findByAppUser(AppUser appUser, Pageable pageable) {
+        return sceneRepository.findByAppUser(appUser, pageable)
+    }
+
 }

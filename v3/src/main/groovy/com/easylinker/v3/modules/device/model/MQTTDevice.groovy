@@ -4,6 +4,7 @@ import com.easylinker.framework.common.model.AbstractDevice
 import com.easylinker.framework.common.model.AbstractModel
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.scene.model.Scene
+import com.fasterxml.jackson.annotation.JsonIgnore
 
 import javax.persistence.*
 
@@ -23,7 +24,9 @@ class MQTTDevice extends AbstractDevice {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "mqttDevice")
     private List<TopicAcl> topicAcls
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JsonIgnore
     private AppUser appUser
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Scene scene
 

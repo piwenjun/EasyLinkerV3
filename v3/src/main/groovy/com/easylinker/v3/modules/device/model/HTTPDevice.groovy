@@ -3,6 +3,7 @@ package com.easylinker.v3.modules.device.model
 import com.easylinker.framework.common.model.AbstractDevice
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.scene.model.Scene
+import com.fasterxml.jackson.annotation.JsonIgnore
 
 import javax.persistence.CascadeType
 import javax.persistence.Entity
@@ -18,10 +19,10 @@ import javax.persistence.ManyToOne
 @Entity
 class HTTPDevice extends AbstractDevice{
     private String token
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     private AppUser appUser
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     private Scene scene
 

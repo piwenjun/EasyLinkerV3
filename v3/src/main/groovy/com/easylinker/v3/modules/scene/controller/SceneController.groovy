@@ -6,10 +6,11 @@ import com.easylinker.v3.modules.scene.form.AddSceneForm
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.scene.service.SceneService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
@@ -28,11 +29,30 @@ class SceneController extends AbstractController {
     }
 
 
+    /**
+     * 添加一个场景
+     * @param addSceneForm
+     * @return
+     */
     @PostMapping("/add")
     R add(@Valid @RequestBody AddSceneForm addSceneForm) {
         Scene scene = new Scene(name: addSceneForm.name, info: addSceneForm.info, appUser: getCurrentUser())
         sceneService.save(scene)
-        return R.ok(1, "场景添加成功")
+        return R.ok(0, "添加成功")
     }
+
+    /**
+     * 列出场景
+     * @param page
+     * @param size
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @GetMapping("/list/{page}/{size}")
+    R list(@PathVariable int page, @PathVariable int size) {
+        Page<Scene> scenePage = sceneService.findByAppUser(getCurrentUser(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
+        return R.okWithData(scenePage)
+    }
+
 
 }

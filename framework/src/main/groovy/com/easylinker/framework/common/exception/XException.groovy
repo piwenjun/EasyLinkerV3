@@ -17,7 +17,6 @@ class XException extends Exception {
     XException(String message) {
         super(message)
         this.message = message
-        this.code = 0
     }
 
 

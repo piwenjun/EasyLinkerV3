@@ -1,8 +1,11 @@
 package com.easylinker.framework.common.config.security
 
+import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.exception.XException
 import com.easylinker.framework.modules.user.service.UserService
 import com.easylinker.framework.utils.JwtUtils
+import com.easylinker.framework.utils.RedisUtils
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.lang.Nullable
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.method.HandlerMethod
@@ -51,7 +54,7 @@ class GlobalSecurityFilter implements HandlerInterceptor {
             return true
         } else {
             if (!hasToken(request)) {
-                throw new XException("缺少token")
+                throw new XException("缺少token,或token已过期,请重新弄登录获取token")
             } else {
                 if (handler instanceof HandlerMethod) {
                     //先检查类注解
@@ -104,13 +107,31 @@ class GlobalSecurityFilter implements HandlerInterceptor {
     }
 
     /**
-     * 判断用户是否想要登入。
+     * 判断用户是否想要登入。无论什么时候，合法的操作必须是Redis里面的token和用户的请求token相等
      * 检测header里面是否包含Authorization字段即可
+     * 加入了 Token刷新机制，后来的会把之前的踢了
      */
-    private static boolean hasToken(ServletRequest request) {
+    @Autowired
+    RedisUtils redisUtils
+
+    private boolean hasToken(ServletRequest request) {
         HttpServletRequest req = request as HttpServletRequest
         String token = req.getHeader("token")
-        return token != null && token.length() > 20
+        if (token == null || token.length() < 20) {
+            return false
+        }
+        Map userData = JwtUtils.getMap(token)
+        JSONObject catchUserData = JSONObject.parseObject(redisUtils.get("USER:" + userData.get("securityId")).toString())
+        if (catchUserData) {
+            String redisToken = catchUserData.getString("token")
+            println("RedisToken 和HttpToken是否相等:" + (redisToken == token))
+            //throw new XException("Token 已过期,请重新登录获取!")
+            return redisToken == token
+
+        } else {
+            //throw new XException("Token 已过期,请重新登录获取!")
+            return false
+        }
     }
 
 

@@ -1,6 +1,7 @@
 package com.easylinker.framework.modules.entry.controller
 
 import cn.hutool.json.JSONArray
+import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.exception.XException
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.modules.entry.form.LoginForm
@@ -11,6 +12,7 @@ import com.easylinker.framework.modules.user.service.RoleService
 import com.easylinker.framework.modules.user.service.UserService
 import com.easylinker.framework.utils.CaptchaUtils
 import com.easylinker.framework.utils.JwtUtils
+import com.easylinker.framework.utils.RedisUtils
 import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
@@ -38,6 +40,9 @@ class EntryController {
     @Autowired
     RoleService roleService
 
+    @Autowired
+    RedisUtils redisUtils
+
     @PostMapping("/login")
     @Transactional
     R login(@Valid @RequestBody LoginForm loginForm) {
@@ -58,11 +63,13 @@ class EntryController {
             }
 
             jwtMap.put("roles", roleArray)
-            jwtMap.put("userId", appUser.id)
+            jwtMap.put("securityId", appUser.securityId)
+            jwtMap.put("id", appUser.id)
             Map<String, Object> dataMap = new HashMap<>()
             dataMap.put("roles", roleArray)
             dataMap.put("principle", appUser.principle)
             dataMap.put("token", JwtUtils.token(jwtMap))
+            redisUtils.set("USER:" + appUser.securityId, JSONObject.toJSONString(dataMap))
             return R.okWithData(dataMap)
         } else {
             throw new XException(0, "登陆失败!")

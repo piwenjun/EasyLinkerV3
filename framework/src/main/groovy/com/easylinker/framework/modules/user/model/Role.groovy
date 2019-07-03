@@ -1,6 +1,7 @@
 package com.easylinker.framework.modules.user.model
 
 import com.easylinker.framework.common.model.AbstractModel
+import com.fasterxml.jackson.annotation.JsonIgnore
 
 import javax.persistence.*
 
@@ -8,6 +9,7 @@ import javax.persistence.*
 class Role extends AbstractModel {
     private String name
     private String info
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private AppUser appUser
 

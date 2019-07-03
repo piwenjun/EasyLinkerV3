@@ -15,6 +15,8 @@ import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.model.TopicAcl
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
+import com.easylinker.v3.modules.scene.model.Scene
+import com.easylinker.v3.modules.scene.service.SceneService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PostMapping
@@ -36,6 +38,8 @@ import javax.validation.Valid
 class DeviceController extends AbstractController {
     @Autowired
     DeviceService deviceService
+    @Autowired
+    SceneService sceneService
 
     DeviceController(HttpServletRequest httpServletRequest) {
         super(httpServletRequest)
@@ -44,26 +48,43 @@ class DeviceController extends AbstractController {
 
     @PostMapping("/addHttp")
     R addHTTP(@RequestBody @Valid HTTPDeviceForm httpDeviceForm) {
-        HTTPDevice httpDevice = new HTTPDevice(name: httpDeviceForm.name,
-                info: httpDeviceForm.info,
-                deviceType: httpDeviceForm.deviceType,
-                appUser: getCurrentUser(),
-                deviceProtocol: DeviceProtocol.HTTP)
-        deviceService.add(httpDevice, DeviceProtocol.HTTP)
-        return R.ok()
+        Scene scene = sceneService.findBySecurityId(httpDeviceForm.securityId)
+        if (scene) {
+
+            HTTPDevice httpDevice = new HTTPDevice(name: httpDeviceForm.name,
+                    info: httpDeviceForm.info,
+                    deviceType: httpDeviceForm.deviceType,
+                    appUser: getCurrentUser(),
+                    scene: scene,
+                    deviceProtocol: DeviceProtocol.HTTP)
+            deviceService.add(httpDevice, DeviceProtocol.HTTP)
+            return R.ok(0, "添加成功")
+
+        } else {
+            return R.error(5, "场景不存在")
+        }
 
     }
 
     @PostMapping("/addCoap")
     R addCOAP(@RequestBody @Valid COAPDeviceForm coapDeviceForm) {
-        COAPDevice coapDevice = new COAPDevice(name: coapDeviceForm.name,
-                info: coapDeviceForm.info,
-                token: UUID.randomUUID().toString().replace("-", ""),
-                deviceType: coapDeviceForm.deviceType,
-                appUser: getCurrentUser(),
-                deviceProtocol: DeviceProtocol.COAP)
-        deviceService.add(coapDevice, DeviceProtocol.COAP)
-        return R.ok()
+        Scene scene = sceneService.findBySecurityId(coapDeviceForm.securityId)
+        if (scene) {
+
+            COAPDevice coapDevice = new COAPDevice(name: coapDeviceForm.name,
+                    info: coapDeviceForm.info,
+                    token: UUID.randomUUID().toString().replace("-", ""),
+                    deviceType: coapDeviceForm.deviceType,
+                    scene: scene,
+                    appUser: getCurrentUser(),
+                    deviceProtocol: DeviceProtocol.COAP)
+            deviceService.add(coapDevice, DeviceProtocol.COAP)
+            return R.ok(0, "添加成功")
+        } else {
+            return R.error(5, "场景不存在")
+
+        }
+
 
     }
     /**
@@ -78,26 +99,35 @@ class DeviceController extends AbstractController {
     @PostMapping("/addMqtt")
     @Transactional(rollbackFor = Exception.class)
     R addMQTT(@RequestBody @Valid MQTTDeviceForm mqttDeviceForm) {
-        MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.name,
-                info: mqttDeviceForm.info,
-                clientId: UUID.randomUUID().toString().replace("-", ""),
-                password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
-                username: UUID.randomUUID().toString().replace("-", ""),
-                deviceType: mqttDeviceForm.deviceType,
-                appUser: getCurrentUser(),
-                deviceProtocol: DeviceProtocol.COAP)
+        Scene scene = sceneService.findBySecurityId(mqttDeviceForm.securityId)
+        if (scene) {
+            MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.name,
+                    info: mqttDeviceForm.info,
+                    clientId: UUID.randomUUID().toString().replace("-", ""),
+                    password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                    username: UUID.randomUUID().toString().replace("-", ""),
+                    deviceType: mqttDeviceForm.deviceType,
+                    appUser: getCurrentUser(),
+                    scene: scene,
+                    deviceProtocol: DeviceProtocol.COAP)
 
-        //默认给两个权限 对自己的频道进行PUB和SUB
-        List<TopicAcl> topicAcls = new ArrayList<>()
-        TopicAcl inAcl = new TopicAcl(ip: "0.0.0.0", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/in", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
-        TopicAcl outAcl = new TopicAcl(ip: "0.0.0.0", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/out", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
-        topicAclService.save(inAcl)
-        topicAclService.save(outAcl)
-        topicAcls.add(inAcl)
-        topicAcls.add(outAcl)
-        mqttDevice.setTopicAcls(topicAcls)
-        deviceService.add(mqttDevice, DeviceProtocol.MQTT)
-        return R.ok()
+            //默认给两个权限 对自己的频道进行PUB和SUB
+            List<TopicAcl> topicAcls = new ArrayList<>()
+            TopicAcl inAcl = new TopicAcl(ip: "0.0.0.0", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/in", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+            TopicAcl outAcl = new TopicAcl(ip: "0.0.0.0", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/out", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+            topicAclService.save(inAcl)
+            topicAclService.save(outAcl)
+            topicAcls.add(inAcl)
+            topicAcls.add(outAcl)
+            mqttDevice.setTopicAcls(topicAcls)
+            deviceService.add(mqttDevice, DeviceProtocol.MQTT)
+            return R.ok(0, "添加成功")
+
+        } else {
+            return R.error(5, "场景不存在")
+
+        }
+
 
     }
 

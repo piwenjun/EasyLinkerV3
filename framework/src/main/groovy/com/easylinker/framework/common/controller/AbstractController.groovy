@@ -30,7 +30,7 @@ abstract class AbstractController {
  */
     long getUserId() {
 
-        JwtUtils.getMap(httpServletRequest.getHeader("token")).get("userId") as long
+        JwtUtils.getMap(httpServletRequest.getHeader("token")).get("id") as long
 
     }
 
