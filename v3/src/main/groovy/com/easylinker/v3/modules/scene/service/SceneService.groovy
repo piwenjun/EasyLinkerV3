@@ -1,6 +1,7 @@
 package com.easylinker.v3.modules.scene.service
 
 import com.easylinker.framework.common.service.AbstractService
+import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.scene.dao.SceneRepository
 import com.easylinker.v3.modules.scene.model.Scene
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,5 +40,9 @@ class SceneService extends AbstractService<Scene> {
     @Override
     void deleteById(long id) {
         sceneRepository.deleteById(id)
+    }
+
+    long countByAppuser(AppUser appUser) {
+        return sceneRepository.countByAppUser(appUser)
     }
 }

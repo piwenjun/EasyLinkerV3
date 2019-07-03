@@ -6,10 +6,10 @@ package com.easylinker.framework.common.web
  */
 enum ReturnEnum {
     SUCCESS(0, "操作成功"),
-    FAIL(1, "系统异常,请联系管理员"),
-    UN_LOGIN(2, "未登录"),
-    INVALID_TOKEN(3, "Token异常"),
-    UN_KNOW_ERROR(4, "未知异常")
+    FAIL(100, "系统异常,请联系管理员"),
+    UN_LOGIN(200, "未登录"),
+    INVALID_TOKEN(300, "Token异常"),
+    UN_KNOW_ERROR(400, "未知异常"),
 
 
     private Integer code

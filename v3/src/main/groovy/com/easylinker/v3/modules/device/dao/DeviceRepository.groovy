@@ -18,15 +18,23 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface HTTPRepository extends JpaRepository<HTTPDevice, Long> {
 
+    long countByAppUser(AppUser appUser)
+
     Page<HTTPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 }
 
 interface COAPRepository extends JpaRepository<COAPDevice, Long> {
+    long countByAppUser(AppUser appUser)
+
     Page<COAPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
 }
 
 interface MQTTRepository extends JpaRepository<MQTTDevice, Long> {
+    long countByAppUser(AppUser appUser)
+
+    long countByOnline(Boolean online)
+
 
     Page<MQTTDevice> findAllByAppUser(Pageable page, AppUser appUser)
 

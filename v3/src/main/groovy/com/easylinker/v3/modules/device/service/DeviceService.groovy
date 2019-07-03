@@ -7,9 +7,11 @@ import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.device.dao.COAPRepository
 import com.easylinker.v3.modules.device.dao.HTTPRepository
 import com.easylinker.v3.modules.device.dao.MQTTRepository
+import com.easylinker.v3.modules.device.dao.TopicAclRepository
 import com.easylinker.v3.modules.device.model.COAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
+import com.easylinker.v3.modules.scene.dao.SceneRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -31,6 +33,40 @@ class DeviceService {
     @Autowired
     MQTTRepository mqttRepository
 
+    @Autowired
+    TopicAclRepository topicAclRepository
+    /**
+     * 统计报表:ADMIN看的
+     * @return
+     */
+    Map analyzeDeviceData() {
+        Map data = new HashMap()
+        Map mqttCount = new HashMap()
+        mqttCount.put("online", mqttRepository.countByOnline(true))
+        mqttCount.put("total", mqttRepository.count())
+        data.put("coap", coapRepository.count())
+        data.put("http", httpRepository.count())
+        data.put("mqtt", mqttCount)
+        return data
+    }
+
+    /**
+     * 根据用户来选择统计报表
+     * @param appUser
+     * @return
+     */
+    @Autowired
+    SceneRepository sceneRepository
+
+    Map analyzeDeviceData(AppUser appUser) {
+        Map data = new HashMap()
+        data.put("coap", coapRepository.countByAppUser(appUser))
+        data.put("http", httpRepository.countByAppUser(appUser))
+        data.put("mqtt", mqttRepository.countByAppUser(appUser))
+        data.put("scene", sceneRepository.countByAppUser(appUser))
+        return data
+    }
+
 
     /**
      * 添加
@@ -43,6 +79,7 @@ class DeviceService {
                 httpRepository.save(abstractDevice as HTTPDevice)
                 break;
             case DeviceProtocol.COAP:
+
                 coapRepository.save(abstractDevice as COAPDevice)
                 break;
             case DeviceProtocol.MQTT:

@@ -1,7 +1,11 @@
 package com.easylinker.v3.modules.analyze.controller
 
+import com.easylinker.framework.common.config.security.RequireAuthRoles
 import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.web.R
+import com.easylinker.v3.modules.analyze.service.AnalyzeService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -18,8 +22,34 @@ import javax.servlet.http.HttpServletRequest
 @RequestMapping("/analyze")
 class AnalyzeController extends AbstractController {
 
+    @Autowired
+    AnalyzeService analyzeService
 
     AnalyzeController(HttpServletRequest httpServletRequest) {
         super(httpServletRequest)
     }
+
+    @GetMapping("/data")
+    R analyzeDeviceData() {
+        return R.okWithData(analyzeService.analyzeDeviceData(getCurrentUser()))
+    }
+
+    /**
+     * 管理员的数据
+     * @return
+     */
+    @RequireAuthRoles(roles = ['ADMIN'])
+    @GetMapping("/adminData")
+    R adminAnalyzeData() {
+        return R.okWithData(analyzeService.analyzeDeviceData())
+    }
+
+    @RequireAuthRoles(roles = ['ADMIN'])
+    @GetMapping("/systemInfo")
+    R systemInfo() {
+        return R.okWithData(analyzeService.systemInfo())
+
+    }
+
+
 }

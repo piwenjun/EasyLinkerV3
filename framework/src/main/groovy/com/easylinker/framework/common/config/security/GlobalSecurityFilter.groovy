@@ -32,11 +32,6 @@ class GlobalSecurityFilter implements HandlerInterceptor {
         allowList.add("/entry/signUp")
     }
 
-    @Override
-    Object invokeMethod(String s, Object o) {
-        return super.invokeMethod(s, o)
-    }
-
     /**
      * 拦截器使用原理：
      * 1 先检查类上面的注解，然后获取roles，然后检查用户的roles，二者进行【AND】对比
@@ -112,7 +107,7 @@ class GlobalSecurityFilter implements HandlerInterceptor {
      * 判断用户是否想要登入。
      * 检测header里面是否包含Authorization字段即可
      */
-    private boolean hasToken(ServletRequest request) {
+    private static boolean hasToken(ServletRequest request) {
         HttpServletRequest req = request as HttpServletRequest
         String token = req.getHeader("token")
         return token != null && token.length() > 20
@@ -129,7 +124,7 @@ class GlobalSecurityFilter implements HandlerInterceptor {
      * @return
      */
 
-    private boolean checkRole(String[] requireRoles, String[] userRoles) {
+    private static boolean checkRole(String[] requireRoles, String[] userRoles) {
         if (requireRoles.length == 0 || userRoles.length == 0) {
             return false
         }
@@ -145,9 +140,9 @@ class GlobalSecurityFilter implements HandlerInterceptor {
                 realRolesCount += 1
             }
         }
-        println("资源要求角色:" + requireRoles)
-        println("用户实际角色:" + compareRoles)
-        println("实际匹配角色数:${realRolesCount} 是否通过:" + (requiredRolesCount == realRolesCount))
+//        println("资源要求角色:" + requireRoles)
+//        println("用户实际角色:" + compareRoles)
+//        println("实际匹配角色数:${realRolesCount} 是否通过:" + (requiredRolesCount == realRolesCount))
         return requiredRolesCount == realRolesCount
     }
 

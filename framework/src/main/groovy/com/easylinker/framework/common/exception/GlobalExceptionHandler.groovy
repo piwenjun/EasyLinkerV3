@@ -48,7 +48,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateKeyException.class)
     R handleDuplicateKeyException(DuplicateKeyException e) {
         logger.error(e.getMessage())
-        R.error(0, "数据库中已存在该记录")
+        R.error(501, "数据库中已存在该记录")
     }
 
 
@@ -56,7 +56,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     R handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         logger.error(e.getMessage())
-        R.error(0, "缺少请求参数")
+        R.error(501, "缺少请求参数")
 
     }
 
@@ -64,7 +64,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     R handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         logger.error(e.getMessage())
-        R.error(0, "HTTP请求方法不支持")
+        R.error(501, "HTTP请求方法不支持")
 
     }
 
@@ -72,7 +72,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     R handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         logger.error(e.getMessage())
-        R.error(0, "请检查参数是否缺少或为空")
+        R.error(501, "请检查参数是否缺少或为空")
 
     }
 
@@ -81,7 +81,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = NullPointerException.class)
     R nullPointerExceptionHandler(NullPointerException e) {
         logger.error(e.getMessage())
-        R.error(0, "空指针异常")
+        R.error(501, "空指针异常")
 
     }
 
@@ -89,7 +89,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = SignatureException.class)
     R signatureException(SignatureException e) {
         logger.error(e.getMessage())
-        R.error(0, "Token异常")
+        R.error(501, "Token异常")
 
     }
 
@@ -97,7 +97,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = ExpiredJwtException.class)
     R expiredJwtException(ExpiredJwtException e) {
         logger.error(e.getMessage())
-        R.error(0, "Token过期，请重新登陆获取")
+        R.error(501, "Token过期，请重新登陆获取")
 
     }
     //MalformedJwtException
@@ -106,7 +106,7 @@ class GlobalExceptionHandler {
     R malformedJwtException(MalformedJwtException e) {
         logger.error(e.getMessage())
 
-        R.error(0, "Token错误")
+        R.error(501, "Token错误")
 
     }
     //WebExchangeBindException
@@ -114,7 +114,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = WebExchangeBindException.class)
     R eebExchangeBindException(WebExchangeBindException e) {
         logger.error(e.getMessage())
-        R.error(0, e.getMessage())
+        R.error(501, e.getMessage())
 
     }
 
@@ -124,7 +124,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     R missingServletRequestParameterExceptionRequired(MissingServletRequestParameterException e) {
         logger.error(e.getMessage())
-        R.error(0, "缺少必需参数")
+        R.error(501, "缺少必需参数")
 
     }
     //SQLIntegrityConstraintViolationException
@@ -132,7 +132,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
     R SQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
         logger.error(e.getMessage())
-        R.error(0, "数据库异常")
+        R.error(501, "数据库异常")
 
     }
 
