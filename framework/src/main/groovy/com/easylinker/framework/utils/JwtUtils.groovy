@@ -82,7 +82,7 @@ class JwtUtils {
      * @param request
      * @return
      */
-    static AppUser getCurrentUser(HttpServletRequest request) {
+    static AppUser getCurrentUser(HttpServletRequest request)  throws Exception {
 
         String principle = getMap(request.getHeader("token")).get("principle") as String
 

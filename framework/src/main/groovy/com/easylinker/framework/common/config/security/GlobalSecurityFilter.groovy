@@ -124,7 +124,7 @@ class GlobalSecurityFilter implements HandlerInterceptor {
         JSONObject catchUserData = JSONObject.parseObject(redisUtils.get("USER:" + userData.get("securityId")).toString())
         if (catchUserData) {
             String redisToken = catchUserData.getString("token")
-            println("RedisToken 和HttpToken是否相等:" + (redisToken == token))
+            //println("RedisToken 和HttpToken是否相等:" + (redisToken == token))
             //throw new XException("Token 已过期,请重新登录获取!")
             return redisToken == token
 
@@ -161,9 +161,6 @@ class GlobalSecurityFilter implements HandlerInterceptor {
                 realRolesCount += 1
             }
         }
-//        println("资源要求角色:" + requireRoles)
-//        println("用户实际角色:" + compareRoles)
-//        println("实际匹配角色数:${realRolesCount} 是否通过:" + (requiredRolesCount == realRolesCount))
         return requiredRolesCount == realRolesCount
     }
 

@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest
 
 /**
  * 公共的基类
- * @param <T >
+ * @param < T >
  */
 abstract class AbstractController {
     private HttpServletRequest httpServletRequest
@@ -33,10 +33,14 @@ abstract class AbstractController {
         JwtUtils.getMap(httpServletRequest.getHeader("token")).get("id") as long
 
     }
+    //securityId
+    String getSecurityId() {
+        JwtUtils.getMap(httpServletRequest.getHeader("token")).get("securityId") as String
+    }
 
     AppUser getCurrentUser() {
 
-        new AppUser(id: getUserId())
+        new AppUser(id: getUserId(), securityId: getSecurityId())
     }
 
     String getIp() {

@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface UserRepository extends JpaRepository<AppUser, Long> {
     AppUser findTopByPrinciple(String principle)
     AppUser findTopByEmail(String email)
+    AppUser findTopBySecurityId(String securityId)
 
 }

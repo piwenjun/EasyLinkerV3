@@ -25,6 +25,11 @@ class UserService extends AbstractService<AppUser> {
         return userRepository.findTopByEmail(email)
 
     }
+    AppUser findBySecurityId(String securityId) {
+
+        return userRepository.findTopBySecurityId(securityId)
+
+    }
 
     @Override
     void save(AppUser appUser) {

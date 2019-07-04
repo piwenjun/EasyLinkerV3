@@ -4,6 +4,8 @@ import cn.hutool.crypto.digest.DigestUtil
 import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.web.R
+import com.easylinker.framework.modules.user.model.AppUser
+import com.easylinker.framework.modules.user.service.UserService
 import com.easylinker.v3.modules.device.form.*
 import com.easylinker.v3.modules.device.model.COAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
@@ -14,11 +16,11 @@ import com.easylinker.v3.modules.device.service.TopicAclService
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.scene.service.SceneService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
@@ -128,15 +130,39 @@ class DeviceController extends AbstractController {
     }
     /**
      * MQTT设备搜索
+     *      * String username
+     *      * String clientId
+     *      * boolean online
+     *      * String name
+     *      * String info
+     *      * DeviceProtocol deviceProtocol
+     *      * DeviceType deviceType
      * @param SearchMqttForm
      * @return
      */
 
-    @PostMapping("/searchMqtt")
-    R searchMqtt(@RequestBody @Valid SearchMqttForm searchMqttForm) {
 
+    @Autowired
+    UserService userService
 
-        return R.ok()
+    @Transactional
+    @PostMapping("/searchMqtt/{page}/{size}")
+    R searchMqtt(@PathVariable int page, @PathVariable int size, @RequestBody @Valid SearchMqttForm searchMqttForm) {
+
+        AppUser appUser = userService.findBySecurityId(getCurrentUser().securityId)
+
+        Page<MQTTDevice> mqttDevicePage = deviceService.searchMqtt(new MQTTDevice(
+                username: searchMqttForm.username,
+                clientId: searchMqttForm.clientId,
+                online: searchMqttForm.online,
+                name: searchMqttForm.name,
+                deviceProtocol: searchMqttForm.deviceProtocol,
+                deviceType: searchMqttForm.deviceType,
+                appUser: appUser,
+                info: searchMqttForm.info),
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
+
+        return R.okWithData(mqttDevicePage)
     }
 
     /**

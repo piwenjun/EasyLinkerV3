@@ -18,6 +18,7 @@ import org.springframework.data.domain.ExampleMatcher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * Java习惯了看这个不习惯？没事多看看就适应了，Groovy格式没那么强制，.groovy是文件而不是类了
@@ -221,28 +222,26 @@ class DeviceService {
 
     /**
      * 搜索Mqtt
-     *     private String username
-     *     private String clientId
-     *     private boolean online
-     *     private String name
-     *     private String info
-     *     private DeviceProtocol deviceProtocol
-     *     private DeviceType deviceType
+     * ExampleMatcher 比较讲究，记录一下
+     * withMatcher：参数是Entity的属性，不是表的字段
+     * ExampleMatcher.GenericPropertyMatchers：有好几个值，对应了SQL的 AND OR 等等逻辑操作
+     * Example.of：可以返回list和Page
      * @return
      */
-//    Page<AbstractDevice> searchMqtt(MQTTDevice mqttDevice, AppUser appUser, Pageable pageable) {
-//        ExampleMatcher matcher = ExampleMatcher.matching()
-//                .withMatcher("username", ExampleMatcher.GenericPropertyMatchers.contains())
-//                .withMatcher("online", ExampleMatcher.GenericPropertyMatchers.contains())
-//                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
-//                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
-//                .withMatcher("deviceProtocol", ExampleMatcher.GenericPropertyMatchers.contains())
-//                .withMatcher("deviceType", ExampleMatcher.GenericPropertyMatchers.contains())
-//
-//        Example<MQTTDevice> example = Example.of(mqttDevice, matcher)
-//
-//        return mqttRepository.findAllByAppUser(example, appUser, pageable)
-//
-//    }
+    @Transactional
+    Page<MQTTDevice> searchMqtt(MQTTDevice mqttDevice, Pageable pageable) {
+        ExampleMatcher matcher = ExampleMatcher.matchingAny()
+                .withMatcher("username", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("clientId", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withIgnoreNullValues()
+                .withIgnorePaths("id", "isSuperUser", "password", "securityId", "createTime", "updateTime")
+
+        Example<MQTTDevice> example = Example.of(mqttDevice, matcher)
+
+        return mqttRepository.findAll(example, pageable)
+
+    }
 
 }
