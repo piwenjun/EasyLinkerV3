@@ -1,4 +1,3 @@
-package com.easylinker.v3
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -11,6 +10,7 @@ class V3ApplicationTests {
 
     @Test
     void contextLoads() {
+        println "test"
     }
 
 }

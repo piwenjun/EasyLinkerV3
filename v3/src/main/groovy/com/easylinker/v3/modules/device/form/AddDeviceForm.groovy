@@ -12,12 +12,34 @@ import com.easylinker.v3.modules.device.model.MQTTDevice
  */
 class HTTPDeviceForm extends HTTPDevice {
     private String sceneSecurityId
+
+    String getSceneSecurityId() {
+        return sceneSecurityId
+    }
+
+    void setSceneSecurityId(String sceneSecurityId) {
+        this.sceneSecurityId = sceneSecurityId
+    }
 }
 
 class COAPDeviceForm extends COAPDevice {
     private String sceneSecurityId
+    String getSceneSecurityId() {
+        return sceneSecurityId
+    }
+
+    void setSceneSecurityId(String sceneSecurityId) {
+        this.sceneSecurityId = sceneSecurityId
+    }
 }
 
 class MQTTDeviceForm extends MQTTDevice {
     private String sceneSecurityId
+    String getSceneSecurityId() {
+        return sceneSecurityId
+    }
+
+    void setSceneSecurityId(String sceneSecurityId) {
+        this.sceneSecurityId = sceneSecurityId
+    }
 }

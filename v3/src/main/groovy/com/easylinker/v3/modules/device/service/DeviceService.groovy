@@ -13,6 +13,8 @@ import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.scene.dao.SceneRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Example
+import org.springframework.data.domain.ExampleMatcher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -196,6 +198,11 @@ class DeviceService {
 
     }
 
+    /**
+     * 根据ID获取
+     * @param id
+     * @return
+     */
     HTTPDevice getHttpById(Long id) {
         return httpRepository.findById(id).get()
 
@@ -211,5 +218,31 @@ class DeviceService {
 
     }
 
+
+    /**
+     * 搜索Mqtt
+     *     private String username
+     *     private String clientId
+     *     private boolean online
+     *     private String name
+     *     private String info
+     *     private DeviceProtocol deviceProtocol
+     *     private DeviceType deviceType
+     * @return
+     */
+//    Page<AbstractDevice> searchMqtt(MQTTDevice mqttDevice, AppUser appUser, Pageable pageable) {
+//        ExampleMatcher matcher = ExampleMatcher.matching()
+//                .withMatcher("username", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withMatcher("online", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withMatcher("deviceProtocol", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withMatcher("deviceType", ExampleMatcher.GenericPropertyMatchers.contains())
+//
+//        Example<MQTTDevice> example = Example.of(mqttDevice, matcher)
+//
+//        return mqttRepository.findAllByAppUser(example, appUser, pageable)
+//
+//    }
 
 }

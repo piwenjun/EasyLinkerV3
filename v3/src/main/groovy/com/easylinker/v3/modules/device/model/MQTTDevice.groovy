@@ -19,7 +19,8 @@ class MQTTDevice extends AbstractDevice {
     private String username
     private String password
     private String clientId
-    private Boolean online
+    private boolean online
+    private boolean isSuperUser
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "mqttDevice")
     private List<TopicAcl> topicAcls
@@ -29,6 +30,18 @@ class MQTTDevice extends AbstractDevice {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Scene scene
+
+    void setOnline(boolean online) {
+        this.online = online
+    }
+
+    boolean getIsSuperUser() {
+        return isSuperUser
+    }
+
+    void setIsSuperUser(boolean isSuperUser) {
+        this.isSuperUser = isSuperUser
+    }
 
     List<TopicAcl> getTopicAcls() {
         return topicAcls
@@ -96,12 +109,19 @@ class TopicAcl extends AbstractModel {
     private String username
     private String clientId
     private String topic
-    /**
-     * 1 PUB
-     * 2 SUB
-     * 3 ALL
-     */
-    private int access
+    //0: deny, 1: allow
+    private int allow = 1
+    //1: subscribe, 2: publish, 3: pubsub
+    private int access = 0
+
+    int getAllow() {
+        return allow
+    }
+
+    void setAllow(int allow) {
+        this.allow = allow
+    }
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private MQTTDevice mqttDevice
 

@@ -7,6 +7,7 @@ import com.easylinker.v3.modules.device.model.MQTTDevice
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 
 /**
  * 这种写法看起来是不是不舒服？蛋疼就对了，这是Groovy的风格，没有Java那么强制性，一个文件可写很多个类
@@ -30,11 +31,10 @@ interface COAPRepository extends JpaRepository<COAPDevice, Long> {
 
 }
 
-interface MQTTRepository extends JpaRepository<MQTTDevice, Long> {
+interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificationExecutor<MQTTDevice> {
     long countByAppUser(AppUser appUser)
 
     long countByOnline(Boolean online)
-
 
     Page<MQTTDevice> findAllByAppUser(Pageable page, AppUser appUser)
 

@@ -1,14 +1,10 @@
 package com.easylinker.v3.modules.device.controller
 
 import cn.hutool.crypto.digest.DigestUtil
-import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.model.DeviceProtocol
-import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
-import com.easylinker.v3.modules.device.form.COAPDeviceForm
-import com.easylinker.v3.modules.device.form.HTTPDeviceForm
-import com.easylinker.v3.modules.device.form.MQTTDeviceForm
+import com.easylinker.v3.modules.device.form.*
 import com.easylinker.v3.modules.device.model.COAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
@@ -48,7 +44,7 @@ class DeviceController extends AbstractController {
 
     @PostMapping("/addHttp")
     R addHTTP(@RequestBody @Valid HTTPDeviceForm httpDeviceForm) {
-        Scene scene = sceneService.findBySecurityId(httpDeviceForm.securityId)
+        Scene scene = sceneService.findBySecurityId(httpDeviceForm.sceneSecurityId)
         if (scene) {
 
             HTTPDevice httpDevice = new HTTPDevice(name: httpDeviceForm.name,
@@ -68,7 +64,7 @@ class DeviceController extends AbstractController {
 
     @PostMapping("/addCoap")
     R addCOAP(@RequestBody @Valid COAPDeviceForm coapDeviceForm) {
-        Scene scene = sceneService.findBySecurityId(coapDeviceForm.securityId)
+        Scene scene = sceneService.findBySecurityId(coapDeviceForm.sceneSecurityId)
         if (scene) {
 
             COAPDevice coapDevice = new COAPDevice(name: coapDeviceForm.name,
@@ -99,7 +95,7 @@ class DeviceController extends AbstractController {
     @PostMapping("/addMqtt")
     @Transactional(rollbackFor = Exception.class)
     R addMQTT(@RequestBody @Valid MQTTDeviceForm mqttDeviceForm) {
-        Scene scene = sceneService.findBySecurityId(mqttDeviceForm.securityId)
+        Scene scene = sceneService.findBySecurityId(mqttDeviceForm.sceneSecurityId)
         if (scene) {
             MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.name,
                     info: mqttDeviceForm.info,
@@ -130,15 +126,42 @@ class DeviceController extends AbstractController {
 
 
     }
+    /**
+     * MQTT设备搜索
+     * @param SearchMqttForm
+     * @return
+     */
 
-    static void main(String[] args) {
-        println(JSONObject.toJSONString(new MQTTDevice(name: "树莓派",
-                info: "测试用的数据",
-                deviceType: DeviceType.VALUE,
-                username: "",
-                password: "",
-                clientId: "",
-                deviceProtocol: DeviceProtocol.MQTT)))
+    @PostMapping("/searchMqtt")
+    R searchMqtt(@RequestBody @Valid SearchMqttForm searchMqttForm) {
+
+
+        return R.ok()
+    }
+
+    /**
+     * 搜索HTTP设备
+     * @param searchHttpForm
+     * @return
+     */
+
+    @PostMapping("/searchHttp")
+    R searchHttp(@RequestBody @Valid SearchHttpForm searchHttpForm) {
+
+
+        return R.ok()
+    }
+    /**
+     * 搜索COAP设备
+     * @param searchCoapForm
+     * @return
+     */
+
+    @PostMapping("/searchCoap")
+    R searchCoap(@RequestBody @Valid SearchCoapForm searchCoapForm) {
+
+
+        return R.ok()
     }
 
 }
