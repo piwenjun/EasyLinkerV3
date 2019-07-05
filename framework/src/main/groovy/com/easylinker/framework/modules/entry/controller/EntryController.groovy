@@ -2,8 +2,10 @@ package com.easylinker.framework.modules.entry.controller
 
 import cn.hutool.json.JSONArray
 import com.alibaba.fastjson.JSONObject
+import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.exception.XException
 import com.easylinker.framework.common.web.R
+import com.easylinker.framework.common.web.ReturnEnum
 import com.easylinker.framework.modules.entry.form.LoginForm
 import com.easylinker.framework.modules.entry.form.SignUpForm
 import com.easylinker.framework.modules.user.model.AppUser
@@ -16,11 +18,9 @@ import com.easylinker.framework.utils.RedisUtils
 import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 
 /**
@@ -31,7 +31,7 @@ import javax.validation.Valid
  */
 @RestController
 @RequestMapping("/entry")
-class EntryController {
+class EntryController extends AbstractController {
     @Autowired
     CaptchaUtils captchaUtils
     @Autowired
@@ -42,6 +42,10 @@ class EntryController {
 
     @Autowired
     RedisUtils redisUtils
+
+    EntryController(HttpServletRequest httpServletRequest) {
+        super(httpServletRequest)
+    }
 
     @PostMapping("/login")
     @Transactional
@@ -69,9 +73,7 @@ class EntryController {
             dataMap.put("roles", roleArray)
             dataMap.put("principle", appUser.principle)
             dataMap.put("token", JwtUtils.token(jwtMap))
-
-            redisUtils.set("USER:" + appUser.securityId, JSONObject.toJSONString(dataMap))
-
+            redisUtils.set("USER:" + appUser.securityId, JSONObject.toJSONString(dataMap), 3_600_0000L)
             return R.okWithData(dataMap)
         } else {
             throw new XException(0, "登陆失败!")
@@ -104,6 +106,26 @@ class EntryController {
         roleService.save(new Role(name: "BASE_ROLE", info: "基本权限", appUser: appUser))
 
         return R.ok()
+
+    }
+
+    /**
+     * 注销账号
+     * @return
+     */
+    @GetMapping
+    @RequestMapping("/logOut")
+    R logOut() {
+        String redisKey = "USER:" + getCurrentUser().getSecurityId()
+        if (redisUtils.hasKey(redisKey)) {
+            redisUtils.del(redisKey)
+            return R.ok(ReturnEnum.SUCCESS)
+
+        } else {
+            return R.ok(ReturnEnum.FAIL)
+
+        }
+
 
     }
 }

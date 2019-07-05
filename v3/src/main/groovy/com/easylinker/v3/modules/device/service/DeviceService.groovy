@@ -172,9 +172,16 @@ class DeviceService {
      * @param deviceType
      * @return
      */
-    Page<AbstractDevice> listByType(Pageable pageable, AppUser appUser, DeviceType deviceType) {
-        return null
-
+    Page<AbstractDevice> listByType(AppUser appUser, DeviceType deviceType, Pageable pageable) {
+        switch (deviceType) {
+            case DeviceProtocol.HTTP:
+                return httpRepository.findAllByAppUserAndDeviceType(appUser, deviceType, pageable)
+            case DeviceProtocol.COAP:
+                return coapRepository.findAllByAppUserAndDeviceType(appUser, deviceType, pageable)
+            case DeviceProtocol.MQTT:
+                return mqttRepository.findAllByAppUserAndDeviceType(appUser, deviceType, pageable)
+            default: return null
+        }
     }
 
     /**

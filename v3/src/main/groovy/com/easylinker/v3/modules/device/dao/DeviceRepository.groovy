@@ -1,5 +1,6 @@
 package com.easylinker.v3.modules.device.dao
 
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.device.model.COAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
@@ -24,6 +25,7 @@ interface HTTPRepository extends JpaRepository<HTTPDevice, Long> {
     Page<HTTPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
     HTTPDevice findBySecurityId(String securityId)
+    Page<HTTPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType,Pageable pageable)
 }
 
 interface COAPRepository extends JpaRepository<COAPDevice, Long> {
@@ -33,6 +35,7 @@ interface COAPRepository extends JpaRepository<COAPDevice, Long> {
 
     Page<COAPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
+    Page<COAPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType,Pageable pageable)
 }
 
 interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificationExecutor<MQTTDevice> {
@@ -43,6 +46,9 @@ interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificati
     long countByOnline(Boolean online)
 
     Page<MQTTDevice> findAllByAppUser(Pageable page, AppUser appUser)
+    //deviceType
+
+    Page<MQTTDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable page)
 
 }
 

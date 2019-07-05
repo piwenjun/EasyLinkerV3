@@ -6,7 +6,7 @@ package com.easylinker.framework.common.web
  */
 enum ReturnEnum {
     SUCCESS(0, "操作成功"),
-    FAIL(100, "系统异常,请联系管理员"),
+    FAIL(100, "操作失败"),
     UN_LOGIN(200, "未登录"),
     INVALID_TOKEN(300, "Token异常"),
     UN_KNOW_ERROR(400, "未知异常"),

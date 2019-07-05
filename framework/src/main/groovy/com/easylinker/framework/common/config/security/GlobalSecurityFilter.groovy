@@ -33,6 +33,8 @@ class GlobalSecurityFilter implements HandlerInterceptor {
         allowList.add("/test")
         allowList.add("/entry/login")
         allowList.add("/entry/signUp")
+        allowList.add("/entry/logOut")
+
     }
 
     /**

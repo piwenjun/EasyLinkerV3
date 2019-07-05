@@ -1,6 +1,6 @@
 package com.easylinker.framework.common.controller
 
-
+import com.easylinker.framework.common.exception.XException
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.framework.utils.JwtUtils
 
@@ -30,12 +30,12 @@ abstract class AbstractController {
  */
     long getUserId() {
 
-        JwtUtils.getMap(httpServletRequest.getHeader("token")).get("id") as long
+        JwtUtils.getMap(getToken()).get("id") as long
 
     }
     //securityId
     String getSecurityId() {
-        JwtUtils.getMap(httpServletRequest.getHeader("token")).get("securityId") as String
+        JwtUtils.getMap(getToken()).get("securityId") as String
     }
 
     AppUser getCurrentUser() {
@@ -57,7 +57,7 @@ abstract class AbstractController {
             return httpServletRequest.getHeader("token")
 
         } else {
-            return ""
+            throw new XException("请求缺少Token")
         }
     }
     /**
@@ -69,7 +69,8 @@ abstract class AbstractController {
             return JwtUtils.getMap(getToken())
 
         } else {
-            return null
+            throw new XException("Token不合法")
+
         }
     }
 }
