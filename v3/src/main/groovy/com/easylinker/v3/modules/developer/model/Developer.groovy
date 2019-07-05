@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne
  */
 @Entity
 class Developer extends AbstractModel {
+    private DeveloperState developerState
     // 开发者等级
     private int level
     // 密钥
@@ -26,11 +27,19 @@ class Developer extends AbstractModel {
     void setSecretKey(String secretKey) {
         this.secretKey = secretKey
     }
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private AppUser appUser
 
     int getLevel() {
         return level
+    }
+
+    DeveloperState getDeveloperState() {
+        return developerState
+    }
+
+    void setDeveloperState(DeveloperState developerState) {
+        this.developerState = developerState
     }
 
     void setLevel(int level) {
@@ -54,7 +63,7 @@ class DevelopApp extends AbstractModel {
     private String appInfo
     private String appKey = DigestUtils.sha256Hex(UUID.randomUUID().toString())
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Developer developer
 
     String getAppKey() {
@@ -88,4 +97,22 @@ class DevelopApp extends AbstractModel {
     void setAppInfo(String appInfo) {
         this.appInfo = appInfo
     }
+}
+/**
+ * 开发者的账号状态：
+ * 1 线提交开发者申请
+ * 2 后台管理员通过
+ * 3 使用开发者身份
+ *
+ */
+enum DeveloperState {
+    //正常，可以创建APP
+    NORMAL,
+    //禁止，不可创建APP
+    FORBID,
+    //申请中，不可操作状态
+    APPLYING,
+    //冻结开发者
+    FREEZE
+
 }
