@@ -80,14 +80,13 @@ class DeviceService {
         switch (deviceProtocol) {
             case DeviceProtocol.HTTP:
                 httpRepository.save(abstractDevice as HTTPDevice)
-                break;
+                break
             case DeviceProtocol.COAP:
-
                 coapRepository.save(abstractDevice as COAPDevice)
-                break;
+                break
             case DeviceProtocol.MQTT:
                 mqttRepository.save(abstractDevice as MQTTDevice)
-                break;
+                break
             default: break
         }
 
@@ -127,7 +126,7 @@ class DeviceService {
                 return coapRepository.findAll(pageable)
             case DeviceProtocol.MQTT:
                 return mqttRepository.findAll(pageable)
-            default: break
+            default: return null
         }
     }
 
@@ -161,7 +160,7 @@ class DeviceService {
                 return coapRepository.findAllByAppUser(pageable, appUser)
             case DeviceProtocol.MQTT:
                 return mqttRepository.findAllByAppUser(pageable, appUser)
-            default: break
+            default: return null
         }
 
     }
@@ -174,9 +173,7 @@ class DeviceService {
      * @return
      */
     Page<AbstractDevice> listByType(Pageable pageable, AppUser appUser, DeviceType deviceType) {
-        switch (deviceType) {
-            default: break
-        }
+        return null
 
     }
 
@@ -194,7 +191,7 @@ class DeviceService {
                 return coapRepository.findById(id) as COAPDevice
             case DeviceProtocol.MQTT:
                 return mqttRepository.findById(id) as MQTTDevice
-            default: break
+            default: return null
         }
 
     }
@@ -257,6 +254,8 @@ class DeviceService {
                 return coapRepository.findBySecurityId(securityId)
             case DeviceProtocol.HTTP:
                 return httpRepository.findBySecurityId(securityId)
+            default: return null
+
         }
     }
 }
