@@ -1,5 +1,6 @@
 package com.easylinker.framework.utils
 
+import com.easylinker.framework.common.exception.XException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
@@ -44,13 +45,13 @@ class RedisUtils {
 
             }
 
-            true
+            return true
 
         } catch (Exception e) {
 
-            e.printStackTrace()
+            //e.printStackTrace()
 
-            false
+            return false
         }
 
     }
@@ -79,7 +80,7 @@ class RedisUtils {
      54
      * @param key 键
      55
-     * @ true 存在 false不存在
+     * @ return true 存在 return false不存在
      56
      */
 
@@ -92,9 +93,7 @@ class RedisUtils {
 
         } catch (Exception e) {
 
-            e.printStackTrace()
-
-            false
+            throw new XException(e.message)
 
         }
 
@@ -145,8 +144,13 @@ class RedisUtils {
 
 
     Object get(String key) {
+        try {
+            return key == null ? null : redisTemplate.opsForValue().get(key)
 
-        key == null ? null : redisTemplate.opsForValue().get(key)
+        } catch (e) {
+            throw new XException(e.message)
+        }
+
 
     }
 
@@ -159,7 +163,7 @@ class RedisUtils {
      94
      * @param value 值
      95
-     * @ true成功 false失败
+     * @ return true成功 return false失败
      96
      */
 
@@ -170,13 +174,13 @@ class RedisUtils {
 
             redisTemplate.opsForValue().set(key, value)
 
-            true
+            return true
 
         } catch (Exception e) {
 
-            e.printStackTrace()
+            //e.printStackTrace()
 
-            false
+            return false
 
         }
 
@@ -194,7 +198,7 @@ class RedisUtils {
      112
      * @param time 时间(秒) time要大于0 如果time小于等于0 将设置无限期
      113
-     * @ true成功 false 失败
+     * @ return true成功 return false 失败
      114
      */
 
@@ -213,13 +217,13 @@ class RedisUtils {
 
             }
 
-            true
+            return true
 
         } catch (Exception e) {
 
-            e.printStackTrace()
+            //e.printStackTrace()
 
-            false
+            return false
 
         }
 
@@ -323,7 +327,7 @@ class RedisUtils {
      178
      * @param map 对应多个键值
      179
-     * @ true 成功 false 失败
+     * @ return true 成功 return false 失败
      180
      */
 
@@ -334,13 +338,13 @@ class RedisUtils {
 
             redisTemplate.opsForHash().putAll(key, map)
 
-            true
+            return true
 
         } catch (Exception e) {
 
-            e.printStackTrace()
+            //e.printStackTrace()
 
-            false
+            return false
 
         }
 
@@ -356,7 +360,7 @@ class RedisUtils {
      195
      * @param time 时间(秒)
      196
-     * @ true成功 false失败
+     * @ return true成功 return false失败
      197
      */
 
@@ -373,13 +377,13 @@ class RedisUtils {
 
             }
 
-            true
+            return true
 
         } catch (Exception e) {
 
-            e.printStackTrace()
+            //e.printStackTrace()
 
-            false
+            return false
 
         }
     }
@@ -394,7 +398,7 @@ class RedisUtils {
      215
      * @param value 值
      216
-     * @ true 成功 false失败
+     * @ return true 成功 return false失败
      217
      */
 
@@ -405,13 +409,13 @@ class RedisUtils {
 
             redisTemplate.opsForHash().put(key, item, value)
 
-            true
+            return true
 
         } catch (Exception e) {
 
-            e.printStackTrace()
+            //e.printStackTrace()
 
-            false
+            return false
 
         }
 
@@ -429,7 +433,7 @@ class RedisUtils {
      233
      * @param time 时间(秒) 注意:如果已存在的hash表有时间,这里将会替换原有的时间
      234
-     * @ true 成功 false失败
+     * @ return true 成功 return false失败
      235
      */
 
@@ -446,13 +450,11 @@ class RedisUtils {
 
             }
 
-            true
+            return true
 
         } catch (Exception e) {
-            244
-            e.printStackTrace()
-            245
-            false
+
+            return false
 
         }
 
@@ -484,7 +486,7 @@ class RedisUtils {
      261
      * @param item 项 不能为null
      262
-     * @ true 存在 false不存在
+     * @ return true 存在 return false不存在
      263
      */
 
@@ -512,9 +514,7 @@ class RedisUtils {
 
 
     double hincr(String key, String item, double by) {
-        276
         redisTemplate.opsForHash().increment(key, item, by)
-        277
     }
 
 
@@ -555,17 +555,9 @@ class RedisUtils {
 
     Set<Object> sGet(String key) {
 
-        try {
 
-            redisTemplate.opsForSet().members(key)
+        redisTemplate.opsForSet().members(key)
 
-        } catch (Exception e) {
-
-            e.printStackTrace()
-
-            null
-
-        }
 
     }
 
@@ -578,7 +570,7 @@ class RedisUtils {
      308
      * @param value 值
      309
-     * @ true 存在 false不存在
+     * @ return true 存在 return false不存在
      310
      */
 
@@ -591,9 +583,9 @@ class RedisUtils {
 
         } catch (Exception e) {
 
-            e.printStackTrace()
+            //e.printStackTrace()
 
-            false
+            return false
 
         }
 
@@ -614,17 +606,9 @@ class RedisUtils {
 
     long sSet(String key, Object... values) {
 
-        try {
 
-            redisTemplate.opsForSet().add(key, values)
+        redisTemplate.opsForSet().add(key, values)
 
-        } catch (Exception e) {
-
-            e.printStackTrace()
-
-            0
-
-        }
 
     }
 
@@ -645,23 +629,15 @@ class RedisUtils {
 
     long sSetAndTime(String key, long time, Object... values) {
 
-        try {
 
-            Long count = redisTemplate.opsForSet().add(key, values)
+        Long count = redisTemplate.opsForSet().add(key, values)
 
-            if (time > 0)
+        if (time > 0)
 
-                expire(key, time)
+            expire(key, time)
 
-            count
+        count
 
-        } catch (Exception e) {
-
-            e.printStackTrace()
-
-            0
-
-        }
 
     }
 
@@ -678,17 +654,9 @@ class RedisUtils {
 
     long sGetSetSize(String key) {
 
-        try {
 
-            redisTemplate.opsForSet().size(key)
+        redisTemplate.opsForSet().size(key)
 
-        } catch (Exception e) {
-
-            e.printStackTrace()
-
-            0
-
-        }
 
     }
 
@@ -707,19 +675,11 @@ class RedisUtils {
 
     long setRemove(String key, Object... values) {
 
-        try {
 
-            Long count = redisTemplate.opsForSet().remove(key, values)
+        Long count = redisTemplate.opsForSet().remove(key, values)
 
-            count
+        count
 
-        } catch (Exception e) {
-
-            e.printStackTrace()
-
-            0
-
-        }
 
     }
 
@@ -743,17 +703,9 @@ class RedisUtils {
 
     List<Object> lGet(String key, long start, long end) {
 
-        try {
 
-            redisTemplate.opsForList().range(key, start, end)
+        redisTemplate.opsForList().range(key, start, end)
 
-        } catch (Exception e) {
-
-            e.printStackTrace()
-
-            null
-
-        }
 
     }
 
@@ -770,17 +722,9 @@ class RedisUtils {
 
     long lGetListSize(String key) {
 
-        try {
 
-            redisTemplate.opsForList().size(key)
+        redisTemplate.opsForList().size(key)
 
-        } catch (Exception e) {
-
-            e.printStackTrace()
-
-            0
-
-        }
 
     }
 
@@ -798,12 +742,9 @@ class RedisUtils {
      */
 
     Object lGetIndex(String key, long index) {
-        try {
-            redisTemplate.opsForList().index(key, index)
-        } catch (Exception e) {
-            e.printStackTrace()
-            null
-        }
+
+        redisTemplate.opsForList().index(key, index)
+
     }
 
     /**
@@ -821,13 +762,9 @@ class RedisUtils {
      */
 
     boolean lSet(String key, Object value) {
-        try {
-            redisTemplate.opsForList().rightPush(key, value)
-            true
-        } catch (Exception e) {
-            e.printStackTrace()
-            false
-        }
+
+        redisTemplate.opsForList().rightPush(key, value)
+        return true
 
     }
 
@@ -855,13 +792,13 @@ class RedisUtils {
 
                 expire(key, time)
 
-            true
+            return true
 
         } catch (Exception e) {
 
-            e.printStackTrace()
+            //e.printStackTrace()
 
-            false
+            return false
 
         }
 
@@ -887,13 +824,13 @@ class RedisUtils {
 
             redisTemplate.opsForList().rightPushAll(key, value)
 
-            true
+            return true
 
         } catch (Exception e) {
 
-            e.printStackTrace()
+            //e.printStackTrace()
 
-            false
+            return false
 
         }
 
@@ -924,13 +861,13 @@ class RedisUtils {
             if (time > 0)
 
                 expire(key, time)
-            true
+            return true
 
         } catch (Exception e) {
 
-            e.printStackTrace()
+            //e.printStackTrace()
 
-            false
+            return false
 
         }
 
@@ -952,10 +889,10 @@ class RedisUtils {
     boolean lUpdateIndex(String key, long index, Object value) {
         try {
             redisTemplate.opsForList().set(key, index, value)
-            true
+            return true
         } catch (Exception e) {
-            e.printStackTrace()
-            false
+            //e.printStackTrace()
+            return false
 
         }
     }
@@ -974,13 +911,9 @@ class RedisUtils {
      526
      */
     long lRemove(String key, long count, Object value) {
-        try {
-            Long remove = redisTemplate.opsForList().remove(key, count, value)
-            remove
-        } catch (Exception e) {
-            e.printStackTrace()
-            0
-        }
+
+        return redisTemplate.opsForList().remove(key, count, value)
+
 
     }
 }

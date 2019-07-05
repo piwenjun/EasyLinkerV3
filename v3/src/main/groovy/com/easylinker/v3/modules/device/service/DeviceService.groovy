@@ -243,5 +243,20 @@ class DeviceService {
         return mqttRepository.findAll(example, pageable)
 
     }
+    /**
+     * 获取设备的详细资料
+     * @param securityId
+     * @return
+     */
 
+    AbstractDevice detail(String securityId, DeviceProtocol deviceProtocol) {
+        switch (deviceProtocol) {
+            case DeviceProtocol.MQTT:
+                return mqttRepository.findBySecurityId(securityId)
+            case DeviceProtocol.COAP:
+                return coapRepository.findBySecurityId(securityId)
+            case DeviceProtocol.HTTP:
+                return httpRepository.findBySecurityId(securityId)
+        }
+    }
 }

@@ -22,10 +22,14 @@ interface HTTPRepository extends JpaRepository<HTTPDevice, Long> {
     long countByAppUser(AppUser appUser)
 
     Page<HTTPDevice> findAllByAppUser(Pageable page, AppUser appUser)
+
+    HTTPDevice findBySecurityId(String securityId)
 }
 
 interface COAPRepository extends JpaRepository<COAPDevice, Long> {
     long countByAppUser(AppUser appUser)
+
+    COAPDevice findBySecurityId(String securityId)
 
     Page<COAPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
@@ -33,6 +37,8 @@ interface COAPRepository extends JpaRepository<COAPDevice, Long> {
 
 interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificationExecutor<MQTTDevice> {
     long countByAppUser(AppUser appUser)
+
+    MQTTDevice findBySecurityId(String securityId)
 
     long countByOnline(Boolean online)
 

@@ -48,7 +48,7 @@ class EntryController {
     R login(@Valid @RequestBody LoginForm loginForm) {
         if (!captchaUtils.validate(loginForm.uuid, loginForm.captchaCode)) {
 
-            throw new XException(0, "验证码识别失败!")
+            throw new XException(501, "验证码识别失败!")
         }
 
         AppUser appUser = userService.findByPrinciple(loginForm.getPrinciple())
@@ -69,7 +69,9 @@ class EntryController {
             dataMap.put("roles", roleArray)
             dataMap.put("principle", appUser.principle)
             dataMap.put("token", JwtUtils.token(jwtMap))
+
             redisUtils.set("USER:" + appUser.securityId, JSONObject.toJSONString(dataMap))
+
             return R.okWithData(dataMap)
         } else {
             throw new XException(0, "登陆失败!")

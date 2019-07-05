@@ -23,6 +23,7 @@ class MQTTDevice extends AbstractDevice {
     private boolean isSuperUser
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "mqttDevice")
+    @JsonIgnore
     private List<TopicAcl> topicAcls
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JsonIgnore

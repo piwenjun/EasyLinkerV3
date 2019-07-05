@@ -128,6 +128,17 @@ class DeviceController extends AbstractController {
 
 
     }
+
+    /**
+     * 获取设备详情
+     * @param detailForm
+     * @return
+     */
+    @GetMapping("/detail")
+    R detail(@RequestBody @Valid DetailForm detailForm) {
+        return R.okWithData(deviceService.detail(detailForm.securityId, detailForm.deviceProtocol))
+
+    }
     /**
      * MQTT设备搜索
      *      * String username
@@ -145,7 +156,7 @@ class DeviceController extends AbstractController {
     @Autowired
     UserService userService
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class, readOnly = true)
     @PostMapping("/searchMqtt/{page}/{size}")
     R searchMqtt(@PathVariable int page, @PathVariable int size, @RequestBody @Valid SearchMqttForm searchMqttForm) {
 
@@ -159,7 +170,10 @@ class DeviceController extends AbstractController {
                 deviceProtocol: searchMqttForm.deviceProtocol,
                 deviceType: searchMqttForm.deviceType,
                 appUser: appUser,
+                updateTime: null,
+                createTime: null,
                 info: searchMqttForm.info),
+
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
 
         return R.okWithData(mqttDevicePage)
