@@ -63,4 +63,5 @@ class SceneService extends AbstractService<Scene> {
         return sceneRepository.findByAppUser(appUser, pageable)
     }
 
+
 }

@@ -3,6 +3,7 @@ package com.easylinker.v3.modules.device.controller
 import cn.hutool.crypto.digest.DigestUtil
 import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.framework.modules.user.service.UserService
@@ -107,7 +108,7 @@ class DeviceController extends AbstractController {
                     deviceType: mqttDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     scene: scene,
-                    deviceProtocol: DeviceProtocol.COAP)
+                    deviceProtocol: DeviceProtocol.MQTT)
 
             //默认给两个权限 对自己的频道进行PUB和SUB
             List<TopicAcl> topicAcls = new ArrayList<>()
@@ -128,6 +129,25 @@ class DeviceController extends AbstractController {
 
 
     }
+    /**
+     * 获取支持的设备类型
+     * @return
+     */
+    @GetMapping("/listDeviceType")
+
+    R listDeviceType() {
+        return R.okWithData(DeviceType.values())
+    }
+
+    /**
+     * 获取支持的协议类型
+     * @return
+     */
+    @GetMapping("/listProtocolType")
+    R listProtocolType() {
+        return R.okWithData(DeviceProtocol.values())
+    }
+
 
     /**
      * 获取设备详情
@@ -141,17 +161,9 @@ class DeviceController extends AbstractController {
     }
     /**
      * MQTT设备搜索
-     *      * String username
-     *      * String clientId
-     *      * boolean online
-     *      * String name
-     *      * String info
-     *      * DeviceProtocol deviceProtocol
-     *      * DeviceType deviceType
      * @param SearchMqttForm
      * @return
      */
-
 
     @Autowired
     UserService userService
@@ -160,7 +172,7 @@ class DeviceController extends AbstractController {
     @PostMapping("/searchMqtt/{page}/{size}")
     R searchMqtt(@PathVariable int page, @PathVariable int size, @RequestBody @Valid SearchMqttForm searchMqttForm) {
 
-        AppUser appUser = userService.findBySecurityId(getCurrentUser().securityId)
+       //AppUser appUser = userService.findBySecurityId(getCurrentUser().securityId)
 
         Page<MQTTDevice> mqttDevicePage = deviceService.searchMqtt(new MQTTDevice(
                 username: searchMqttForm.username,
@@ -169,9 +181,7 @@ class DeviceController extends AbstractController {
                 name: searchMqttForm.name,
                 deviceProtocol: searchMqttForm.deviceProtocol,
                 deviceType: searchMqttForm.deviceType,
-                appUser: appUser,
-                updateTime: null,
-                createTime: null,
+                appUser: getCurrentUser(),
                 info: searchMqttForm.info),
 
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
@@ -199,7 +209,6 @@ class DeviceController extends AbstractController {
 
     @PostMapping("/searchCoap")
     R searchCoap(@RequestBody @Valid SearchCoapForm searchCoapForm) {
-
 
         return R.ok()
     }

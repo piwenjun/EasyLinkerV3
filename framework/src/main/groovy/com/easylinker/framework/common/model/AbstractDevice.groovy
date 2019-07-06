@@ -2,6 +2,8 @@ package com.easylinker.framework.common.model
 
 import lombok.Data
 
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.MappedSuperclass
 
 /**
@@ -17,7 +19,9 @@ class AbstractDevice extends AbstractModel {
 
     private String name
     private String info
+    @Enumerated(EnumType.STRING)
     private DeviceProtocol deviceProtocol
+    @Enumerated(EnumType.STRING)
     private DeviceType deviceType
 
     DeviceType getDeviceType() {
@@ -56,11 +60,11 @@ class AbstractDevice extends AbstractModel {
  * 协议类型枚举
  */
 enum DeviceProtocol {
-    HTTP, COAP, MQTT, UDP, TCP
+    HTTP, COAP, MQTT, UDP, TCP, PLACEHOLDER
 }
 /**
  * 设备类型
  */
 enum DeviceType {
-    VALUE, TEXT, BOOLEAN, FILE, STREAM
+    VALUE, TEXT, BOOLEAN, FILE,
 }

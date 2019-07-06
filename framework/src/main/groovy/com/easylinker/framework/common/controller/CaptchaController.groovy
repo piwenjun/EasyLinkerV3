@@ -3,8 +3,8 @@ package com.easylinker.framework.common.controller
 import com.easylinker.framework.utils.CaptchaUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 import javax.imageio.ImageIO
@@ -27,7 +27,7 @@ class CaptchaController {
      * 验证码
      */
     @GetMapping("/jpg")
-    void captcha(HttpServletResponse response,@RequestHeader String uuid) {
+    void captcha(HttpServletResponse response, @RequestParam String uuid) {
         response.setHeader("Cache-Control", "no-store, no-cache")
         response.setContentType("image/jpeg")
         //获取图片验证码

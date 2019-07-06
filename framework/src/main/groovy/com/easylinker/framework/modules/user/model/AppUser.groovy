@@ -1,6 +1,7 @@
 package com.easylinker.framework.modules.user.model
 
 import com.easylinker.framework.common.model.AbstractModel
+import com.fasterxml.jackson.annotation.JsonIgnore
 
 import javax.persistence.CascadeType
 import javax.persistence.Entity
@@ -15,6 +16,7 @@ class AppUser extends AbstractModel {
     private String email
     private String name
     private Integer state
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "appUser")
     private List<Role> roles
 

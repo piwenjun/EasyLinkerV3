@@ -1,10 +1,12 @@
 package com.easylinker.v3.modules.device.dao
 
+import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.device.model.COAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
+import com.easylinker.v3.modules.scene.model.Scene
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -24,8 +26,11 @@ interface HTTPRepository extends JpaRepository<HTTPDevice, Long> {
 
     Page<HTTPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
+    Page<HTTPDevice> findAllBySceneAndDeviceProtocol(Scene scene, DeviceProtocol deviceProtocol, Pageable page)
+
     HTTPDevice findBySecurityId(String securityId)
-    Page<HTTPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType,Pageable pageable)
+
+    Page<HTTPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable pageable)
 }
 
 interface COAPRepository extends JpaRepository<COAPDevice, Long> {
@@ -33,15 +38,19 @@ interface COAPRepository extends JpaRepository<COAPDevice, Long> {
 
     COAPDevice findBySecurityId(String securityId)
 
+    Page<COAPDevice> findAllBySceneAndDeviceProtocol(Scene scene, DeviceProtocol deviceProtocol, Pageable page)
+
     Page<COAPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
-    Page<COAPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType,Pageable pageable)
+    Page<COAPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable pageable)
 }
 
 interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificationExecutor<MQTTDevice> {
     long countByAppUser(AppUser appUser)
 
     MQTTDevice findBySecurityId(String securityId)
+
+    Page<MQTTDevice> findAllBySceneAndDeviceProtocol(Scene scene, DeviceProtocol deviceProtocol, Pageable page)
 
     long countByOnline(Boolean online)
 

@@ -12,6 +12,7 @@ import com.easylinker.v3.modules.device.model.COAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.scene.dao.SceneRepository
+import com.easylinker.v3.modules.scene.model.Scene
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Example
 import org.springframework.data.domain.ExampleMatcher
@@ -265,4 +266,43 @@ class DeviceService {
 
         }
     }
+    /**
+     * 根据用户查找设备
+     * @param appUser
+     * @return
+     */
+
+    Page<AbstractDevice> listDeviceByAppUser(AppUser appUser, DeviceProtocol deviceProtocol, Pageable pageable) {
+        switch (deviceProtocol) {
+            case DeviceProtocol.MQTT:
+                return mqttRepository.findAllByAppUser(pageable, appUser)
+            case DeviceProtocol.COAP:
+                return coapRepository.findAllByAppUser(pageable, appUser)
+            case DeviceProtocol.HTTP:
+                return httpRepository.findAllByAppUser(pageable, appUser)
+            default: return null
+
+        }
+    }
+    /**
+     * 根据场景查找设备
+     * @param appUser
+     * @return
+     */
+    Page<AbstractDevice> listDeviceByScene(Scene scene, DeviceProtocol deviceProtocol, Pageable pageable) {
+        switch (deviceProtocol) {
+            case DeviceProtocol.MQTT:
+                return mqttRepository.findAllBySceneAndDeviceProtocol(scene, deviceProtocol, pageable)
+
+            case DeviceProtocol.COAP:
+                return coapRepository.findAllBySceneAndDeviceProtocol(scene, deviceProtocol, pageable)
+
+            case DeviceProtocol.HTTP:
+                return httpRepository.findAllBySceneAndDeviceProtocol(scene, deviceProtocol, pageable)
+
+            default: return null
+
+        }
+    }
+
 }

@@ -1,9 +1,21 @@
 package com.easylinker.v3.modules.scene.controller
 
+import cn.hutool.crypto.digest.DigestUtil
 import com.easylinker.framework.common.controller.AbstractController
+import com.easylinker.framework.common.model.AbstractDevice
+import com.easylinker.framework.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
+import com.easylinker.v3.modules.device.form.ListDeviceForm
+import com.easylinker.v3.modules.device.model.HTTPDevice
+import com.easylinker.v3.modules.device.model.MQTTDevice
+import com.easylinker.v3.modules.device.model.TopicAcl
+import com.easylinker.v3.modules.device.service.DeviceService
+import com.easylinker.v3.modules.device.service.TopicAclService
 import com.easylinker.v3.modules.scene.form.AddSceneForm
+import com.easylinker.v3.modules.scene.model.PreInstallTemplate
 import com.easylinker.v3.modules.scene.model.Scene
+import com.easylinker.v3.modules.scene.model.SceneType
 import com.easylinker.v3.modules.scene.service.SceneService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -23,9 +35,31 @@ import javax.validation.Valid
 class SceneController extends AbstractController {
     @Autowired
     SceneService sceneService
+    @Autowired
+    TopicAclService topicAclService
+    @Autowired
+    DeviceService deviceService
 
     SceneController(HttpServletRequest httpServletRequest) {
         super(httpServletRequest)
+    }
+
+    /**
+     * 列出支持的场景类型
+     * @return
+     */
+    @GetMapping("/listSceneType")
+    R listSceneType() {
+        return R.okWithData(SceneType.values())
+    }
+    /**
+     * 列出系统内置的场景
+     * @return
+     */
+    @GetMapping("/listPreInstallTemplate")
+
+    R listPreInstallTemplate() {
+        return R.okWithData(PreInstallTemplate.values())
     }
 
 
@@ -34,11 +68,147 @@ class SceneController extends AbstractController {
      * @param addSceneForm
      * @return
      */
+
     @PostMapping("/add")
     R add(@Valid @RequestBody AddSceneForm addSceneForm) {
-        Scene scene = new Scene(name: addSceneForm.name, info: addSceneForm.info, appUser: getCurrentUser())
-        sceneService.save(scene)
-        return R.ok(0, "添加成功")
+
+        switch (addSceneForm.sceneType) {
+            case SceneType.CUSTOM:
+                //新建一个类型
+                Scene scene = new Scene(name: addSceneForm.name,
+                        sceneType: SceneType.CUSTOM,
+                        info: addSceneForm.info,
+                        appUser: getCurrentUser())
+                sceneService.save(scene)
+                return R.ok()
+            case SceneType.PRE_INSTALL_TEMPLATE:
+                return handPreInstallTemplate(addSceneForm.preInstallTemplate)
+            default: return R.error()
+
+        }
+    }
+
+    /**
+     * 模板中的数据类型设备全部是HTTP协议
+     * @param addSceneForm
+     * @param preInstallTemplate
+     * @return
+     */
+
+    private R handPreInstallTemplate(PreInstallTemplate preInstallTemplate) {
+        switch (preInstallTemplate) {
+            case PreInstallTemplate.HUMIDITY_TEMPERATURE_TEMPLATE:
+                Scene scene = new Scene(name: "温湿度监控中心模板",
+                        sceneType: SceneType.PRE_INSTALL_TEMPLATE,
+                        info: "MQTT温湿度监控模块",
+                        appUser: getCurrentUser())
+                sceneService.save(scene)
+                //默认创建10个设备
+                for (int i = 0; i < 10; i++) {
+                    HTTPDevice httpDevice = new HTTPDevice(name: "温湿度检测模块[${i}]",
+                            info: "温湿度检测模块[${i}]",
+                            deviceType: DeviceType.VALUE,
+                            appUser: getCurrentUser(),
+                            scene: scene,
+                            deviceProtocol: DeviceProtocol.HTTP)
+                    deviceService.addHttpDevice(httpDevice)
+                }
+
+                return R.ok()
+            case PreInstallTemplate.GPS_TEMPLATE:
+                /**
+                 * GPS有2个坐标，默认是HTTP设备
+                 */
+                Scene scene = new Scene(name: "GPS场景模板",
+                        sceneType: SceneType.PRE_INSTALL_TEMPLATE,
+                        info: "GPS场景模板",
+                        appUser: getCurrentUser())
+                sceneService.save(scene)
+                //默认创建10个设备
+                for (int i = 0; i < 10; i++) {
+                    HTTPDevice httpDevice = new HTTPDevice(name: "GPS跟踪模块[${i}]",
+                            info: "GPS跟踪模块[${i}]",
+                            deviceType: DeviceType.VALUE,
+                            appUser: getCurrentUser(),
+                            scene: scene,
+                            deviceProtocol: DeviceProtocol.HTTP)
+                    deviceService.addHttpDevice(httpDevice)
+                }
+
+                return R.ok()
+
+            case PreInstallTemplate.GENERAL_SWITCH_TEMPLATE:
+                /**
+                 * 通用开关是MQTT类型的设备
+                 */
+
+                Scene scene = new Scene(name: "通用开关模块模板",
+                        sceneType: SceneType.PRE_INSTALL_TEMPLATE,
+                        info: "通用开关模块模板",
+                        appUser: getCurrentUser())
+                sceneService.save(scene)
+                //默认创建10个设备
+                for (int i = 0; i < 10; i++) {
+                    MQTTDevice mqttDevice = new MQTTDevice(name: "通用开关模块模板[${i}]",
+                            info: "通用开关模块模板[${i}]",
+                            clientId: UUID.randomUUID().toString().replace("-", ""),
+                            password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                            username: UUID.randomUUID().toString().replace("-", ""),
+                            deviceType: DeviceType.VALUE,
+                            appUser: getCurrentUser(),
+                            scene: scene,
+                            deviceProtocol: DeviceProtocol.MQTT)
+                    //默认给两个权限 对自己的频道进行PUB和SUB
+                    List<TopicAcl> topicAcls = new ArrayList<>()
+                    TopicAcl inAcl = new TopicAcl(ip: "0.0.0.0", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/in", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+                    TopicAcl outAcl = new TopicAcl(ip: "0.0.0.0", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/out", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+                    topicAclService.save(inAcl)
+                    topicAclService.save(outAcl)
+                    topicAcls.add(inAcl)
+                    topicAcls.add(outAcl)
+                    mqttDevice.setTopicAcls(topicAcls)
+                    deviceService.addMqttDevice(mqttDevice)
+
+                }
+                return R.ok()
+
+            case PreInstallTemplate.SERIAL_DISPLAY_TEMPLATE:
+                /**
+                 * 串口屏是文本类型的设备
+                 */
+                Scene scene = new Scene(name: "通用串口显示屏",
+                        sceneType: SceneType.PRE_INSTALL_TEMPLATE,
+                        info: "通用串口显示屏",
+                        appUser: getCurrentUser())
+                sceneService.save(scene)
+                //默认创建10个设备
+                for (int i = 0; i < 10; i++) {
+                    MQTTDevice mqttDevice = new MQTTDevice(name: "通用串口显示屏[${i}]",
+                            info: "通用串口显示屏[${i}]",
+                            clientId: UUID.randomUUID().toString().replace("-", ""),
+                            password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                            username: UUID.randomUUID().toString().replace("-", ""),
+                            deviceType: DeviceType.TEXT,
+                            appUser: getCurrentUser(),
+                            scene: scene,
+                            deviceProtocol: DeviceProtocol.MQTT)
+                    List<TopicAcl> topicAcls = new ArrayList<>()
+                    TopicAcl inAcl = new TopicAcl(ip: "0.0.0.0", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/in", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+                    TopicAcl outAcl = new TopicAcl(ip: "0.0.0.0", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/out", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+
+                    topicAcls.add(inAcl)
+                    topicAcls.add(outAcl)
+                    mqttDevice.setTopicAcls(topicAcls)
+                    deviceService.addMqttDevice(mqttDevice)
+                    topicAclService.save(inAcl)
+                    topicAclService.save(outAcl)
+                }
+                return R.ok()
+
+            default:
+                return R.error()
+        }
+
     }
 
     /**
@@ -51,6 +221,24 @@ class SceneController extends AbstractController {
     @GetMapping("/list/{page}/{size}")
     R list(@PathVariable int page, @PathVariable int size) {
         Page<Scene> scenePage = sceneService.findByAppUser(getCurrentUser(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
+        return R.okWithData(scenePage)
+    }
+    /**
+     * 列出场景下的设备
+     * @param page
+     * @param size
+     * @return
+     */
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/listDevice/{page}/{size}")
+    R listDevice(@PathVariable int page, @PathVariable int size, @RequestBody @Valid ListDeviceForm listDeviceForm) {
+        Scene scene = sceneService.findBySecurityId(listDeviceForm.sceneSecurityId)
+        if (!scene) {
+            return R.error()
+        }
+
+        Page<AbstractDevice> scenePage = deviceService.listDeviceByScene(scene, listDeviceForm.deviceProtocol, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
         return R.okWithData(scenePage)
     }
 
