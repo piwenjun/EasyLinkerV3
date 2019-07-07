@@ -9,7 +9,6 @@ import com.easylinker.framework.common.web.R
 import com.easylinker.v3.modules.device.form.ListDeviceForm
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
-import com.easylinker.v3.modules.device.model.TopicAcl
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
 import com.easylinker.v3.modules.scene.form.AddSceneForm
@@ -158,15 +157,6 @@ class SceneController extends AbstractController {
                             appUser: getCurrentUser(),
                             scene: scene,
                             deviceProtocol: DeviceProtocol.MQTT)
-                    //默认给两个权限 对自己的频道进行PUB和SUB
-                    List<TopicAcl> topicAcls = new ArrayList<>()
-                    TopicAcl inAcl = new TopicAcl(ip: "0.0.0.0", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/in", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
-                    TopicAcl outAcl = new TopicAcl(ip: "0.0.0.0", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/out", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
-                    topicAclService.save(inAcl)
-                    topicAclService.save(outAcl)
-                    topicAcls.add(inAcl)
-                    topicAcls.add(outAcl)
-                    mqttDevice.setTopicAcls(topicAcls)
                     deviceService.addMqttDevice(mqttDevice)
 
                 }
@@ -192,16 +182,7 @@ class SceneController extends AbstractController {
                             appUser: getCurrentUser(),
                             scene: scene,
                             deviceProtocol: DeviceProtocol.MQTT)
-                    List<TopicAcl> topicAcls = new ArrayList<>()
-                    TopicAcl inAcl = new TopicAcl(ip: "0.0.0.0", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/in", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
-                    TopicAcl outAcl = new TopicAcl(ip: "0.0.0.0", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/out", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
-
-                    topicAcls.add(inAcl)
-                    topicAcls.add(outAcl)
-                    mqttDevice.setTopicAcls(topicAcls)
                     deviceService.addMqttDevice(mqttDevice)
-                    topicAclService.save(inAcl)
-                    topicAclService.save(outAcl)
                 }
                 return R.ok()
 

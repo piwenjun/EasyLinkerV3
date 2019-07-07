@@ -11,6 +11,7 @@ import com.easylinker.v3.modules.device.dao.TopicAclRepository
 import com.easylinker.v3.modules.device.model.COAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
+import com.easylinker.v3.modules.device.model.TopicAcl
 import com.easylinker.v3.modules.scene.dao.SceneRepository
 import com.easylinker.v3.modules.scene.model.Scene
 import org.springframework.beans.factory.annotation.Autowired
@@ -94,6 +95,24 @@ class DeviceService {
     }
 
     /**
+     * 添加默认的ACL
+     * @param mqttDevice
+     */
+
+    private void addDefaultAcls(MQTTDevice mqttDevice) {
+        //1: subscribe, 2: publish, 3: pubsub
+        List<TopicAcl> topicAcls = new ArrayList<>()
+        TopicAcl inAcl = new TopicAcl(ip: "", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/s2c", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+        TopicAcl outAcl = new TopicAcl(ip: "", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/c2s", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+        topicAcls.add(inAcl)
+        topicAcls.add(outAcl)
+        mqttDevice.setTopicAcls(topicAcls)
+        topicAclRepository.save(inAcl)
+        topicAclRepository.save(outAcl)
+
+    }
+
+    /**
      * 添加设备
      * @param httpDevice
      */
@@ -108,8 +127,8 @@ class DeviceService {
     }
 
     void addMqttDevice(MQTTDevice mqttDevice) {
-
         mqttRepository.save(mqttDevice)
+        addDefaultAcls(mqttDevice)
     }
 
 
