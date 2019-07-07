@@ -100,6 +100,7 @@ class DeviceService {
      */
 
     private void addDefaultAcls(MQTTDevice mqttDevice) {
+
         //1: subscribe, 2: publish, 3: pubsub
         List<TopicAcl> topicAcls = new ArrayList<>()
         TopicAcl inAcl = new TopicAcl(ip: "", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/s2c", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
