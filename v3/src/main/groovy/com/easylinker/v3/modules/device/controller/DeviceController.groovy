@@ -42,6 +42,11 @@ class DeviceController extends AbstractController {
         super(httpServletRequest)
     }
 
+    /**
+     * 添加HTTP设备
+     * @param httpDeviceForm
+     * @return
+     */
 
     @PostMapping("/addHttp")
     R addHTTP(@RequestBody @Valid HTTPDeviceForm httpDeviceForm) {
@@ -62,6 +67,11 @@ class DeviceController extends AbstractController {
         }
 
     }
+    /**
+     * 添加COAP设备
+     * @param coapDeviceForm
+     * @return
+     */
 
     @PostMapping("/addCoap")
     R addCOAP(@RequestBody @Valid COAPDeviceForm coapDeviceForm) {
@@ -85,7 +95,7 @@ class DeviceController extends AbstractController {
 
     }
     /**
-     * 【/client/{user_id}/{client_id}/{方向}/#】
+     * 添加MQTT设备
      * @param mqttDeviceForm
      * @return
      */
@@ -186,7 +196,6 @@ class DeviceController extends AbstractController {
 
     @PostMapping("/searchHttp")
     R searchHttp(@RequestBody @Valid SearchHttpForm searchHttpForm) {
-
 
         return R.ok()
     }
