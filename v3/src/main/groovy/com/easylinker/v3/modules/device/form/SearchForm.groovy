@@ -79,12 +79,45 @@ class SearchMqttForm {
 
 
 class SearchCoapForm {
+    private String name
+    private String info
 
+    String getName() {
+        return name
+    }
+
+    void setName(String name) {
+        this.name = name
+    }
+
+    String getInfo() {
+        return info
+    }
+
+    void setInfo(String info) {
+        this.info = info
+    }
 
 }
 
 
 class SearchHttpForm {
+    private String name
+    private String info
 
+    String getName() {
+        return name
+    }
 
+    void setName(String name) {
+        this.name = name
+    }
+
+    String getInfo() {
+        return info
+    }
+
+    void setInfo(String info) {
+        this.info = info
+    }
 }

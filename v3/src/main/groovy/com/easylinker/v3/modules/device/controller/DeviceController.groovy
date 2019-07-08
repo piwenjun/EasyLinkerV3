@@ -6,7 +6,10 @@ import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.modules.user.service.UserService
-import com.easylinker.v3.modules.device.form.*
+import com.easylinker.v3.modules.device.form.COAPDeviceForm
+import com.easylinker.v3.modules.device.form.DetailForm
+import com.easylinker.v3.modules.device.form.HTTPDeviceForm
+import com.easylinker.v3.modules.device.form.MQTTDeviceForm
 import com.easylinker.v3.modules.device.model.COAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
@@ -168,20 +171,26 @@ class DeviceController extends AbstractController {
     UserService userService
 
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    @PostMapping("/searchMqtt/{page}/{size}")
-    R searchMqtt(@PathVariable int page, @PathVariable int size, @RequestBody @Valid SearchMqttForm searchMqttForm) {
-
-        //AppUser appUser = userService.findBySecurityId(getCurrentUser().securityId)
+    @GetMapping("/searchMqtt")
+    R searchMqtt(@RequestParam(required = true) String username,
+                 @RequestParam(required = true) String clientId,
+                 @RequestParam(required = true) boolean online,
+                 @RequestParam(required = true) String name,
+                 @RequestParam(required = true) String deviceProtocol,
+                 @RequestParam(required = true) String deviceType,
+                 @RequestParam(required = true) String info,
+                 @RequestParam(required = true) int page,
+                 @RequestParam(required = true) int size) {
 
         Page<MQTTDevice> mqttDevicePage = deviceService.searchMqtt(new MQTTDevice(
-                username: searchMqttForm.username,
-                clientId: searchMqttForm.clientId,
-                online: searchMqttForm.online,
-                name: searchMqttForm.name,
-                deviceProtocol: searchMqttForm.deviceProtocol,
-                deviceType: searchMqttForm.deviceType,
+                username: username,
+                clientId: clientId,
+                online: online,
+                name: name,
+                deviceProtocol: deviceProtocol,
+                deviceType: deviceType,
                 appUser: getCurrentUser(),
-                info: searchMqttForm.info),
+                info: info),
 
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
 
@@ -194,10 +203,18 @@ class DeviceController extends AbstractController {
      * @return
      */
 
-    @PostMapping("/searchHttp")
-    R searchHttp(@RequestBody @Valid SearchHttpForm searchHttpForm) {
+    @GetMapping("/searchHttp")
+    R searchHttp(@RequestParam(required = true) int page,
+                 @RequestParam(required = true) int size,
+                 @RequestParam(required = true) String name,
+                 @RequestParam(required = true) String info) {
+        Page<HTTPDevice> httpDevicePage = deviceService.searchHttp(new HTTPDevice(
+                name: name,
+                appUser: getCurrentUser(),
+                info: info),
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
 
-        return R.ok()
+        return R.okWithData(httpDevicePage)
     }
     /**
      * 搜索COAP设备
@@ -206,9 +223,39 @@ class DeviceController extends AbstractController {
      */
 
     @PostMapping("/searchCoap")
-    R searchCoap(@RequestBody @Valid SearchCoapForm searchCoapForm) {
+    R searchCoap(@RequestParam(required = true) int page,
+                 @RequestParam(required = true) int size,
+                 @RequestParam(required = true) String name,
+                 @RequestParam(required = true) String info) {
+        Page<COAPDevice> httpDevicePage = deviceService.searchCoap(new COAPDevice(
+                name: name,
+                appUser: getCurrentUser(),
+                info: info),
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
 
-        return R.ok()
+        return R.okWithData(httpDevicePage)
     }
 
+    /**
+     * 查询MQTT设备
+     * http://localhost:2500/easyboot/device/list?page=0&size=10
+     * @return
+     */
+    @GetMapping("/listMqtt")
+    R listMqtt(@RequestParam int page, @RequestParam int size) {
+        return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), DeviceProtocol.MQTT))
+
+    }
+
+    @GetMapping("/listHttp")
+    R listHttp(@RequestParam int page, @RequestParam int size) {
+        return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), DeviceProtocol.HTTP))
+
+    }
+
+    @GetMapping("/listCoap")
+    R listCoap(@RequestParam int page, @RequestParam int size) {
+        return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), DeviceProtocol.COAP))
+
+    }
 }

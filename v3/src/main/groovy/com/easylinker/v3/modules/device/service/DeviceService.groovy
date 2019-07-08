@@ -268,6 +268,44 @@ class DeviceService {
         return mqttRepository.findAll(example, pageable)
 
     }
+/**
+ * 搜索Http
+ * @param httpDevice
+ * @param pageable
+ * @return
+ */
+    @Transactional
+    Page<HTTPDevice> searchHttp(HTTPDevice httpDevice, Pageable pageable) {
+        ExampleMatcher matcher = ExampleMatcher.matchingAny()
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withIgnoreNullValues()
+                .withIgnorePaths("id", "securityId", "token", "clientId", "createTime", "updateTime")
+
+        Example<HTTPDevice> example = Example.of(httpDevice, matcher)
+        return httpRepository.findAll(example, pageable)
+
+    }
+
+    /**
+     * 搜索COAP
+     * @param coapDevice
+     * @param pageable
+     * @return
+     */
+    @Transactional
+    Page<COAPDevice> searchCoap(COAPDevice coapDevice, Pageable pageable) {
+        ExampleMatcher matcher = ExampleMatcher.matchingAny()
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withIgnoreNullValues()
+                .withIgnorePaths("id", "securityId", "token", "clientId", "createTime", "updateTime")
+        Example<COAPDevice> example = Example.of(coapDevice, matcher)
+        return coapRepository.findAll(example, pageable)
+
+    }
+
+
     /**
      * 获取设备的详细资料
      * @param securityId
