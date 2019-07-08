@@ -10,6 +10,14 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/framework/pom.xml" />
         <option value="$PROJECT_DIR$/v3/pom.xml" />
+        <option value="$PROJECT_DIR$/http-service/pom.xml" />
+        <option value="$PROJECT_DIR$/coap-service/pom.xml" />
+        <option value="$PROJECT_DIR$/mqtt-service/pom.xml" />
+        <option value="$PROJECT_DIR$/tcp-service/pom.xml" />
+        <option value="$PROJECT_DIR$/udpservice/pom.xml" />
+        <option value="$PROJECT_DIR$/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/udp-service/pom.xml" />
+        <option value="$PROJECT_DIR$/file-service/pom.xml" />
       </list>
     </option>
   </component>

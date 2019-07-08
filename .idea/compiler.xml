@@ -6,14 +6,28 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="gateway" />
+        <module name="coap-service" />
+        <module name="tcp-service" />
+        <module name="udp-service" />
         <module name="framework" />
         <module name="v3" />
+        <module name="http-service" />
+        <module name="file-service" />
+        <module name="mqtt-service" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="coap-service" options="-parameters" />
+      <module name="file-service" options="-parameters" />
       <module name="framework" options="-parameters" />
+      <module name="gateway" options="-parameters" />
+      <module name="http-service" options="-parameters" />
+      <module name="mqtt-service" options="-parameters" />
+      <module name="tcp-service" options="-parameters" />
+      <module name="udp-service" options="-parameters" />
       <module name="v3" options="-parameters" />
     </option>
   </component>
