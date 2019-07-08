@@ -4,12 +4,7 @@ import com.easylinker.framework.common.model.AbstractModel
 import com.easylinker.framework.modules.user.model.AppUser
 import com.fasterxml.jackson.annotation.JsonIgnore
 
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.FetchType
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 @Entity
 class Scene extends AbstractModel {
@@ -74,7 +69,7 @@ enum SceneType {
 
  */
 enum PreInstallTemplate {
-    NOTHING,
+    PLACEHOLDER,
     HUMIDITY_TEMPERATURE_TEMPLATE,
     GPS_TEMPLATE,
     GENERAL_SWITCH_TEMPLATE,

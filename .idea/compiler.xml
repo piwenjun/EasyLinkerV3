@@ -11,6 +11,7 @@
         <module name="tcp-service" />
         <module name="udp-service" />
         <module name="framework" />
+        <module name="terminal-service" />
         <module name="v3" />
         <module name="http-service" />
         <module name="file-service" />
@@ -27,6 +28,7 @@
       <module name="http-service" options="-parameters" />
       <module name="mqtt-service" options="-parameters" />
       <module name="tcp-service" options="-parameters" />
+      <module name="terminal-service" options="-parameters" />
       <module name="udp-service" options="-parameters" />
       <module name="v3" options="-parameters" />
     </option>

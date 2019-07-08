@@ -18,6 +18,7 @@
         <option value="$PROJECT_DIR$/gateway/pom.xml" />
         <option value="$PROJECT_DIR$/udp-service/pom.xml" />
         <option value="$PROJECT_DIR$/file-service/pom.xml" />
+        <option value="$PROJECT_DIR$/terminal-service/pom.xml" />
       </list>
     </option>
   </component>

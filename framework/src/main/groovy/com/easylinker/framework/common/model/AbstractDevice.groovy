@@ -66,5 +66,5 @@ enum DeviceProtocol {
  * 设备类型
  */
 enum DeviceType {
-    VALUE, TEXT, BOOLEAN, FILE,
+    VALUE, TEXT, BOOLEAN, FILE, STREAM, TERMINAL_HOST, PLACEHOLDER
 }
