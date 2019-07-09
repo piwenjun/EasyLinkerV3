@@ -1,12 +1,15 @@
 package com.easylinker.v3.modules.devicedata.controller
 
 import com.easylinker.framework.common.controller.AbstractController
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
-import com.easylinker.v3.modules.devicedata.form.DataQueryForm
 import com.easylinker.v3.modules.devicedata.service.DeviceDataService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
@@ -32,9 +35,13 @@ class DeviceDataController extends AbstractController {
      * @param dataQueryForm
      * @return
      */
-    @PostMapping("/list/{page}/{size}")
-    R list(@PathVariable int page, @PathVariable int size, @RequestBody @Valid DataQueryForm dataQueryForm) {
+    @GetMapping("/list")
+    R list(@RequestParam int page,
+           @RequestParam int size,
+           @RequestParam @Valid String deviceSecurityId,
+           @RequestParam DeviceType deviceType) {
 
-        return R.okWithData(deviceDataService.list(dataQueryForm.deviceSecurityId, dataQueryForm.deviceType, PageRequest.of(page, size)))
+        return R.okWithData(deviceDataService.list(deviceSecurityId,
+                deviceType, PageRequest.of(page, size)))
     }
 }

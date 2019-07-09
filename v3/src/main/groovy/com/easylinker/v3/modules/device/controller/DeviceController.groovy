@@ -7,7 +7,6 @@ import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.modules.user.service.UserService
 import com.easylinker.v3.modules.device.form.COAPDeviceForm
-import com.easylinker.v3.modules.device.form.DetailForm
 import com.easylinker.v3.modules.device.form.HTTPDeviceForm
 import com.easylinker.v3.modules.device.form.MQTTDeviceForm
 import com.easylinker.v3.modules.device.model.COAPDevice
@@ -157,8 +156,8 @@ class DeviceController extends AbstractController {
      * @return
      */
     @GetMapping("/detail")
-    R detail(@RequestBody @Valid DetailForm detailForm) {
-        return R.okWithData(deviceService.detail(detailForm.securityId, detailForm.deviceProtocol))
+    R detail(@RequestParam @Valid String securityId, @RequestParam DeviceProtocol deviceProtocol) {
+        return R.okWithData(deviceService.detail(securityId, deviceProtocol))
 
     }
     /**

@@ -6,7 +6,6 @@ import com.easylinker.framework.common.model.AbstractDevice
 import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
-import com.easylinker.v3.modules.device.form.ListDeviceForm
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
@@ -199,8 +198,8 @@ class SceneController extends AbstractController {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    @GetMapping("/list/{page}/{size}")
-    R list(@PathVariable int page, @PathVariable int size) {
+    @GetMapping("/list")
+    R list(@RequestParam int page, @RequestParam int size) {
         Page<Scene> scenePage = sceneService.findByAppUser(getCurrentUser(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
         return R.okWithData(scenePage)
     }
@@ -212,14 +211,18 @@ class SceneController extends AbstractController {
      */
 
     @Transactional(rollbackFor = Exception.class)
-    @PostMapping("/listDevice/{page}/{size}")
-    R listDevice(@PathVariable int page, @PathVariable int size, @RequestBody @Valid ListDeviceForm listDeviceForm) {
-        Scene scene = sceneService.findBySecurityId(listDeviceForm.sceneSecurityId)
+    @GetMapping("/listDevice")
+    R listDevice(@RequestParam int page,
+                 @RequestParam int size,
+                 @RequestParam DeviceProtocol deviceProtocol,
+                 @RequestParam String sceneSecurityId
+    ) {
+        Scene scene = sceneService.findBySecurityId(sceneSecurityId)
         if (!scene) {
             return R.error()
         }
 
-        Page<AbstractDevice> scenePage = deviceService.listDeviceByScene(scene, listDeviceForm.deviceProtocol, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
+        Page<AbstractDevice> scenePage = deviceService.listDeviceByScene(scene, deviceProtocol, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
         return R.okWithData(scenePage)
     }
 
