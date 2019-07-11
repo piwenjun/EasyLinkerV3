@@ -55,10 +55,19 @@ class Scene extends AbstractModel {
  */
 enum SceneType {
     //用户自定义类型的，设备的种类不限制
-    CUSTOM,
+    CUSTOM("自定义模板"),
     //预设模板，比如常见的：温湿度监控模板，开关模板，聊天室模板，显示屏模板
-    PRE_INSTALL_TEMPLATE
+    PRE_INSTALL_TEMPLATE("系统预装模板")
 
+    SceneType(String name) {
+        this.name = name
+    }
+    String name
+
+    @Override
+    String toString() {
+        return name()
+    }
 }
 /**
  * 备注：预设的场景类型,这里后面会动态增加
@@ -69,9 +78,21 @@ enum SceneType {
 
  */
 enum PreInstallTemplate {
-    PLACEHOLDER,
-    HUMIDITY_TEMPERATURE_TEMPLATE,
-    GPS_TEMPLATE,
-    GENERAL_SWITCH_TEMPLATE,
-    SERIAL_DISPLAY_TEMPLATE
+    PLACEHOLDER("暂不选择"),
+    HUMIDITY_TEMPERATURE_TEMPLATE("温湿度模板"),
+    GPS_TEMPLATE("GPS定位模板"),
+    GENERAL_SWITCH_TEMPLATE("通用开关模板"),
+    SERIAL_DISPLAY_TEMPLATE("串口显示屏模板")
+
+    String name
+
+    PreInstallTemplate(String name) {
+        this.name = name
+
+    }
+
+    @Override
+    String toString() {
+        return name()
+    }
 }

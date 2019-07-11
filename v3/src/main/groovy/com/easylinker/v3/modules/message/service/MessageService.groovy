@@ -1,7 +1,11 @@
 package com.easylinker.v3.modules.message.service
 
 import com.easylinker.framework.common.service.AbstractService
+import com.easylinker.framework.modules.user.model.AppUser
+import com.easylinker.v3.modules.message.dao.MessageRepository
 import com.easylinker.v3.modules.message.model.Message
+import com.easylinker.v3.modules.message.model.MessageState
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -13,6 +17,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class MessageService extends AbstractService<Message> {
+    @Autowired
+    MessageRepository messageRepository
+
     @Override
     void save(Message message) {
 
@@ -37,4 +44,32 @@ class MessageService extends AbstractService<Message> {
     void deleteById(long id) {
 
     }
+
+    /**
+     * 根据用户查找
+     * @param appUser
+     * @param pageable
+     * @return
+     */
+    Page<Message> listByUser(AppUser appUser, MessageState messageState, Pageable pageable) {
+
+        return messageRepository.findAllByUserSecurityIdAndMessageState(appUser.securityId, messageState, pageable)
+    }
+    /**
+     * 标记阅读
+     * @param message
+     */
+    void markRead(Message message) {
+        message.setMessageState(MessageState.ALREADY_READ)
+        messageRepository.save(message)
+    }
+    /**
+     * 查找一个Message
+     * @param securityId
+     * @return
+     */
+    Message getByUserSecurityId(String securityId){
+        return messageRepository.findTopByUserSecurityId(securityId)
+    }
+
 }

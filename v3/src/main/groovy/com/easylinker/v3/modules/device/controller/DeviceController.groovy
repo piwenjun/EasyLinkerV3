@@ -15,6 +15,7 @@ import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
 import com.easylinker.v3.modules.scene.model.Scene
+import com.easylinker.v3.modules.scene.model.SceneType
 import com.easylinker.v3.modules.scene.service.SceneService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -130,6 +131,37 @@ class DeviceController extends AbstractController {
 
 
     }
+
+
+
+    @PostMapping("/addTerminal")
+    @Transactional(rollbackFor = Exception.class)
+    R addTerminal(@RequestBody @Valid MQTTDeviceForm mqttDeviceForm) {
+        Scene scene = sceneService.findBySecurityId(mqttDeviceForm.sceneSecurityId)
+        if (scene) {
+            MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.name,
+                    info: mqttDeviceForm.info,
+                    clientId: UUID.randomUUID().toString().replace("-", ""),
+                    password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                    username: UUID.randomUUID().toString().replace("-", ""),
+                    deviceType: mqttDeviceForm.deviceType,
+                    appUser: getCurrentUser(),
+                    scene: scene,
+                    deviceProtocol: DeviceProtocol.MQTT)
+
+            deviceService.addMqttDevice(mqttDevice)
+            return R.ok(0, "添加成功")
+
+        } else {
+            return R.error(5, "场景不存在")
+
+        }
+
+
+    }
+
+
+
     /**
      * 获取支持的设备类型
      * @return
@@ -137,7 +169,15 @@ class DeviceController extends AbstractController {
     @GetMapping("/listDeviceType")
 
     R listDeviceType() {
-        return R.okWithData(DeviceType.values())
+
+        List<Map<String, Object>> list = new ArrayList<>()
+        for (DeviceType deviceType : DeviceType.values()) {
+            Map<String, Object> map = new HashMap<>()
+            map.put("name", deviceType.name)
+            map.put("key", deviceType)
+            list.add(map)
+        }
+        return R.okWithData(list)
     }
 
     /**
@@ -146,7 +186,14 @@ class DeviceController extends AbstractController {
      */
     @GetMapping("/listProtocolType")
     R listProtocolType() {
-        return R.okWithData(DeviceProtocol.values())
+        List<Map<String, Object>> list = new ArrayList<>()
+        for (DeviceProtocol deviceProtocol: DeviceProtocol.values()) {
+            Map<String, Object> map = new HashMap<>()
+            map.put("name", deviceProtocol.name)
+            map.put("key", deviceProtocol)
+            list.add(map)
+        }
+        return R.okWithData(list)
     }
 
 
@@ -257,4 +304,6 @@ class DeviceController extends AbstractController {
         return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), DeviceProtocol.COAP))
 
     }
+
+
 }

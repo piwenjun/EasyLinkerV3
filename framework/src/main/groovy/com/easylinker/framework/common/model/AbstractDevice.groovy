@@ -60,11 +60,32 @@ class AbstractDevice extends AbstractModel {
  * 协议类型枚举
  */
 enum DeviceProtocol {
-    HTTP, COAP, MQTT, UDP, TCP, PLACEHOLDER
+    HTTP("HTTP协议设备"),
+    COAP("COAP协议设备"),
+    MQTT("MQTT协议设备"),
+    UDP("UDP协议设备"),
+    TCP("TCP协议设备"),
+    PLACEHOLDER("暂不选择协议")
+    String name
+
+    DeviceProtocol(String name) {
+        this.name = name
+    }
 }
 /**
  * 设备类型
  */
 enum DeviceType {
-    VALUE, TEXT, BOOLEAN, FILE, STREAM, TERMINAL_HOST, PLACEHOLDER
+    VALUE("数值型设备"),
+    TEXT("文本型设备"),
+    BOOLEAN("开关型设备"),
+    FILE("文件型设备"),
+    STREAM("流媒体型设备"),
+    TERMINAL_HOST("终端型设备"),
+    PLACEHOLDER("暂不选择类型")
+    String name
+
+    DeviceType(String name) {
+        this.name = name
+    }
 }

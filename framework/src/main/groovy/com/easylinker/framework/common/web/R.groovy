@@ -144,6 +144,12 @@ class R extends JSONObject {
 
     }
 
+    static R noAuth() {
+        R r = new R()
+        r.put("code", 401)
+        r.put("msg", "没有权限")
+        r
+    }
     static void main(String[] args) {
     }
 }
