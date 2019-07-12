@@ -3,6 +3,8 @@ package com.easylinker.v3.modules.message.model
 import com.easylinker.framework.common.model.AbstractModel
 
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 
 /**
  * Created by admin on 2019/6/11 10:20
@@ -13,6 +15,10 @@ import javax.persistence.Entity
 @Entity
 class Message extends AbstractModel {
 
+    /**
+     * 用户的SecurityId
+     */
+    private String userSecurityId
     /**
      * 消息类型
      */
@@ -30,7 +36,8 @@ class Message extends AbstractModel {
     /**
      * 状态
      */
-    private Integer state
+    @Enumerated(EnumType.STRING)
+    private MessageState messageState
 
     String getMsgType() {
         return msgType
@@ -56,11 +63,27 @@ class Message extends AbstractModel {
         this.msgContent = msgContent
     }
 
-    Integer getState() {
-        return state
+    MessageState getMessageState() {
+        return messageState
     }
 
-    void setState(Integer state) {
-        this.state = state
+    void setMessageState(MessageState messageState) {
+        this.messageState = messageState
     }
+
+    String getUserSecurityId() {
+        return userSecurityId
+    }
+
+    void setUserSecurityId(String userSecurityId) {
+        this.userSecurityId = userSecurityId
+    }
+}
+/**
+ * 消息的状态
+ */
+enum MessageState {
+    NO_READ,
+    ALREADY_READ,
+    DELETE
 }

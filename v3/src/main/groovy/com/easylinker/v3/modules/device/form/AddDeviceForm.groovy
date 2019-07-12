@@ -1,5 +1,6 @@
 package com.easylinker.v3.modules.device.form
 
+import com.easylinker.framework.common.model.AbstractDevice
 import com.easylinker.v3.modules.device.model.COAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
@@ -24,6 +25,7 @@ class HTTPDeviceForm extends HTTPDevice {
 
 class COAPDeviceForm extends COAPDevice {
     private String sceneSecurityId
+
     String getSceneSecurityId() {
         return sceneSecurityId
     }
@@ -35,6 +37,7 @@ class COAPDeviceForm extends COAPDevice {
 
 class MQTTDeviceForm extends MQTTDevice {
     private String sceneSecurityId
+
     String getSceneSecurityId() {
         return sceneSecurityId
     }
@@ -42,4 +45,8 @@ class MQTTDeviceForm extends MQTTDevice {
     void setSceneSecurityId(String sceneSecurityId) {
         this.sceneSecurityId = sceneSecurityId
     }
+}
+
+class TerminalHostDeviceForm extends AbstractDevice {
+
 }

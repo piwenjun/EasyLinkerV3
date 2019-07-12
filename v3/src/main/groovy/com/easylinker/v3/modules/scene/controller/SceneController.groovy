@@ -48,7 +48,15 @@ class SceneController extends AbstractController {
      */
     @GetMapping("/listSceneType")
     R listSceneType() {
-        return R.okWithData(SceneType.values())
+
+        List<Map<String, Object>> list = new ArrayList<>()
+        for (SceneType sceneType : SceneType.values()) {
+            Map<String, Object> map = new HashMap<>()
+            map.put("name", sceneType.name)
+            map.put("key", sceneType)
+            list.add(map)
+        }
+        return R.okWithData(list)
     }
     /**
      * 列出系统内置的场景
@@ -57,7 +65,14 @@ class SceneController extends AbstractController {
     @GetMapping("/listPreInstallTemplate")
 
     R listPreInstallTemplate() {
-        return R.okWithData(PreInstallTemplate.values())
+        List<Map<String, Object>> list = new ArrayList<>()
+        for (PreInstallTemplate preInstallTemplate : PreInstallTemplate.values()) {
+            Map<String, Object> map = new HashMap<>()
+            map.put("name", preInstallTemplate.name)
+            map.put("key", preInstallTemplate)
+            list.add(map)
+        }
+        return R.okWithData(list)
     }
 
 
