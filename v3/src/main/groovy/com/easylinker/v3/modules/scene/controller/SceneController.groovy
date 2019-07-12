@@ -95,7 +95,7 @@ class SceneController extends AbstractController {
                 sceneService.save(scene)
                 return R.ok()
             case SceneType.PRE_INSTALL_TEMPLATE:
-                return handPreInstallTemplate(addSceneForm.preInstallTemplate)
+                return handPreInstallTemplate(addSceneForm)
             default: return R.error()
 
         }
@@ -108,12 +108,12 @@ class SceneController extends AbstractController {
      * @return
      */
 
-    private R handPreInstallTemplate(PreInstallTemplate preInstallTemplate) {
-        switch (preInstallTemplate) {
+    private R handPreInstallTemplate(AddSceneForm addSceneForm) {
+        switch (addSceneForm.preInstallTemplate) {
             case PreInstallTemplate.HUMIDITY_TEMPERATURE_TEMPLATE:
-                Scene scene = new Scene(name: "温湿度监控中心模板",
+                Scene scene = new Scene(name: addSceneForm.name,
                         sceneType: SceneType.PRE_INSTALL_TEMPLATE,
-                        info: "MQTT温湿度监控模块",
+                        info: addSceneForm.info,
                         appUser: getCurrentUser())
                 sceneService.save(scene)
                 //默认创建10个设备
@@ -132,9 +132,9 @@ class SceneController extends AbstractController {
                 /**
                  * GPS有2个坐标，默认是HTTP设备
                  */
-                Scene scene = new Scene(name: "GPS场景模板",
+                Scene scene = new Scene(name: addSceneForm.name,
                         sceneType: SceneType.PRE_INSTALL_TEMPLATE,
-                        info: "GPS场景模板",
+                        info: addSceneForm.info,
                         appUser: getCurrentUser())
                 sceneService.save(scene)
                 //默认创建10个设备
@@ -155,9 +155,9 @@ class SceneController extends AbstractController {
                  * 通用开关是MQTT类型的设备
                  */
 
-                Scene scene = new Scene(name: "通用开关模块模板",
+                Scene scene = new Scene(name: addSceneForm.name,
                         sceneType: SceneType.PRE_INSTALL_TEMPLATE,
-                        info: "通用开关模块模板",
+                        info: addSceneForm.info,
                         appUser: getCurrentUser())
                 sceneService.save(scene)
                 //默认创建10个设备
@@ -180,9 +180,9 @@ class SceneController extends AbstractController {
                 /**
                  * 串口屏是文本类型的设备
                  */
-                Scene scene = new Scene(name: "通用串口显示屏",
+                Scene scene = new Scene(name: addSceneForm.name,
                         sceneType: SceneType.PRE_INSTALL_TEMPLATE,
-                        info: "通用串口显示屏",
+                        info: addSceneForm.info,
                         appUser: getCurrentUser())
                 sceneService.save(scene)
                 //默认创建10个设备

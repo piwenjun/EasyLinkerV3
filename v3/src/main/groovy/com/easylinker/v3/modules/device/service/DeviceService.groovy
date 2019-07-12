@@ -4,14 +4,8 @@ import com.easylinker.framework.common.model.AbstractDevice
 import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.modules.user.model.AppUser
-import com.easylinker.v3.modules.device.dao.COAPRepository
-import com.easylinker.v3.modules.device.dao.HTTPRepository
-import com.easylinker.v3.modules.device.dao.MQTTRepository
-import com.easylinker.v3.modules.device.dao.TopicAclRepository
-import com.easylinker.v3.modules.device.model.COAPDevice
-import com.easylinker.v3.modules.device.model.HTTPDevice
-import com.easylinker.v3.modules.device.model.MQTTDevice
-import com.easylinker.v3.modules.device.model.TopicAcl
+import com.easylinker.v3.modules.device.dao.*
+import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.scene.dao.SceneRepository
 import com.easylinker.v3.modules.scene.model.Scene
 import org.springframework.beans.factory.annotation.Autowired
@@ -37,6 +31,8 @@ class DeviceService {
     HTTPRepository httpRepository
     @Autowired
     MQTTRepository mqttRepository
+    @Autowired
+    TerminalHostDeviceRepository terminalHostDeviceRepository
 
     @Autowired
     TopicAclRepository topicAclRepository
@@ -132,6 +128,9 @@ class DeviceService {
         addDefaultAcls(mqttDevice)
     }
 
+    void addTerminal(TerminalHostDevice terminalHostDevice) {
+        terminalHostDeviceRepository.save(terminalHostDevice)
+    }
 
     /**
      * 无条件查询

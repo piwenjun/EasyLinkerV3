@@ -9,13 +9,14 @@ import com.easylinker.framework.modules.user.service.UserService
 import com.easylinker.v3.modules.device.form.COAPDeviceForm
 import com.easylinker.v3.modules.device.form.HTTPDeviceForm
 import com.easylinker.v3.modules.device.form.MQTTDeviceForm
+import com.easylinker.v3.modules.device.form.TerminalHostDeviceForm
 import com.easylinker.v3.modules.device.model.COAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
+import com.easylinker.v3.modules.device.model.TerminalHostDevice
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
 import com.easylinker.v3.modules.scene.model.Scene
-import com.easylinker.v3.modules.scene.model.SceneType
 import com.easylinker.v3.modules.scene.service.SceneService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -53,20 +54,34 @@ class DeviceController extends AbstractController {
 
     @PostMapping("/addHttp")
     R addHTTP(@RequestBody @Valid HTTPDeviceForm httpDeviceForm) {
-        Scene scene = sceneService.findBySecurityId(httpDeviceForm.sceneSecurityId)
-        if (scene) {
+        if (httpDeviceForm.sceneSecurityId) {
+            Scene scene = sceneService.findBySecurityId(httpDeviceForm.sceneSecurityId)
+            if (scene) {
+
+                HTTPDevice httpDevice = new HTTPDevice(name: httpDeviceForm.name,
+                        info: httpDeviceForm.info,
+                        deviceType: httpDeviceForm.deviceType,
+                        appUser: getCurrentUser(),
+                        scene: scene,
+                        deviceProtocol: DeviceProtocol.HTTP)
+                deviceService.add(httpDevice, DeviceProtocol.HTTP)
+                return R.ok(0, "添加成功")
+
+            } else {
+                return R.error(5, "场景不存在")
+            }
+
+        } else {
 
             HTTPDevice httpDevice = new HTTPDevice(name: httpDeviceForm.name,
                     info: httpDeviceForm.info,
                     deviceType: httpDeviceForm.deviceType,
                     appUser: getCurrentUser(),
-                    scene: scene,
                     deviceProtocol: DeviceProtocol.HTTP)
             deviceService.add(httpDevice, DeviceProtocol.HTTP)
             return R.ok(0, "添加成功")
 
-        } else {
-            return R.error(5, "场景不存在")
+
         }
 
     }
@@ -78,20 +93,35 @@ class DeviceController extends AbstractController {
 
     @PostMapping("/addCoap")
     R addCOAP(@RequestBody @Valid COAPDeviceForm coapDeviceForm) {
-        Scene scene = sceneService.findBySecurityId(coapDeviceForm.sceneSecurityId)
-        if (scene) {
+        if (coapDeviceForm.sceneSecurityId) {
+            Scene scene = sceneService.findBySecurityId(coapDeviceForm.sceneSecurityId)
+            if (scene) {
+
+                COAPDevice coapDevice = new COAPDevice(name: coapDeviceForm.name,
+                        info: coapDeviceForm.info,
+                        token: UUID.randomUUID().toString().replace("-", ""),
+                        deviceType: coapDeviceForm.deviceType,
+                        scene: scene,
+                        appUser: getCurrentUser(),
+                        deviceProtocol: DeviceProtocol.COAP)
+                deviceService.add(coapDevice, DeviceProtocol.COAP)
+                return R.ok(0, "添加成功")
+            } else {
+                return R.error(5, "场景不存在")
+
+            }
+
+        } else {
 
             COAPDevice coapDevice = new COAPDevice(name: coapDeviceForm.name,
                     info: coapDeviceForm.info,
                     token: UUID.randomUUID().toString().replace("-", ""),
                     deviceType: coapDeviceForm.deviceType,
-                    scene: scene,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.COAP)
             deviceService.add(coapDevice, DeviceProtocol.COAP)
             return R.ok(0, "添加成功")
-        } else {
-            return R.error(5, "场景不存在")
+
 
         }
 
@@ -109,8 +139,29 @@ class DeviceController extends AbstractController {
     @PostMapping("/addMqtt")
     @Transactional(rollbackFor = Exception.class)
     R addMQTT(@RequestBody @Valid MQTTDeviceForm mqttDeviceForm) {
-        Scene scene = sceneService.findBySecurityId(mqttDeviceForm.sceneSecurityId)
-        if (scene) {
+
+        if (mqttDeviceForm.sceneSecurityId) {
+            Scene scene = sceneService.findBySecurityId(mqttDeviceForm.sceneSecurityId)
+            if (scene) {
+                MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.name,
+                        info: mqttDeviceForm.info,
+                        clientId: UUID.randomUUID().toString().replace("-", ""),
+                        password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                        username: UUID.randomUUID().toString().replace("-", ""),
+                        deviceType: mqttDeviceForm.deviceType,
+                        appUser: getCurrentUser(),
+                        scene: scene,
+                        deviceProtocol: DeviceProtocol.MQTT)
+
+                deviceService.addMqttDevice(mqttDevice)
+                return R.ok(0, "添加成功")
+
+            } else {
+                return R.error(5, "场景不存在")
+
+            }
+
+        } else {
             MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.name,
                     info: mqttDeviceForm.info,
                     clientId: UUID.randomUUID().toString().replace("-", ""),
@@ -118,48 +169,58 @@ class DeviceController extends AbstractController {
                     username: UUID.randomUUID().toString().replace("-", ""),
                     deviceType: mqttDeviceForm.deviceType,
                     appUser: getCurrentUser(),
-                    scene: scene,
                     deviceProtocol: DeviceProtocol.MQTT)
-
             deviceService.addMqttDevice(mqttDevice)
             return R.ok(0, "添加成功")
-
-        } else {
-            return R.error(5, "场景不存在")
-
         }
 
 
     }
 
 
-
+    /**
+     * 添加终端设备
+     * @param terminalHostDeviceForm
+     * @return
+     */
     @PostMapping("/addTerminal")
     @Transactional(rollbackFor = Exception.class)
-    R addTerminal(@RequestBody @Valid MQTTDeviceForm mqttDeviceForm) {
-        Scene scene = sceneService.findBySecurityId(mqttDeviceForm.sceneSecurityId)
-        if (scene) {
-            MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.name,
-                    info: mqttDeviceForm.info,
-                    clientId: UUID.randomUUID().toString().replace("-", ""),
-                    password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
-                    username: UUID.randomUUID().toString().replace("-", ""),
-                    deviceType: mqttDeviceForm.deviceType,
-                    appUser: getCurrentUser(),
-                    scene: scene,
-                    deviceProtocol: DeviceProtocol.MQTT)
+    R addTerminal(@RequestBody @Valid TerminalHostDeviceForm terminalHostDeviceForm) {
+        if (terminalHostDeviceForm.sceneSecurityId) {
+            Scene scene = sceneService.findBySecurityId(terminalHostDeviceForm.sceneSecurityId)
+            if (scene) {
+                TerminalHostDevice terminalHostDevice = new TerminalHostDevice(name: terminalHostDeviceForm.name,
+                        info: terminalHostDeviceForm.info,
+                        sshUsername: terminalHostDeviceForm.sshUsername,
+                        sshPassword: terminalHostDeviceForm.sshPassword,
+                        sshPort: terminalHostDeviceForm.sshPort,
+                        deviceType: terminalHostDeviceForm.deviceType,
+                        appUser: getCurrentUser(),
+                        scene: scene,
+                        deviceProtocol: DeviceProtocol.TCP)
 
-            deviceService.addMqttDevice(mqttDevice)
-            return R.ok(0, "添加成功")
+                deviceService.addTerminal(terminalHostDevice)
+                return R.ok(0, "添加成功")
 
+            } else {
+                return R.error(5, "场景不存在")
+
+            }
         } else {
-            return R.error(5, "场景不存在")
-
+            TerminalHostDevice terminalHostDevice = new TerminalHostDevice(name: terminalHostDeviceForm.name,
+                    info: terminalHostDeviceForm.info,
+                    sshUsername: terminalHostDeviceForm.sshUsername,
+                    sshPassword: terminalHostDeviceForm.sshPassword,
+                    sshPort: terminalHostDeviceForm.sshPort,
+                    deviceType: terminalHostDeviceForm.deviceType,
+                    appUser: getCurrentUser(),
+                    deviceProtocol: DeviceProtocol.TCP)
+            deviceService.addTerminal(terminalHostDevice)
+            return R.ok(0, "添加成功")
         }
 
 
     }
-
 
 
     /**
@@ -187,7 +248,7 @@ class DeviceController extends AbstractController {
     @GetMapping("/listProtocolType")
     R listProtocolType() {
         List<Map<String, Object>> list = new ArrayList<>()
-        for (DeviceProtocol deviceProtocol: DeviceProtocol.values()) {
+        for (DeviceProtocol deviceProtocol : DeviceProtocol.values()) {
             Map<String, Object> map = new HashMap<>()
             map.put("name", deviceProtocol.name)
             map.put("key", deviceProtocol)
