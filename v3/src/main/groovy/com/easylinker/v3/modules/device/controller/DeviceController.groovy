@@ -46,6 +46,10 @@ class DeviceController extends AbstractController {
         super(httpServletRequest)
     }
 
+
+    private R addDevice( HTTPDeviceForm httpDeviceForm){
+
+    }
     /**
      * 添加HTTP设备
      * @param httpDeviceForm
@@ -64,7 +68,7 @@ class DeviceController extends AbstractController {
                         appUser: getCurrentUser(),
                         scene: scene,
                         deviceProtocol: DeviceProtocol.HTTP)
-                deviceService.add(httpDevice, DeviceProtocol.HTTP)
+                deviceService.add(httpDevice)
                 return R.ok("添加成功")
 
             } else {
@@ -78,7 +82,7 @@ class DeviceController extends AbstractController {
                     deviceType: httpDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.HTTP)
-            deviceService.add(httpDevice, DeviceProtocol.HTTP)
+            deviceService.add(httpDevice)
             return R.ok("添加成功")
 
 
@@ -104,7 +108,7 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         appUser: getCurrentUser(),
                         deviceProtocol: DeviceProtocol.COAP)
-                deviceService.add(coapDevice, DeviceProtocol.COAP)
+                deviceService.add(coapDevice)
                 return R.ok("添加成功")
             } else {
                 return R.error("场景不存在")
@@ -119,7 +123,7 @@ class DeviceController extends AbstractController {
                     deviceType: coapDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.COAP)
-            deviceService.add(coapDevice, DeviceProtocol.COAP)
+            deviceService.add(coapDevice)
             return R.ok("添加成功")
 
 

@@ -70,12 +70,11 @@ class DeviceService {
 
 
     /**
-     * 添加
+     * 添加设备
      * @param abstractDevice
-     * @param deviceProtocol
      */
-    void add(AbstractDevice abstractDevice, DeviceProtocol deviceProtocol) {
-        switch (deviceProtocol) {
+    void add(AbstractDevice abstractDevice) {
+        switch (abstractDevice.deviceProtocol) {
             case DeviceProtocol.HTTP:
                 httpRepository.save(abstractDevice as HTTPDevice)
                 break
@@ -97,6 +96,7 @@ class DeviceService {
 
     private void addDefaultAcls(MQTTDevice mqttDevice) {
 
+        //auth.mysql.acl_query = select allow,ip AS ipaddr, username, client_id AS clientid, access, topic from topic_acl where  username = '%u' or username = '$all'  or client_id = '%c';
         //1: subscribe, 2: publish, 3: pubsub
         List<TopicAcl> topicAcls = new ArrayList<>()
         TopicAcl inAcl = new TopicAcl(ip: "", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/s2c", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)

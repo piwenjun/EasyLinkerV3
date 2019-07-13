@@ -93,10 +93,10 @@ class SceneController extends AbstractController {
                         info: addSceneForm.info,
                         appUser: getCurrentUser())
                 sceneService.save(scene)
-                return R.ok()
+                return R.ok("场景创建成功")
             case SceneType.PRE_INSTALL_TEMPLATE:
                 return handPreInstallTemplate(addSceneForm)
-            default: return R.error()
+            default: return R.error("场景类型不支持")
 
         }
     }
@@ -127,7 +127,7 @@ class SceneController extends AbstractController {
                     deviceService.addHttpDevice(httpDevice)
                 }
 
-                return R.ok()
+                return R.ok("场景创建成功")
             case PreInstallTemplate.GPS_TEMPLATE:
                 /**
                  * GPS有2个坐标，默认是HTTP设备
@@ -148,7 +148,7 @@ class SceneController extends AbstractController {
                     deviceService.addHttpDevice(httpDevice)
                 }
 
-                return R.ok()
+                return R.ok("场景创建成功")
 
             case PreInstallTemplate.GENERAL_SWITCH_TEMPLATE:
                 /**
@@ -174,7 +174,7 @@ class SceneController extends AbstractController {
                     deviceService.addMqttDevice(mqttDevice)
 
                 }
-                return R.ok()
+                return R.ok("场景创建成功")
 
             case PreInstallTemplate.SERIAL_DISPLAY_TEMPLATE:
                 /**
@@ -198,10 +198,10 @@ class SceneController extends AbstractController {
                             deviceProtocol: DeviceProtocol.MQTT)
                     deviceService.addMqttDevice(mqttDevice)
                 }
-                return R.ok()
+                return R.ok("场景创建成功")
 
             default:
-                return R.error()
+                return R.error("场景创建失败")
         }
 
     }
@@ -234,7 +234,7 @@ class SceneController extends AbstractController {
     ) {
         Scene scene = sceneService.findBySecurityId(sceneSecurityId)
         if (!scene) {
-            return R.error()
+            return R.error("场景不存在")
         }
 
         Page<AbstractDevice> scenePage = deviceService.listDeviceByScene(scene, deviceProtocol, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))

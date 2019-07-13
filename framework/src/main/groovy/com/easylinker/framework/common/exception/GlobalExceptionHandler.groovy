@@ -89,7 +89,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = SignatureException.class)
     R signatureException(SignatureException e) {
         logger.error(e.getMessage())
-        R.error(501, "Token异常")
+        R.error(401, "Token异常")
 
     }
 
@@ -97,7 +97,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = ExpiredJwtException.class)
     R expiredJwtException(ExpiredJwtException e) {
         logger.error(e.getMessage())
-        R.error(501, "Token过期，请重新登陆获取")
+        R.error(401, "Token过期，请重新登陆获取")
 
     }
     //MalformedJwtException
@@ -106,7 +106,7 @@ class GlobalExceptionHandler {
     R malformedJwtException(MalformedJwtException e) {
         logger.error(e.getMessage())
 
-        R.error(501, "Token错误")
+        R.error(401, "Token错误")
 
     }
     //WebExchangeBindException
