@@ -65,10 +65,10 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         deviceProtocol: DeviceProtocol.HTTP)
                 deviceService.add(httpDevice, DeviceProtocol.HTTP)
-                return R.ok(0, "添加成功")
+                return R.ok("添加成功")
 
             } else {
-                return R.error(5, "场景不存在")
+                return R.error("场景不存在")
             }
 
         } else {
@@ -79,7 +79,7 @@ class DeviceController extends AbstractController {
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.HTTP)
             deviceService.add(httpDevice, DeviceProtocol.HTTP)
-            return R.ok(0, "添加成功")
+            return R.ok("添加成功")
 
 
         }
@@ -105,9 +105,9 @@ class DeviceController extends AbstractController {
                         appUser: getCurrentUser(),
                         deviceProtocol: DeviceProtocol.COAP)
                 deviceService.add(coapDevice, DeviceProtocol.COAP)
-                return R.ok(0, "添加成功")
+                return R.ok("添加成功")
             } else {
-                return R.error(5, "场景不存在")
+                return R.error("场景不存在")
 
             }
 
@@ -120,7 +120,7 @@ class DeviceController extends AbstractController {
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.COAP)
             deviceService.add(coapDevice, DeviceProtocol.COAP)
-            return R.ok(0, "添加成功")
+            return R.ok("添加成功")
 
 
         }
@@ -154,10 +154,10 @@ class DeviceController extends AbstractController {
                         deviceProtocol: DeviceProtocol.MQTT)
 
                 deviceService.addMqttDevice(mqttDevice)
-                return R.ok(0, "添加成功")
+                return R.ok("添加成功")
 
             } else {
-                return R.error(5, "场景不存在")
+                return R.error("场景不存在")
 
             }
 
@@ -171,7 +171,7 @@ class DeviceController extends AbstractController {
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.MQTT)
             deviceService.addMqttDevice(mqttDevice)
-            return R.ok(0, "添加成功")
+            return R.ok("添加成功")
         }
 
 
@@ -200,10 +200,10 @@ class DeviceController extends AbstractController {
                         deviceProtocol: DeviceProtocol.TCP)
 
                 deviceService.addTerminal(terminalHostDevice)
-                return R.ok(0, "添加成功")
+                return R.ok("添加成功")
 
             } else {
-                return R.error(5, "场景不存在")
+                return R.error("场景不存在")
 
             }
         } else {
@@ -216,7 +216,7 @@ class DeviceController extends AbstractController {
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.TCP)
             deviceService.addTerminal(terminalHostDevice)
-            return R.ok(0, "添加成功")
+            return R.ok("添加成功")
         }
 
 

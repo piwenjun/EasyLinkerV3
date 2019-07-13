@@ -84,6 +84,13 @@ class R extends JSONObject {
         r
 
     }
+    static R error(String message) {
+        R r = new R()
+        r.put("code", ReturnEnum.FAIL.code)
+        r.put("msg", message)
+        r
+
+    }
     /**
      * 内置错误
      * @return
@@ -144,12 +151,21 @@ class R extends JSONObject {
 
     }
 
+    static R ok(String msg) {
+        R r = new R()
+        r.put("code", ReturnEnum.SUCCESS.code)
+        r.put("msg", msg)
+        r
+
+    }
+
     static R noAuth() {
         R r = new R()
         r.put("code", 401)
         r.put("msg", "没有权限")
         r
     }
+
     static void main(String[] args) {
     }
 }
