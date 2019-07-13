@@ -58,20 +58,20 @@ class GlobalSecurityFilter implements HandlerInterceptor {
             return true
         } else {
             if (!hasToken(request)) {
-                throw new XException("缺少token,或token已过期,请重新弄登录获取token")
+                throw new XException(401,"缺少token,或token已过期,请重新弄登录获取token")
             } else {
                 if (handler instanceof HandlerMethod) {
                     //先检查类注解
                     String[] userRoles = JwtUtils.getMap(request).get("roles") as String[]
                     if (userRoles.length < 1) {
-                        throw new XException("用户权限不足")
+                        throw new XException(402,"用户权限不足")
                     }
                     Class controllerClazz = handler.beanType
                     RequireAuthRoles requireRole1 = controllerClazz.getAnnotation(RequireAuthRoles.class)
 
                     if (requireRole1) {
                         if (!checkRole(requireRole1.roles(), userRoles)) {
-                            throw new XException("请求权限不足")
+                            throw new XException(402,"请求权限不足")
                         } else {
                             return true
 
@@ -82,7 +82,7 @@ class GlobalSecurityFilter implements HandlerInterceptor {
                         RequireAuthRoles requireRole2 = method.getAnnotation(RequireAuthRoles.class)
                         if (requireRole2) {
                             if (!checkRole(requireRole2.roles(), userRoles)) {
-                                throw new XException("请求权限不足")
+                                throw new XException(402,"请求权限不足")
                             } else {
                                 return true
                             }

@@ -7,15 +7,21 @@ package com.easylinker.framework.common.web
 enum ReturnEnum {
     SUCCESS(0, "操作成功"),
     FAIL(100, "操作失败"),
-    UN_LOGIN(200, "未登录"),
-    INVALID_TOKEN(300, "Token异常"),
-    UN_KNOW_ERROR(400, "未知异常"),
+    INVALID_TOKEN(401, "Token异常"),
+    NO_AUTH(402, "Token异常"),
+    UN_LOGIN(403, "未登录"),
+    NOT_FOUND(404, "资源不存在"),
+    UN_KNOW_ERROR(500, "未知异常"),
 
 
     private Integer code
 
     private String message
 
+    @Override
+    String toString() {
+        return name()
+    }
 
     ReturnEnum(Integer code, String message) {
         this.code = code
