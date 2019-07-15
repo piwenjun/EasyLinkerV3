@@ -17,9 +17,13 @@ import javax.persistence.*
 @Entity
 class MQTTDevice extends AbstractDevice {
     private String username
+
     private String password
+
     private String clientId
+
     private boolean online
+
     private boolean isSuperUser
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "mqttDevice")
@@ -174,3 +178,5 @@ class TopicAcl extends AbstractModel {
         this.mqttDevice = mqttDevice
     }
 }
+
+

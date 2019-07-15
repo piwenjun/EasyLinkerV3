@@ -16,7 +16,6 @@ import javax.persistence.MappedSuperclass
 @Data
 class AbstractDevice extends AbstractModel {
 
-
     private String name
     private String info
     @Enumerated(EnumType.STRING)
@@ -61,7 +60,7 @@ class AbstractDevice extends AbstractModel {
  */
 enum DeviceProtocol {
     HTTP("HTTP协议设备"),
-    COAP("COAP协议设备"),
+    CoAP("CoAP协议设备"),
     MQTT("MQTT协议设备"),
     UDP("UDP协议设备"),
     TCP("TCP协议设备"),

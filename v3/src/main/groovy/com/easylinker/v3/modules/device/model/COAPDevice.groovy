@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne
  *
  */
 @Entity
-class COAPDevice extends AbstractDevice {
+class CoAPDevice extends AbstractDevice {
     private String token
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)

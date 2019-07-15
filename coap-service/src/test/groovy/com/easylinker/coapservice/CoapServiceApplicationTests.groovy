@@ -1,4 +1,4 @@
-package com.easylinker.coapservice
+package com.easylinker.CoAPservice
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner
 
 @RunWith(SpringRunner)
 @SpringBootTest
-class CoapServiceApplicationTests {
+class CoAPServiceApplicationTests {
 
     @Test
     void contextLoads() {

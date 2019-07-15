@@ -4,13 +4,14 @@ import cn.hutool.crypto.digest.DigestUtil
 import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceType
+import com.easylinker.framework.common.model.FieldDesc
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.modules.user.service.UserService
-import com.easylinker.v3.modules.device.form.COAPDeviceForm
+import com.easylinker.v3.modules.device.form.CoAPDeviceForm
 import com.easylinker.v3.modules.device.form.HTTPDeviceForm
 import com.easylinker.v3.modules.device.form.MQTTDeviceForm
 import com.easylinker.v3.modules.device.form.TerminalHostDeviceForm
-import com.easylinker.v3.modules.device.model.COAPDevice
+import com.easylinker.v3.modules.device.model.CoAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.model.TerminalHostDevice
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
+import java.lang.reflect.Field
 
 /**
  * @author wwhai* @date 2019/6/29 23:00
@@ -47,7 +49,7 @@ class DeviceController extends AbstractController {
     }
 
 
-    private R addDevice( HTTPDeviceForm httpDeviceForm){
+    private R addDevice(HTTPDeviceForm httpDeviceForm) {
 
     }
     /**
@@ -56,7 +58,7 @@ class DeviceController extends AbstractController {
      * @return
      */
 
-    @PostMapping("/addHttp")
+    @PostMapping("/addHTTP")
     R addHTTP(@RequestBody @Valid HTTPDeviceForm httpDeviceForm) {
         if (httpDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(httpDeviceForm.sceneSecurityId)
@@ -67,6 +69,7 @@ class DeviceController extends AbstractController {
                         deviceType: httpDeviceForm.deviceType,
                         appUser: getCurrentUser(),
                         scene: scene,
+                        token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                         deviceProtocol: DeviceProtocol.HTTP)
                 deviceService.add(httpDevice)
                 return R.ok("添加成功")
@@ -81,6 +84,7 @@ class DeviceController extends AbstractController {
                     info: httpDeviceForm.info,
                     deviceType: httpDeviceForm.deviceType,
                     appUser: getCurrentUser(),
+                    token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                     deviceProtocol: DeviceProtocol.HTTP)
             deviceService.add(httpDevice)
             return R.ok("添加成功")
@@ -90,25 +94,25 @@ class DeviceController extends AbstractController {
 
     }
     /**
-     * 添加COAP设备
-     * @param coapDeviceForm
+     * 添加CoAP设备
+     * @param CoAPDeviceForm
      * @return
      */
 
-    @PostMapping("/addCoap")
-    R addCOAP(@RequestBody @Valid COAPDeviceForm coapDeviceForm) {
-        if (coapDeviceForm.sceneSecurityId) {
-            Scene scene = sceneService.findBySecurityId(coapDeviceForm.sceneSecurityId)
+    @PostMapping("/addCoAP")
+    R addCoAP(@RequestBody @Valid CoAPDeviceForm CoAPDeviceForm) {
+        if (CoAPDeviceForm.sceneSecurityId) {
+            Scene scene = sceneService.findBySecurityId(CoAPDeviceForm.sceneSecurityId)
             if (scene) {
 
-                COAPDevice coapDevice = new COAPDevice(name: coapDeviceForm.name,
-                        info: coapDeviceForm.info,
+                CoAPDevice CoAPDevice = new CoAPDevice(name: CoAPDeviceForm.name,
+                        info: CoAPDeviceForm.info,
                         token: UUID.randomUUID().toString().replace("-", ""),
-                        deviceType: coapDeviceForm.deviceType,
+                        deviceType: CoAPDeviceForm.deviceType,
                         scene: scene,
                         appUser: getCurrentUser(),
-                        deviceProtocol: DeviceProtocol.COAP)
-                deviceService.add(coapDevice)
+                        deviceProtocol: DeviceProtocol.CoAP)
+                deviceService.add(CoAPDevice)
                 return R.ok("添加成功")
             } else {
                 return R.error("场景不存在")
@@ -117,13 +121,13 @@ class DeviceController extends AbstractController {
 
         } else {
 
-            COAPDevice coapDevice = new COAPDevice(name: coapDeviceForm.name,
-                    info: coapDeviceForm.info,
+            CoAPDevice CoAPDevice = new CoAPDevice(name: CoAPDeviceForm.name,
+                    info: CoAPDeviceForm.info,
                     token: UUID.randomUUID().toString().replace("-", ""),
-                    deviceType: coapDeviceForm.deviceType,
+                    deviceType: CoAPDeviceForm.deviceType,
                     appUser: getCurrentUser(),
-                    deviceProtocol: DeviceProtocol.COAP)
-            deviceService.add(coapDevice)
+                    deviceProtocol: DeviceProtocol.CoAP)
+            deviceService.add(CoAPDevice)
             return R.ok("添加成功")
 
 
@@ -140,7 +144,7 @@ class DeviceController extends AbstractController {
     @Autowired
     TopicAclService topicAclService
 
-    @PostMapping("/addMqtt")
+    @PostMapping("/addMQTT")
     @Transactional(rollbackFor = Exception.class)
     R addMQTT(@RequestBody @Valid MQTTDeviceForm mqttDeviceForm) {
 
@@ -282,7 +286,7 @@ class DeviceController extends AbstractController {
     UserService userService
 
     @Transactional(rollbackFor = Exception.class, readOnly = true)
-    @GetMapping("/searchMqtt")
+    @GetMapping("/searchMQTT")
     R searchMqtt(@RequestParam(required = true) String username,
                  @RequestParam(required = true) String clientId,
                  @RequestParam(required = true) boolean online,
@@ -314,7 +318,7 @@ class DeviceController extends AbstractController {
      * @return
      */
 
-    @GetMapping("/searchHttp")
+    @GetMapping("/searchHTTP")
     R searchHttp(@RequestParam(required = true) int page,
                  @RequestParam(required = true) int size,
                  @RequestParam(required = true) String name,
@@ -328,17 +332,17 @@ class DeviceController extends AbstractController {
         return R.okWithData(httpDevicePage)
     }
     /**
-     * 搜索COAP设备
-     * @param searchCoapForm
+     * 搜索CoAP设备
+     * @param searchCoAPForm
      * @return
      */
 
-    @PostMapping("/searchCoap")
-    R searchCoap(@RequestParam(required = true) int page,
+    @PostMapping("/searchCoAP")
+    R searchCoAP(@RequestParam(required = true) int page,
                  @RequestParam(required = true) int size,
                  @RequestParam(required = true) String name,
                  @RequestParam(required = true) String info) {
-        Page<COAPDevice> httpDevicePage = deviceService.searchCoap(new COAPDevice(
+        Page<CoAPDevice> httpDevicePage = deviceService.searchCoAP(new CoAPDevice(
                 name: name,
                 appUser: getCurrentUser(),
                 info: info),
@@ -352,21 +356,69 @@ class DeviceController extends AbstractController {
      * http://localhost:2500/easyboot/device/list?page=0&size=10
      * @return
      */
-    @GetMapping("/listMqtt")
+    @GetMapping("/listMQTT")
     R listMqtt(@RequestParam int page, @RequestParam int size) {
         return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), DeviceProtocol.MQTT))
 
     }
 
-    @GetMapping("/listHttp")
+    @GetMapping("/listHTTP")
     R listHttp(@RequestParam int page, @RequestParam int size) {
         return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), DeviceProtocol.HTTP))
 
     }
 
-    @GetMapping("/listCoap")
-    R listCoap(@RequestParam int page, @RequestParam int size) {
-        return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), DeviceProtocol.COAP))
+    @GetMapping("/listCoAP")
+    R listCoAP(@RequestParam int page, @RequestParam int size) {
+        return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), DeviceProtocol.CoAP))
+
+    }
+
+
+    @GetMapping("/listField")
+    R listField(@RequestParam @Valid DeviceProtocol deviceProtocol) {
+        List<Map<String, Object>> fieldList = new ArrayList<>()
+        switch (deviceProtocol) {
+
+            case DeviceProtocol.MQTT:
+
+                for (Field field : new MQTTDevice().getClass().declaredFields) {
+                    FieldDesc fieldDesc = field.getAnnotation(FieldDesc.class)
+                    if (fieldDesc) {
+                        Map<String, Object> data = new HashMap<>()
+                        data.put("title", fieldDesc.title())
+                        data.put("dataIndex", field.name)
+                        fieldList.add(data)
+                    }
+                }
+                return R.okWithData(fieldList)
+            case DeviceProtocol.HTTP:
+                for (Field field : new HTTPDevice().getClass().declaredFields) {
+                    FieldDesc fieldDesc = field.getAnnotation(FieldDesc.class)
+                    if (fieldDesc) {
+                        Map<String, Object> data = new HashMap<>()
+                        data.put("title", fieldDesc.title())
+                        data.put("dataIndex", field.name)
+                        fieldList.add(data)
+                    }
+                }
+                return R.okWithData(fieldList)
+            case DeviceProtocol.CoAP:
+                for (Field field : new CoAPDevice().getClass().declaredFields) {
+                    FieldDesc fieldDesc = field.getAnnotation(FieldDesc.class)
+                    if (fieldDesc) {
+                        Map<String, Object> data = new HashMap<>()
+                        data.put("title", fieldDesc.title())
+                        data.put("dataIndex", field.name)
+                        fieldList.add(data)
+                    }
+                }
+                return R.okWithData(fieldList)
+            default:
+                return R.error("不支持的类型")
+
+
+        }
 
     }
 

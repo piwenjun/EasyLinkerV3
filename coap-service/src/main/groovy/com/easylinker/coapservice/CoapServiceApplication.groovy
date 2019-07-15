@@ -1,13 +1,13 @@
-package com.easylinker.coapservice
+package com.easylinker.CoAPservice
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication
-class CoapServiceApplication {
+class CoAPServiceApplication {
 
     static void main(String[] args) {
-        SpringApplication.run(CoapServiceApplication, args)
+        SpringApplication.run(CoAPServiceApplication, args)
     }
 
 }
