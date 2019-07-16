@@ -6,7 +6,9 @@ import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.device.model.CoAPDevice
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
+import com.easylinker.v3.modules.device.model.TCPDevice
 import com.easylinker.v3.modules.device.model.TerminalHostDevice
+import com.easylinker.v3.modules.device.model.UDPDevice
 import com.easylinker.v3.modules.scene.model.Scene
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -21,6 +23,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor
  *
  */
 
+/**
+ * HTTP
+ */
 interface HTTPRepository extends JpaRepository<HTTPDevice, Long> {
 
     long countByAppUser(AppUser appUser)
@@ -33,7 +38,9 @@ interface HTTPRepository extends JpaRepository<HTTPDevice, Long> {
 
     Page<HTTPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable pageable)
 }
-
+/**
+ * CoAP
+ */
 interface CoAPRepository extends JpaRepository<CoAPDevice, Long> {
     long countByAppUser(AppUser appUser)
 
@@ -45,7 +52,9 @@ interface CoAPRepository extends JpaRepository<CoAPDevice, Long> {
 
     Page<CoAPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable pageable)
 }
-
+/**
+ * Mqtt
+ */
 interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificationExecutor<MQTTDevice> {
     long countByAppUser(AppUser appUser)
 
@@ -61,8 +70,42 @@ interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificati
     Page<MQTTDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable page)
 
 }
-
+/**
+ * Host
+ */
 interface TerminalHostDeviceRepository extends JpaRepository<TerminalHostDevice,Long>{
+    long countByAppUser(AppUser appUser)
+
+    TerminalHostDevice findBySecurityId(String securityId)
+
+    Page<TerminalHostDevice> findAllBySceneAndDeviceProtocol(Scene scene, DeviceProtocol deviceProtocol, Pageable page)
+
+    Page<TerminalHostDevice> findAllByAppUser(Pageable page, AppUser appUser)
+
+    Page<TerminalHostDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable page)
+
+}
+
+/**
+ * TCP
+ */
+interface TCPDeviceRepository extends JpaRepository<TCPDevice,Long>{
+    long countByAppUser(AppUser appUser)
+
+    TerminalHostDevice findBySecurityId(String securityId)
+
+    Page<TerminalHostDevice> findAllBySceneAndDeviceProtocol(Scene scene, DeviceProtocol deviceProtocol, Pageable page)
+
+    Page<TerminalHostDevice> findAllByAppUser(Pageable page, AppUser appUser)
+
+    Page<TerminalHostDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable page)
+
+}
+
+/**
+ * Udp
+ */
+interface UDPDeviceRepository extends JpaRepository<UDPDevice,Long>{
     long countByAppUser(AppUser appUser)
 
     TerminalHostDevice findBySecurityId(String securityId)

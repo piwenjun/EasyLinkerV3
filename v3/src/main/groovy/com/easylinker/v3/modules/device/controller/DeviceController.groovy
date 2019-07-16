@@ -4,17 +4,10 @@ import cn.hutool.crypto.digest.DigestUtil
 import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceType
-import com.easylinker.framework.common.model.FieldDesc
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.modules.user.service.UserService
-import com.easylinker.v3.modules.device.form.CoAPDeviceForm
-import com.easylinker.v3.modules.device.form.HTTPDeviceForm
-import com.easylinker.v3.modules.device.form.MQTTDeviceForm
-import com.easylinker.v3.modules.device.form.TerminalHostDeviceForm
-import com.easylinker.v3.modules.device.model.CoAPDevice
-import com.easylinker.v3.modules.device.model.HTTPDevice
-import com.easylinker.v3.modules.device.model.MQTTDevice
-import com.easylinker.v3.modules.device.model.TerminalHostDevice
+import com.easylinker.v3.modules.device.form.*
+import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
 import com.easylinker.v3.modules.scene.model.Scene
@@ -28,7 +21,6 @@ import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
-import java.lang.reflect.Field
 
 /**
  * @author wwhai* @date 2019/6/29 23:00
@@ -48,10 +40,6 @@ class DeviceController extends AbstractController {
         super(httpServletRequest)
     }
 
-
-    private R addDevice(HTTPDeviceForm httpDeviceForm) {
-
-    }
     /**
      * 添加HTTP设备
      * @param httpDeviceForm
@@ -161,7 +149,7 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         deviceProtocol: DeviceProtocol.MQTT)
 
-                deviceService.addMqttDevice(mqttDevice)
+                deviceService.add(mqttDevice)
                 return R.ok("添加成功")
 
             } else {
@@ -178,7 +166,7 @@ class DeviceController extends AbstractController {
                     deviceType: mqttDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.MQTT)
-            deviceService.addMqttDevice(mqttDevice)
+            deviceService.add(mqttDevice)
             return R.ok("添加成功")
         }
 
@@ -207,7 +195,7 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         deviceProtocol: DeviceProtocol.TCP)
 
-                deviceService.addTerminal(terminalHostDevice)
+                deviceService.add(terminalHostDevice)
                 return R.ok("添加成功")
 
             } else {
@@ -223,13 +211,99 @@ class DeviceController extends AbstractController {
                     deviceType: terminalHostDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.TCP)
-            deviceService.addTerminal(terminalHostDevice)
+            deviceService.add(terminalHostDevice)
             return R.ok("添加成功")
         }
 
 
     }
 
+    /**
+     * 添加TCP
+     * @param tcpDeviceForm
+     * @return
+     */
+    @PostMapping("/addTCP")
+    @Transactional(rollbackFor = Exception.class)
+    R addTCP(@RequestBody @Valid TCPDeviceForm tcpDeviceForm) {
+
+        if (tcpDeviceForm.sceneSecurityId) {
+            Scene scene = sceneService.findBySecurityId(tcpDeviceForm.sceneSecurityId)
+            if (scene) {
+                TCPDevice tcpDevice = new TCPDevice(name: tcpDeviceForm.name,
+                        info: tcpDeviceForm.info,
+                        token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                        password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                        username: UUID.randomUUID().toString().replace("-", ""),
+                        deviceType: tcpDeviceForm.deviceType,
+                        appUser: getCurrentUser(),
+                        scene: scene,
+                        deviceProtocol: DeviceProtocol.TCP)
+
+                deviceService.add(tcpDevice)
+                return R.ok("添加成功")
+
+            } else {
+                return R.error("场景不存在")
+
+            }
+
+        } else {
+            TCPDevice tcpDevice = new TCPDevice(name: tcpDeviceForm.name,
+                    info: tcpDeviceForm.info,
+                    token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                    password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                    username: UUID.randomUUID().toString().replace("-", ""),
+                    deviceType: tcpDeviceForm.deviceType,
+                    appUser: getCurrentUser(),
+                    deviceProtocol: DeviceProtocol.TCP)
+            deviceService.add(tcpDevice)
+            return R.ok("添加成功")
+        }
+
+
+    }
+    /**
+     * 添加UDP
+     * @param udpDeviceForm
+     * @return
+     */
+    @PostMapping("/addUDP")
+    @Transactional(rollbackFor = Exception.class)
+    R addUDP(@RequestBody @Valid UDPDeviceForm udpDeviceForm) {
+
+        if (udpDeviceForm.sceneSecurityId) {
+            Scene scene = sceneService.findBySecurityId(udpDeviceForm.sceneSecurityId)
+            if (scene) {
+                UDPDevice udpDevice = new UDPDevice(name: udpDeviceForm.name,
+                        info: udpDeviceForm.info,
+                        token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                        deviceType: udpDeviceForm.deviceType,
+                        appUser: getCurrentUser(),
+                        scene: scene,
+                        deviceProtocol: DeviceProtocol.UDP)
+
+                deviceService.add(udpDevice)
+                return R.ok("添加成功")
+
+            } else {
+                return R.error("场景不存在")
+
+            }
+
+        } else {
+            UDPDevice udpDevice = new UDPDevice(name: udpDeviceForm.name,
+                    info: udpDeviceForm.info,
+                    token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
+                    deviceType: udpDeviceForm.deviceType,
+                    appUser: getCurrentUser(),
+                    deviceProtocol: DeviceProtocol.UDP)
+            deviceService.add(udpDevice)
+            return R.ok("添加成功")
+        }
+
+
+    }
 
     /**
      * 获取支持的设备类型
@@ -352,73 +426,15 @@ class DeviceController extends AbstractController {
     }
 
     /**
-     * 查询MQTT设备
-     * http://localhost:2500/easyboot/device/list?page=0&size=10
+     * 获取设备列表[7-16最新版，上面的是最初写的，后来发现不利于动态扩展于是写了个泛型查询]
+     * @param page
+     * @param size
+     * @param deviceProtocol
      * @return
      */
-    @GetMapping("/listMQTT")
-    R listMqtt(@RequestParam int page, @RequestParam int size) {
-        return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), DeviceProtocol.MQTT))
-
-    }
-
-    @GetMapping("/listHTTP")
-    R listHttp(@RequestParam int page, @RequestParam int size) {
-        return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), DeviceProtocol.HTTP))
-
-    }
-
-    @GetMapping("/listCoAP")
-    R listCoAP(@RequestParam int page, @RequestParam int size) {
-        return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), DeviceProtocol.CoAP))
-
-    }
-
-
-    @GetMapping("/listField")
-    R listField(@RequestParam @Valid DeviceProtocol deviceProtocol) {
-        List<Map<String, Object>> fieldList = new ArrayList<>()
-        switch (deviceProtocol) {
-
-            case DeviceProtocol.MQTT:
-
-                for (Field field : new MQTTDevice().getClass().declaredFields) {
-                    FieldDesc fieldDesc = field.getAnnotation(FieldDesc.class)
-                    if (fieldDesc) {
-                        Map<String, Object> data = new HashMap<>()
-                        data.put("title", fieldDesc.title())
-                        data.put("dataIndex", field.name)
-                        fieldList.add(data)
-                    }
-                }
-                return R.okWithData(fieldList)
-            case DeviceProtocol.HTTP:
-                for (Field field : new HTTPDevice().getClass().declaredFields) {
-                    FieldDesc fieldDesc = field.getAnnotation(FieldDesc.class)
-                    if (fieldDesc) {
-                        Map<String, Object> data = new HashMap<>()
-                        data.put("title", fieldDesc.title())
-                        data.put("dataIndex", field.name)
-                        fieldList.add(data)
-                    }
-                }
-                return R.okWithData(fieldList)
-            case DeviceProtocol.CoAP:
-                for (Field field : new CoAPDevice().getClass().declaredFields) {
-                    FieldDesc fieldDesc = field.getAnnotation(FieldDesc.class)
-                    if (fieldDesc) {
-                        Map<String, Object> data = new HashMap<>()
-                        data.put("title", fieldDesc.title())
-                        data.put("dataIndex", field.name)
-                        fieldList.add(data)
-                    }
-                }
-                return R.okWithData(fieldList)
-            default:
-                return R.error("不支持的类型")
-
-
-        }
+    @GetMapping("/listDevice")
+    R listDevice(@RequestParam int page, @RequestParam int size, @RequestParam DeviceProtocol deviceProtocol) {
+        return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), deviceProtocol))
 
     }
 

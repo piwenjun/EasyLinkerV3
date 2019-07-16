@@ -23,6 +23,16 @@ class AbstractDevice extends AbstractModel {
     @Enumerated(EnumType.STRING)
     private DeviceType deviceType
 
+    private Date lastActive
+
+    Date getLastActive() {
+        return lastActive
+    }
+
+    void setLastActive(Date lastActive) {
+        this.lastActive = lastActive
+    }
+
     DeviceType getDeviceType() {
         return deviceType
     }

@@ -21,6 +21,12 @@ abstract class AbstractModel {
      * 项目创建时间
      */
     private Date createTime = new Date()
+
+    /**
+     * 是否软删除
+     */
+    private boolean isDelete = false
+
     /**
      * 项目更新时间
      */
@@ -58,4 +64,11 @@ abstract class AbstractModel {
         this.updateTime = updateTime
     }
 
+    boolean getIsDelete() {
+        return isDelete
+    }
+
+    void setIsDelete(boolean isDelete) {
+        this.isDelete = isDelete
+    }
 }
