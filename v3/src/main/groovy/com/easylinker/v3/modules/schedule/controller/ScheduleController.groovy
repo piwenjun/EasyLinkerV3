@@ -1,7 +1,10 @@
 package com.easylinker.v3.modules.schedule.controller
 
+import com.easylinker.framework.common.controller.AbstractController
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestController
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 定时计划任务
@@ -10,5 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/schedule")
-class ScheduleController {
+class ScheduleController extends AbstractController {
+
+    ScheduleController(HttpServletRequest httpServletRequest) {
+        super(httpServletRequest)
+    }
 }

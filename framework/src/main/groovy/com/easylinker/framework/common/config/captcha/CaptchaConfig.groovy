@@ -1,9 +1,8 @@
 package com.easylinker.framework.common.config.captcha
 
 /**
- * @author wwhai
- * @date 2019/6/4 22:59
- * @email:751957846@qq.com 瞅啥瞅？代码拿过来我看看有没有BUG。
+ * @author wwhai* @date 2019/6/4 22:59
+ * @email:751957846 @qq.com瞅啥瞅？代码拿过来我看看有没有BUG。
  */
 
 import com.google.code.kaptcha.impl.DefaultKaptcha
@@ -25,7 +24,7 @@ public class CaptchaConfig {
         // 图片边框
         properties.setProperty("kaptcha.border", "yes")
         // 边框颜色
-        properties.setProperty("kaptcha.border.color", "105,179,90")
+        //properties.setProperty("kaptcha.border.color", "105,179,90")
         // 字体颜色
         properties.setProperty("kaptcha.textproducer.font.color", "blue")
         // 图片宽
@@ -39,7 +38,7 @@ public class CaptchaConfig {
         // 验证码长度
         properties.setProperty("kaptcha.textproducer.char.length", "6")
         // 字体
-        properties.setProperty("kaptcha.textproducer.font.names", "宋体,楷体,微软雅黑")
+        //properties.setProperty("kaptcha.textproducer.font.names", "宋体,楷体,微软雅黑")
 
         Config config = new Config(properties)
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha()

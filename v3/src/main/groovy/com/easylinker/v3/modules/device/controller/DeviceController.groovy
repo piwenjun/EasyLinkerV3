@@ -350,6 +350,9 @@ class DeviceController extends AbstractController {
         return R.okWithData(deviceService.detail(securityId, deviceProtocol))
 
     }
+
+
+
     /**
      * MQTT设备搜索
      * @param SearchMqttForm
@@ -432,11 +435,23 @@ class DeviceController extends AbstractController {
      * @param deviceProtocol
      * @return
      */
-    @GetMapping("/listDevice")
-    R listDevice(@RequestParam int page, @RequestParam int size, @RequestParam DeviceProtocol deviceProtocol) {
-        return R.okWithData(deviceService.listByUser(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), deviceProtocol))
+    @GetMapping("/listByProtocol")
+    R listDeviceByProtocol(@RequestParam int page, @RequestParam int size, @RequestParam DeviceProtocol deviceProtocol) {
+        return R.okWithData(deviceService.listByProtocol(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")), getCurrentUser(), deviceProtocol))
 
     }
+    /**
+     * 根据设备类型筛选
+     * @param page
+     * @param size
+     * @param deviceType
+     * @return
+     */
 
+    @GetMapping("/listByType")
+    R listDeviceByType(@RequestParam int page, @RequestParam int size, @RequestParam DeviceType deviceType) {
+        return R.okWithData(deviceService.listByType(getCurrentUser(), deviceType, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"))))
+
+    }
 
 }

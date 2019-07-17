@@ -8,6 +8,8 @@ import com.easylinker.framework.common.web.R
 import com.easylinker.framework.common.web.ReturnEnum
 import com.easylinker.framework.modules.entry.form.LoginForm
 import com.easylinker.framework.modules.entry.form.SignUpForm
+import com.easylinker.framework.modules.syslog.model.SystemLog
+import com.easylinker.framework.modules.syslog.service.SystemLogService
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.framework.modules.user.model.Role
 import com.easylinker.framework.modules.user.service.RoleService
@@ -43,6 +45,9 @@ class EntryController extends AbstractController {
     @Autowired
     RedisUtils redisUtils
 
+    @Autowired
+    SystemLogService systemLogService
+
     EntryController(HttpServletRequest httpServletRequest) {
         super(httpServletRequest)
     }
@@ -52,7 +57,7 @@ class EntryController extends AbstractController {
     R login(@Valid @RequestBody LoginForm loginForm) {
         if (!captchaUtils.validate(loginForm.uuid, loginForm.captchaCode)) {
 
-            throw new XException(501, "验证码识别失败!")
+            throw new XException("验证码识别失败!")
         }
 
         AppUser appUser = userService.findByPrinciple(loginForm.getPrinciple())
@@ -74,9 +79,12 @@ class EntryController extends AbstractController {
             dataMap.put("principle", appUser.principle)
             dataMap.put("token", JwtUtils.token(jwtMap))
             redisUtils.set("USER:" + appUser.securityId, JSONObject.toJSONString(dataMap), 3_600_0000L)
+            systemLogService.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆成功,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId))
             return R.okWithData(dataMap)
         } else {
-            throw new XException(0, "登陆失败!")
+            systemLogService.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆失败,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId))
+
+            throw new XException("登陆失败!")
         }
     }
 
@@ -90,11 +98,11 @@ class EntryController extends AbstractController {
     R signUp(@Valid @RequestBody SignUpForm signUpForm) {
 
         if (userService.findByPrinciple(signUpForm.principle) != null) {
-            return R.error(0, "用户名已经存在!")
+            return R.error("用户名已经存在!")
         }
 
         if (userService.findByEmail(signUpForm.email) != null) {
-            return R.error(0, "该邮箱已经被注册!")
+            return R.error("该邮箱已经被注册!")
 
         }
         AppUser appUser = new AppUser(principle: signUpForm.principle,
@@ -104,8 +112,8 @@ class EntryController extends AbstractController {
         )
         userService.save(appUser)
         roleService.save(new Role(name: "BASE_ROLE", info: "基本权限", appUser: appUser))
-
-        return R.ok()
+        systemLogService.save(new SystemLog(reason: "注册", info: "用户:" + appUser.name + " 注册成功", userSecurityId: ""))
+        return R.ok("注册成功")
 
     }
 
@@ -122,7 +130,7 @@ class EntryController extends AbstractController {
             return R.ok(ReturnEnum.SUCCESS)
 
         } else {
-            return R.ok(ReturnEnum.FAIL)
+            return R.error(ReturnEnum.FAIL)
 
         }
 

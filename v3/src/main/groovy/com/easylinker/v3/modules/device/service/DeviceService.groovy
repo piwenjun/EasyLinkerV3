@@ -50,8 +50,8 @@ class DeviceService {
         mqttCount.put("online", mqttRepository.countByOnline(true))
         mqttCount.put("total", mqttRepository.count())
         data.put("CoAP", coAPRepository.count())
-        data.put("http", httpRepository.count())
-        data.put("mqtt", mqttCount)
+        data.put("HTTP", httpRepository.count())
+        data.put("MQTT", mqttCount)
         return data
     }
 
@@ -157,7 +157,7 @@ class DeviceService {
      * @return
      */
 
-    Page<AbstractDevice> listByUser(Pageable pageable, AppUser appUser, DeviceProtocol deviceProtocol) {
+    Page<AbstractDevice> listByProtocol(Pageable pageable, AppUser appUser, DeviceProtocol deviceProtocol) {
         switch (deviceProtocol) {
             case DeviceProtocol.HTTP:
                 return httpRepository.findAllByAppUser(pageable, appUser)
@@ -189,31 +189,12 @@ class DeviceService {
                 return coAPRepository.findAllByAppUserAndDeviceType(appUser, deviceType, pageable)
             case DeviceProtocol.MQTT:
                 return mqttRepository.findAllByAppUserAndDeviceType(appUser, deviceType, pageable)
-            default: return null
-        }
-    }
-
-    /**
-     * 根据ID查找
-     * @param id
-     * @return
-     */
-
-    AbstractDevice getBySecurityId(String sid, DeviceProtocol deviceProtocol) {
-        switch (deviceProtocol) {
-            case DeviceProtocol.HTTP:
-                return httpRepository.findBySecurityId(sid) as HTTPDevice
-            case DeviceProtocol.CoAP:
-                return coAPRepository.findBySecurityId(sid) as CoAPDevice
-            case DeviceProtocol.MQTT:
-                return mqttRepository.findBySecurityId(sid) as MQTTDevice
             case DeviceProtocol.TCP:
-                return mqttRepository.findBySecurityId(sid) as TCPDevice
+                return tcpDeviceRepository.findAllByAppUserAndDeviceType(appUser, deviceType, pageable)
             case DeviceProtocol.UDP:
-                return mqttRepository.findBySecurityId(sid) as UDPDevice
+                return udpDeviceRepository.findAllByAppUserAndDeviceType(appUser, deviceType, pageable)
             default: return null
         }
-
     }
 
 
@@ -296,28 +277,6 @@ class DeviceService {
                 return tcpDeviceRepository.findBySecurityId(securityId)
             case DeviceProtocol.UDP:
                 return udpDeviceRepository.findBySecurityId(securityId)
-            default: return null
-
-        }
-    }
-/**
- * 根据用户查找设备
- * @param appUser
- * @return
- */
-
-    Page<AbstractDevice> listDeviceByAppUser(AppUser appUser, DeviceProtocol deviceProtocol, Pageable pageable) {
-        switch (deviceProtocol) {
-            case DeviceProtocol.MQTT:
-                return mqttRepository.findAllByAppUser(pageable, appUser)
-            case DeviceProtocol.CoAP:
-                return coAPRepository.findAllByAppUser(pageable, appUser)
-            case DeviceProtocol.HTTP:
-                return httpRepository.findAllByAppUser(pageable, appUser)
-            case DeviceProtocol.TCP:
-                return tcpDeviceRepository.findAllByAppUser(pageable, appUser)
-            case DeviceProtocol.UDP:
-                return udpDeviceRepository.findAllByAppUser(pageable, appUser)
             default: return null
 
         }
