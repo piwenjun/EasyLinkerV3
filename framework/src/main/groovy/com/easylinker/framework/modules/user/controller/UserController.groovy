@@ -3,16 +3,16 @@ package com.easylinker.framework.modules.user.controller
 import cn.hutool.json.JSONArray
 import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.web.R
+import com.easylinker.framework.modules.user.form.UpdateForm
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.framework.modules.user.model.Role
 import com.easylinker.framework.modules.user.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/user")
@@ -46,6 +46,26 @@ class UserController extends AbstractController {
         dataMap.put("email", appUser.email)
         dataMap.put("name", appUser.name)
         return R.okWithData(dataMap)
+
+    }
+
+    /**
+     * 更新用户资料
+     * @param updateForm
+     * @return
+     */
+    @PostMapping("/update")
+    R update(@RequestBody @Valid UpdateForm updateForm) {
+        AppUser appUser = userService.findBySecurityId(getCurrentUser().securityId)
+        if (appUser) {
+            appUser.setName(updateForm.name)
+            appUser.setEmail(updateForm.email)
+            userService.save(appUser)
+            return R.ok("用户信息更新成功")
+        } else {
+            return R.error("用户不存在")
+
+        }
 
     }
 }

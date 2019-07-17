@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 /**
+ * 一些辅助功能
  * @author wwhai* @date 2019/7/13 11:50
  * @email:751957846 @qq.com
  * 瞅啥瞅？代码拿过来我看看有没有BUG。
@@ -32,5 +33,6 @@ class ExtController {
         }
         return R.okWithData(list)
     }
+
 
 }
