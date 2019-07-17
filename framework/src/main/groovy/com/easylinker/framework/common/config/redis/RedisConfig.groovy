@@ -58,7 +58,7 @@ class RedisConfig {
 
         template.afterPropertiesSet()
 
-        template
+        return template
 
     }
 }

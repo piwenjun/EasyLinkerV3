@@ -1,4 +1,4 @@
-package com.easylinker.framework.common.model
+package com.easylinker.framework.common.annotations
 /**
  * 返回给前端的表头注解
  */
