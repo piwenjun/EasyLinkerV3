@@ -1,14 +1,10 @@
 package com.easylinker.v3.modules.device.dao
 
 import com.easylinker.framework.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceStatus
 import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.modules.user.model.AppUser
-import com.easylinker.v3.modules.device.model.CoAPDevice
-import com.easylinker.v3.modules.device.model.HTTPDevice
-import com.easylinker.v3.modules.device.model.MQTTDevice
-import com.easylinker.v3.modules.device.model.TCPDevice
-import com.easylinker.v3.modules.device.model.TerminalHostDevice
-import com.easylinker.v3.modules.device.model.UDPDevice
+import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.scene.model.Scene
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -37,6 +33,13 @@ interface HTTPRepository extends JpaRepository<HTTPDevice, Long> {
     HTTPDevice findBySecurityId(String securityId)
 
     Page<HTTPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable pageable)
+
+    //
+    Page<HTTPDevice> findAllByAppUserAndDeviceProtocolAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol, DeviceStatus status, DeviceType deviceType, String name, String info, String sn, Pageable pageable)
+
+    //
+    Page<HTTPDevice> findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol,Scene scene,DeviceStatus status,  DeviceType deviceType, String name, String info, String sn, Pageable pageable)
+
 }
 /**
  * CoAP
@@ -51,6 +54,12 @@ interface CoAPRepository extends JpaRepository<CoAPDevice, Long> {
     Page<CoAPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
     Page<CoAPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable pageable)
+
+    Page<CoAPDevice> findAllByAppUserAndDeviceProtocolAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol, DeviceStatus status, DeviceType deviceType, String name, String info, String sn, Pageable pageable)
+
+
+    Page<CoAPDevice> findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol,Scene scene,DeviceStatus status,  DeviceType deviceType, String name, String info, String sn, Pageable pageable)
+
 }
 /**
  * Mqtt
@@ -69,11 +78,16 @@ interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificati
 
     Page<MQTTDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable page)
 
+    Page<MQTTDevice> findAllByAppUserAndDeviceProtocolAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol, DeviceStatus status, DeviceType deviceType, String name, String info, String sn, Pageable pageable)
+
+
+    Page<MQTTDevice>  findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol,Scene scene,DeviceStatus status,  DeviceType deviceType, String name, String info, String sn, Pageable pageable)
+
 }
 /**
  * Host
  */
-interface TerminalHostDeviceRepository extends JpaRepository<TerminalHostDevice,Long>{
+interface TerminalHostDeviceRepository extends JpaRepository<TerminalHostDevice, Long> {
     long countByAppUser(AppUser appUser)
 
     TerminalHostDevice findBySecurityId(String securityId)
@@ -83,38 +97,52 @@ interface TerminalHostDeviceRepository extends JpaRepository<TerminalHostDevice,
     Page<TerminalHostDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
     Page<TerminalHostDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable page)
+
+    Page<TerminalHostDevice>findAllByAppUserAndDeviceProtocolAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol, DeviceStatus status, DeviceType deviceType, String name, String info, String sn, Pageable pageable)
+
+
+    Page<TerminalHostDevice>  findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol,Scene scene,DeviceStatus status,  DeviceType deviceType, String name, String info, String sn, Pageable pageable)
 
 }
 
 /**
  * TCP
  */
-interface TCPDeviceRepository extends JpaRepository<TCPDevice,Long>{
+interface TCPDeviceRepository extends JpaRepository<TCPDevice, Long> {
     long countByAppUser(AppUser appUser)
 
-    TerminalHostDevice findBySecurityId(String securityId)
+    TCPDevice findBySecurityId(String securityId)
 
-    Page<TerminalHostDevice> findAllBySceneAndDeviceProtocol(Scene scene, DeviceProtocol deviceProtocol, Pageable page)
+    Page<TCPDevice> findAllBySceneAndDeviceProtocol(Scene scene, DeviceProtocol deviceProtocol, Pageable page)
 
-    Page<TerminalHostDevice> findAllByAppUser(Pageable page, AppUser appUser)
+    Page<TCPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
-    Page<TerminalHostDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable page)
+    Page<TCPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable page)
+
+    Page<TCPDevice>findAllByAppUserAndDeviceProtocolAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol, DeviceStatus status, DeviceType deviceType, String name, String info, String sn, Pageable pageable)
+
+
+    Page<TCPDevice>  findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol,Scene scene,DeviceStatus status,  DeviceType deviceType, String name, String info, String sn, Pageable pageable)
 
 }
 
 /**
  * Udp
  */
-interface UDPDeviceRepository extends JpaRepository<UDPDevice,Long>{
+interface UDPDeviceRepository extends JpaRepository<UDPDevice, Long> {
     long countByAppUser(AppUser appUser)
 
-    TerminalHostDevice findBySecurityId(String securityId)
+    UDPDevice findBySecurityId(String securityId)
 
-    Page<TerminalHostDevice> findAllBySceneAndDeviceProtocol(Scene scene, DeviceProtocol deviceProtocol, Pageable page)
+    Page<UDPDevice> findAllBySceneAndDeviceProtocol(Scene scene, DeviceProtocol deviceProtocol, Pageable page)
 
-    Page<TerminalHostDevice> findAllByAppUser(Pageable page, AppUser appUser)
+    Page<UDPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
-    Page<TerminalHostDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable page)
+    Page<UDPDevice> findAllByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType, Pageable page)
+
+    Page<UDPDevice> findAllByAppUserAndDeviceProtocolAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol, DeviceStatus status, DeviceType deviceType, String name, String info, String sn, Pageable pageable)
+
+    Page<UDPDevice>  findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(AppUser appUser, DeviceProtocol deviceProtocol,Scene scene,DeviceStatus status,  DeviceType deviceType, String name, String info, String sn, Pageable pageable)
 
 }
 

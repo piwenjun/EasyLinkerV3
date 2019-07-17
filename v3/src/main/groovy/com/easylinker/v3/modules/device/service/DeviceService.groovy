@@ -2,6 +2,7 @@ package com.easylinker.v3.modules.device.service
 
 import com.easylinker.framework.common.model.AbstractDevice
 import com.easylinker.framework.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceStatus
 import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.device.dao.*
@@ -9,12 +10,9 @@ import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.scene.dao.SceneRepository
 import com.easylinker.v3.modules.scene.model.Scene
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Example
-import org.springframework.data.domain.ExampleMatcher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 /**
  * Java习惯了看这个不习惯？没事多看看就适应了，Groovy格式没那么强制，.groovy是文件而不是类了
@@ -92,8 +90,9 @@ class DeviceService {
                 break
             case DeviceProtocol.MQTT:
                 MQTTDevice mqttDevice = abstractDevice as MQTTDevice
-                addDefaultAcls(mqttDevice)
                 mqttRepository.save(mqttDevice)
+                addDefaultAcls(mqttDevice)
+
                 break
             case DeviceProtocol.TCP:
                 tcpDeviceRepository.save(abstractDevice as TCPDevice)
@@ -196,68 +195,123 @@ class DeviceService {
             default: return null
         }
     }
+    /**
+     *
+     * @param appUser
+     * @param deviceType
+     * @param deviceProtocol
+     * @param pageable
+     * @return
+     */
 
-
-/**
- * 搜索Mqtt
- * ExampleMatcher 比较讲究，记录一下
- * withMatcher：参数是Entity的属性，不是表的字段
- * ExampleMatcher.GenericPropertyMatchers：有好几个值，对应了SQL的 AND OR 等等逻辑操作
- * Example.of：可以返回list和Page
- * @return
- */
-    @Transactional
-    Page<MQTTDevice> searchMqtt(MQTTDevice mqttDevice, Pageable pageable) {
-        ExampleMatcher matcher = ExampleMatcher.matchingAny()
-                .withMatcher("username", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withMatcher("clientId", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withIgnoreNullValues()
-                .withIgnorePaths("id", "isSuperUser", "password", "securityId", "createTime", "updateTime")
-
-        Example<MQTTDevice> example = Example.of(mqttDevice, matcher)
-
-        return mqttRepository.findAll(example, pageable)
-
-    }
-/**
- * 搜索Http
- * @param httpDevice
- * @param pageable
- * @return
- */
-    @Transactional
-    Page<HTTPDevice> searchHttp(HTTPDevice httpDevice, Pageable pageable) {
-        ExampleMatcher matcher = ExampleMatcher.matchingAny()
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withIgnoreNullValues()
-                .withIgnorePaths("id", "securityId", "token", "clientId", "createTime", "updateTime")
-
-        Example<HTTPDevice> example = Example.of(httpDevice, matcher)
-        return httpRepository.findAll(example, pageable)
-
+    Page<AbstractDevice> listDevice(AppUser appUser,
+                                    DeviceProtocol deviceProtocol,
+                                    DeviceStatus deviceStatus,
+                                    DeviceType deviceType,
+                                    String name,
+                                    String sn,
+                                    String info,
+                                    Pageable pageable) {
+        switch (deviceProtocol) {
+            case DeviceProtocol.HTTP:
+                return httpRepository.findAllByAppUserAndDeviceProtocolAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(appUser, deviceProtocol, deviceStatus, deviceType, name, info, sn, pageable)
+            case DeviceProtocol.MQTT:
+                return mqttRepository.findAllByAppUserAndDeviceProtocolAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(appUser, deviceProtocol, deviceStatus, deviceType, name, info, sn, pageable)
+            case DeviceProtocol.CoAP:
+                return coAPRepository.findAllByAppUserAndDeviceProtocolAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(appUser, deviceProtocol, deviceStatus, deviceType, name, info, sn, pageable)
+            case DeviceProtocol.TCP:
+                return tcpDeviceRepository.findAllByAppUserAndDeviceProtocolAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(appUser, deviceProtocol, deviceStatus, deviceType, name, info, sn, pageable)
+            case DeviceProtocol.UDP:
+                return udpDeviceRepository.findAllByAppUserAndDeviceProtocolAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(appUser, deviceProtocol, deviceStatus, deviceType, name, info, sn, pageable)
+            default: return null
+        }
     }
 
-/**
- * 搜索CoAP
- * @param CoAPDevice
- * @param pageable
- * @return
- */
-    @Transactional
-    Page<CoAPDevice> searchCoAP(CoAPDevice CoAPDevice, Pageable pageable) {
-        ExampleMatcher matcher = ExampleMatcher.matchingAny()
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withIgnoreNullValues()
-                .withIgnorePaths("id", "securityId", "token", "clientId", "createTime", "updateTime")
-        Example<CoAPDevice> example = Example.of(CoAPDevice, matcher)
-        return coAPRepository.findAll(example, pageable)
-
+    Page<AbstractDevice> listDevice(AppUser appUser,
+                                    DeviceProtocol deviceProtocol,
+                                    DeviceStatus deviceStatus,
+                                    DeviceType deviceType,
+                                    Scene scene,
+                                    String name,
+                                    String sn,
+                                    String info,
+                                    Pageable pageable) {
+        switch (deviceProtocol) {
+            case DeviceProtocol.HTTP:
+                return httpRepository.findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(appUser, deviceProtocol, scene, deviceStatus, deviceType, name, info, sn, pageable)
+            case DeviceProtocol.MQTT:
+                return mqttRepository.findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(appUser, deviceProtocol, scene, deviceStatus, deviceType, name, info, sn, pageable)
+            case DeviceProtocol.CoAP:
+                return coAPRepository.findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(appUser, deviceProtocol, scene, deviceStatus, deviceType, name, info, sn, pageable)
+            case DeviceProtocol.TCP:
+                return tcpDeviceRepository.findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(appUser, deviceProtocol, scene, deviceStatus, deviceType, name, info, sn, pageable)
+            case DeviceProtocol.UDP:
+                return udpDeviceRepository.findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusOrDeviceTypeLikeOrNameLikeOrInfoLikeOrSnLike(appUser, deviceProtocol, scene, deviceStatus, deviceType, name, info, sn, pageable)
+            default: return null
+        }
     }
 
+
+///**
+// * 搜索Mqtt
+// * ExampleMatcher 比较讲究，记录一下
+// * withMatcher：参数是Entity的属性，不是表的字段
+// * ExampleMatcher.GenericPropertyMatchers：有好几个值，对应了SQL的 AND OR 等等逻辑操作
+// * Example.of：可以返回list和Page
+// * @return
+// */
+//    @Transactional
+//    Page<MQTTDevice> searchMqtt(MQTTDevice mqttDevice, Pageable pageable) {
+//        ExampleMatcher matcher = ExampleMatcher.matchingAny()
+//                .withMatcher("username", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withMatcher("clientId", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withIgnoreNullValues()
+//                .withIgnorePaths("id", "isSuperUser", "password", "securityId", "createTime", "updateTime")
+//
+//        Example<MQTTDevice> example = Example.of(mqttDevice, matcher)
+//
+//        return mqttRepository.findAll(example, pageable)
+//
+//    }
+///**
+// * 搜索Http
+// * @param httpDevice
+// * @param pageable
+// * @return
+// */
+//    @Transactional
+//    Page<HTTPDevice> searchHttp(HTTPDevice httpDevice, Pageable pageable) {
+//        ExampleMatcher matcher = ExampleMatcher.matchingAny()
+//                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withIgnoreNullValues()
+//                .withIgnorePaths("id", "securityId", "token", "clientId", "createTime", "updateTime")
+//
+//        Example<HTTPDevice> example = Example.of(httpDevice, matcher)
+//        return httpRepository.findAll(example, pageable)
+//
+//    }
+//
+///**
+// * 搜索CoAP
+// * @param CoAPDevice
+// * @param pageable
+// * @return
+// */
+//    @Transactional
+//    Page<CoAPDevice> searchCoAP(CoAPDevice CoAPDevice, Pageable pageable) {
+//        ExampleMatcher matcher = ExampleMatcher.matchingAny()
+//                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
+//                .withIgnoreNullValues()
+//                .withIgnorePaths("id", "securityId", "token", "clientId", "createTime", "updateTime")
+//        Example<CoAPDevice> example = Example.of(CoAPDevice, matcher)
+//        return coAPRepository.findAll(example, pageable)
+//
+//    }
+//
 
 /**
  * 获取设备的详细资料

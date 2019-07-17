@@ -3,10 +3,7 @@ package com.easylinker.framework.modules.user.model
 import com.easylinker.framework.common.model.AbstractModel
 import com.fasterxml.jackson.annotation.JsonIgnore
 
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.FetchType
-import javax.persistence.OneToMany
+import javax.persistence.*
 
 @Entity
 class AppUser extends AbstractModel {
@@ -15,7 +12,8 @@ class AppUser extends AbstractModel {
     private String password
     private String email
     private String name
-    private Integer state
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "appUser")
     private List<Role> roles
@@ -53,12 +51,12 @@ class AppUser extends AbstractModel {
         this.name = name
     }
 
-    Integer getState() {
-        return state
+    UserStatus getUserStatus() {
+        return userStatus
     }
 
-    void setState(Integer state) {
-        this.state = state
+    void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus
     }
 
     List<Role> getRoles() {
@@ -68,4 +66,11 @@ class AppUser extends AbstractModel {
     void setRoles(List<Role> roles) {
         this.roles = roles
     }
+}
+
+enum UserStatus {
+    NORMAL,
+    FORBID,
+    FREEZE,
+
 }

@@ -1,5 +1,6 @@
 package com.easylinker.framework.common.model
 
+import com.easylinker.framework.utils.SerialNumberUtils
 import lombok.Data
 
 import javax.persistence.EnumType
@@ -18,12 +19,34 @@ class AbstractDevice extends AbstractModel {
 
     private String name
     private String info
+    private String sn = SerialNumberUtils.getSerialNumber()
+    /**
+     * 设备协议：为了生成SDK和终端交互
+     */
     @Enumerated(EnumType.STRING)
     private DeviceProtocol deviceProtocol
+    /**
+     * 设备类型：用在前端显示界面
+     */
     @Enumerated(EnumType.STRING)
     private DeviceType deviceType
-
+    /**
+     * 最后活跃时间
+     */
     private Date lastActive
+    /**
+     * 设备状态
+     */
+    @Enumerated(EnumType.STRING)
+    DeviceStatus deviceStatus = DeviceStatus.OFFLINE
+
+    String getSn() {
+        return sn
+    }
+
+    void setSn(String sn) {
+        this.sn = sn
+    }
 
     Date getLastActive() {
         return lastActive
@@ -96,5 +119,27 @@ enum DeviceType {
 
     DeviceType(String name) {
         this.name = name
+    }
+}
+/**
+ * 设备基本状态
+ */
+enum DeviceStatus {
+    ONLINE("在线"),
+    OFFLINE("离线"),
+    RUNNING("运行"),
+    ABNORMAL("异常"),
+    CRUSH("崩溃"),
+    OVER_LOAD("过载"),
+    UN_KNOW("未知")
+    String title
+
+    DeviceStatus(String title) {
+        this.title = title
+    }
+
+    @Override
+    String toString() {
+        return name()
     }
 }

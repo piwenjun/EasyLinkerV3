@@ -124,7 +124,7 @@ class SceneController extends AbstractController {
                             appUser: getCurrentUser(),
                             scene: scene,
                             deviceProtocol: DeviceProtocol.HTTP)
-                    deviceService.addHttpDevice(httpDevice)
+                    deviceService.add(httpDevice)
                 }
 
                 return R.ok("场景创建成功")
@@ -145,7 +145,7 @@ class SceneController extends AbstractController {
                             appUser: getCurrentUser(),
                             scene: scene,
                             deviceProtocol: DeviceProtocol.HTTP)
-                    deviceService.addHttpDevice(httpDevice)
+                    deviceService.add(httpDevice)
                 }
 
                 return R.ok("场景创建成功")
@@ -171,7 +171,7 @@ class SceneController extends AbstractController {
                             appUser: getCurrentUser(),
                             scene: scene,
                             deviceProtocol: DeviceProtocol.MQTT)
-                    deviceService.addMqttDevice(mqttDevice)
+                    deviceService.add(mqttDevice)
 
                 }
                 return R.ok("场景创建成功")
@@ -196,7 +196,7 @@ class SceneController extends AbstractController {
                             appUser: getCurrentUser(),
                             scene: scene,
                             deviceProtocol: DeviceProtocol.MQTT)
-                    deviceService.addMqttDevice(mqttDevice)
+                    deviceService.add(mqttDevice)
                 }
                 return R.ok("场景创建成功")
 
