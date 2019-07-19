@@ -2,6 +2,7 @@ package com.easylinker.v3.modules.device.controller
 
 import cn.hutool.crypto.digest.DigestUtil
 import com.easylinker.framework.common.controller.AbstractController
+import com.easylinker.framework.common.model.AbstractDevice
 import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceStatus
 import com.easylinker.framework.common.model.DeviceType
@@ -396,55 +397,6 @@ class DeviceController extends AbstractController {
 
     }
 
-//    /**
-//     * 条件筛选
-//     * @param page
-//     * @param size
-//     * @param deviceProtocol
-//     * @param deviceType
-//     * @param name
-//     * @param info
-//     * @param sn
-//     * @return
-//     */
-//
-//    @GetMapping("/list")
-//    R listDevice(@RequestParam int page,
-//                 @RequestParam int size,
-//                 @RequestParam DeviceProtocol deviceProtocol,
-//                 @RequestParam DeviceType deviceType,
-//                 @RequestParam DeviceStatus deviceStatus,
-//                 @RequestParam String name,
-//                 @RequestParam String info,
-//                 @RequestParam String sn,
-//                 @RequestParam(required = false) String sceneSecurityId) {
-//        Scene scene = sceneService.findBySecurityId(sceneSecurityId)
-//
-//        if (scene) {
-//            return R.okWithData(deviceService.listDevice(getCurrentUser(),
-//                    deviceProtocol,
-//                    deviceStatus,
-//                    deviceType,
-//                    scene,
-//                    name,
-//                    sn,
-//                    info,
-//                    PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createTime"))))
-//
-//        } else {
-//            return R.okWithData(deviceService.listDevice(getCurrentUser(),
-//                    deviceProtocol,
-//                    deviceStatus,
-//                    deviceType,
-//                    name,
-//                    sn,
-//                    info,
-//                    PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createTime"))))
-//        }
-//
-//    }
-
-
     /**
      * 搜索
      * @param page
@@ -536,6 +488,79 @@ class DeviceController extends AbstractController {
 
 
         }
+
+    }
+
+
+    /**
+     * 更新单个设备
+     * @param name
+     * @param info
+     * @param sn
+     * @param sceneSecurityId
+     * @return
+     */
+    @PostMapping("/update")
+    R update(@RequestBody UpdateForm updateForm) {
+
+        AbstractDevice abstractDevice = deviceService.detail(updateForm.securityId, updateForm.deviceProtocol)
+        Scene scene = sceneService.findBySecurityId(updateForm.sceneSecurityId)
+        if (abstractDevice) {
+            AbstractDevice device
+            switch (updateForm.deviceProtocol) {
+                case DeviceProtocol.MQTT:
+                    device = abstractDevice as MQTTDevice
+                    device.setName(updateForm.name)
+                    device.setInfo(updateForm.info)
+                    if (scene)
+                        device.setScene(scene)
+                    deviceService.save(device)
+                    return R.ok("更新成功")
+
+                case DeviceProtocol.CoAP:
+                    device = abstractDevice as MQTTDevice
+                    device.setName(updateForm.name)
+                    device.setInfo(updateForm.info)
+                    if (scene)
+                        device.setScene(scene)
+                    deviceService.save(device)
+                    return R.ok("更新成功")
+
+                case DeviceProtocol.HTTP:
+                    device = abstractDevice as MQTTDevice
+                    device.setName(updateForm.name)
+                    device.setInfo(updateForm.info)
+                    if (scene)
+                        device.setScene(scene)
+                    deviceService.save(device)
+                    return R.ok("更新成功")
+
+                case DeviceProtocol.TCP:
+                    device = abstractDevice as MQTTDevice
+                    device.setName(updateForm.name)
+                    device.setInfo(updateForm.info)
+                    if (scene)
+                        device.setScene(scene)
+                    deviceService.save(device)
+                    return R.ok("更新成功")
+
+                case DeviceProtocol.UDP:
+                    device = abstractDevice as MQTTDevice
+                    device.setName(updateForm.name)
+                    device.setInfo(updateForm.info)
+                    if (scene)
+                        device.setScene(scene)
+                    deviceService.save(device)
+                    return R.ok("更新成功")
+
+                default: return R.error("更新失败")
+
+
+            }
+        } else {
+            return R.error("设备不存在")
+        }
+
 
     }
 }

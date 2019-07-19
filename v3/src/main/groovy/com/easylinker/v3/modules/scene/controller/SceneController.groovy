@@ -6,11 +6,13 @@ import com.easylinker.framework.common.model.AbstractDevice
 import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
+import com.easylinker.v3.modules.device.form.UpdateForm
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
 import com.easylinker.v3.modules.scene.form.AddSceneForm
+import com.easylinker.v3.modules.scene.form.UpdateSceneForm
 import com.easylinker.v3.modules.scene.model.PreInstallTemplate
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.scene.model.SceneType
@@ -241,5 +243,22 @@ class SceneController extends AbstractController {
         return R.okWithData(scenePage)
     }
 
+    /**
+     * 更新
+     * @param updateForm
+     * @return
+     */
+    @PostMapping("/update")
+    R update(@RequestBody UpdateSceneForm updateForm) {
+        Scene scene=sceneService.findBySecurityId(updateForm.securityId)
+        if(scene){
+            scene.setName(updateForm.name)
+            scene.setInfo(updateForm.info)
+            sceneService.save(scene)
+            return R.ok("更新成功")
+        }else {
+            return R.error("场景不存在")
+        }
 
+    }
 }
