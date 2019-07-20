@@ -1,6 +1,5 @@
 package com.easylinker.v3.modules.test
 
-
 import com.easylinker.framework.common.config.security.RequireAuthRoles
 import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.model.AbstractDevice
@@ -9,7 +8,6 @@ import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
-import com.easylinker.v3.modules.devicedata.model.BooleanData
 import com.easylinker.v3.modules.devicedata.model.DeviceData
 import com.easylinker.v3.modules.devicedata.model.SwitchData
 import com.easylinker.v3.modules.devicedata.service.DeviceDataService
@@ -90,6 +88,7 @@ class TestController extends AbstractController {
         }
 
         return R.ok("测试数据")
+
     }
 
 }
