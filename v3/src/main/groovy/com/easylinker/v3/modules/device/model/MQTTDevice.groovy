@@ -127,6 +127,8 @@ class TopicAcl extends AbstractModel {
         this.allow = allow
     }
 
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private MQTTDevice mqttDevice
 

@@ -61,7 +61,7 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                         deviceProtocol: DeviceProtocol.HTTP)
-                deviceService.add(httpDevice)
+                deviceService.create(httpDevice)
                 return R.ok("添加成功")
 
             } else {
@@ -76,7 +76,7 @@ class DeviceController extends AbstractController {
                     appUser: getCurrentUser(),
                     token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                     deviceProtocol: DeviceProtocol.HTTP)
-            deviceService.add(httpDevice)
+            deviceService.create(httpDevice)
             return R.ok("添加成功")
 
 
@@ -102,7 +102,7 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         appUser: getCurrentUser(),
                         deviceProtocol: DeviceProtocol.CoAP)
-                deviceService.add(CoAPDevice)
+                deviceService.create(CoAPDevice)
                 return R.ok("添加成功")
             } else {
                 return R.error("场景不存在")
@@ -117,7 +117,7 @@ class DeviceController extends AbstractController {
                     deviceType: coAPDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.CoAP)
-            deviceService.add(CoAPDevice)
+            deviceService.create(CoAPDevice)
             return R.ok("添加成功")
 
 
@@ -151,7 +151,7 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         deviceProtocol: DeviceProtocol.MQTT)
 
-                deviceService.add(mqttDevice)
+                deviceService.create(mqttDevice)
                 return R.ok("添加成功")
 
             } else {
@@ -168,7 +168,7 @@ class DeviceController extends AbstractController {
                     deviceType: mqttDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.MQTT)
-            deviceService.add(mqttDevice)
+            deviceService.create(mqttDevice)
             return R.ok("添加成功")
         }
 
@@ -197,7 +197,7 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         deviceProtocol: DeviceProtocol.TCP)
 
-                deviceService.add(terminalHostDevice)
+                deviceService.create(terminalHostDevice)
                 return R.ok("添加成功")
 
             } else {
@@ -213,7 +213,7 @@ class DeviceController extends AbstractController {
                     deviceType: terminalHostDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.TCP)
-            deviceService.add(terminalHostDevice)
+            deviceService.create(terminalHostDevice)
             return R.ok("添加成功")
         }
 
@@ -242,7 +242,7 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         deviceProtocol: DeviceProtocol.TCP)
 
-                deviceService.add(tcpDevice)
+                deviceService.create(tcpDevice)
                 return R.ok("添加成功")
 
             } else {
@@ -259,7 +259,7 @@ class DeviceController extends AbstractController {
                     deviceType: tcpDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.TCP)
-            deviceService.add(tcpDevice)
+            deviceService.create(tcpDevice)
             return R.ok("添加成功")
         }
 
@@ -285,7 +285,7 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         deviceProtocol: DeviceProtocol.UDP)
 
-                deviceService.add(udpDevice)
+                deviceService.create(udpDevice)
                 return R.ok("添加成功")
 
             } else {
@@ -300,7 +300,7 @@ class DeviceController extends AbstractController {
                     deviceType: udpDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.UDP)
-            deviceService.add(udpDevice)
+            deviceService.create(udpDevice)
             return R.ok("添加成功")
         }
 
@@ -501,7 +501,7 @@ class DeviceController extends AbstractController {
      * @return
      */
     @PostMapping("/update")
-    R update(@RequestBody UpdateForm updateForm) {
+    R update(@RequestBody @Valid UpdateForm updateForm) {
 
         AbstractDevice abstractDevice = deviceService.detail(updateForm.securityId, updateForm.deviceProtocol)
         Scene scene = sceneService.findBySecurityId(updateForm.sceneSecurityId)
@@ -563,4 +563,81 @@ class DeviceController extends AbstractController {
 
 
     }
+
+    /**
+     * 绑定设备到用户
+     * @return
+     */
+    @PostMapping("/bind")
+    R bind(@RequestBody BindForm bindForm) {
+        AbstractDevice abstractDevice = deviceService.detail(bindForm.deviceSecurityId, bindForm.deviceProtocol)
+        Scene scene = sceneService.findBySecurityId(bindForm.sceneSecurityId)
+
+        if (abstractDevice) {
+            switch (abstractDevice.class) {
+                case MQTTDevice.class:
+                    MQTTDevice device = abstractDevice as MQTTDevice
+                    device.setAppUser(getCurrentUser())
+                    if (scene) {
+                        device.setScene(scene)
+                    }
+                    deviceService.save(device)
+                    return R.ok("绑定成功")
+                case HTTPDevice.class:
+                    HTTPDevice device = abstractDevice as HTTPDevice
+                    device.setAppUser(getCurrentUser())
+                    if (scene) {
+                        device.setScene(scene)
+                    }
+                    deviceService.save(device)
+                    return R.ok("绑定成功")
+                case CoAPDevice.class:
+                    CoAPDevice device = abstractDevice as CoAPDevice
+                    device.setAppUser(getCurrentUser())
+                    if (scene) {
+                        device.setScene(scene)
+                    }
+                    deviceService.save(device)
+                    return R.ok("绑定成功")
+                case TCPDevice.class:
+                    TCPDevice device = abstractDevice as TCPDevice
+                    device.setAppUser(getCurrentUser())
+                    if (scene) {
+                        device.setScene(scene)
+                    }
+                    deviceService.save(device)
+                    return R.ok("绑定成功")
+                case UDPDevice.class:
+                    UDPDevice device = abstractDevice as UDPDevice
+                    device.setAppUser(getCurrentUser())
+                    if (scene) {
+                        device.setScene(scene)
+                    }
+                    deviceService.save(device)
+                    return R.ok("绑定成功")
+                default: return R.error("该设备不存在")
+            }
+
+        } else {
+            return R.error("该设备不存在")
+        }
+
+    }
+
+    /**
+     * 获取ACL
+     * @param mqttSecurityId
+     * @return
+     */
+    @GetMapping("/listAcls")
+    R listAcls(@RequestParam String mqttSecurityId) {
+        AbstractDevice mqttDevice = deviceService.detail(mqttSecurityId, DeviceProtocol.MQTT) as MQTTDevice
+        if (mqttDevice) {
+            return R.okWithData(topicAclService.listAcls(mqttDevice))
+        } else {
+            return R.error("终端不存在")
+        }
+    }
+
+
 }

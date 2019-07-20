@@ -2,6 +2,7 @@ package com.easylinker.v3.modules.devicedata.dao
 
 import com.easylinker.v3.modules.devicedata.model.BooleanData
 import com.easylinker.v3.modules.devicedata.model.FileData
+import com.easylinker.v3.modules.devicedata.model.SwitchData
 import com.easylinker.v3.modules.devicedata.model.TextData
 import com.easylinker.v3.modules.devicedata.model.ValueData
 import org.springframework.data.domain.Page
@@ -23,6 +24,12 @@ interface TextDeviceDataRepository extends JpaRepository<TextData, Long> {
 }
 
 interface ValueDeviceDataRepository extends JpaRepository<ValueData, Long> {
+    Page<ValueData> findAllByDeviceSecurityId(String deviceSecurityId, Pageable pageable)
+
+}
+
+
+interface SwitchDeviceDataRepository extends JpaRepository<SwitchData, Long> {
     Page<ValueData> findAllByDeviceSecurityId(String deviceSecurityId, Pageable pageable)
 
 }

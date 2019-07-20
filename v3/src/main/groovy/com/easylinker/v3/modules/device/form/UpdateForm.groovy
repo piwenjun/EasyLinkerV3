@@ -6,7 +6,6 @@ class UpdateForm {
     String securityId
     String name
     String info
-    String sn
     String sceneSecurityId
     DeviceProtocol deviceProtocol
 }

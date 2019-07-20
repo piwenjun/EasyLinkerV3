@@ -6,7 +6,6 @@ import com.easylinker.framework.common.model.AbstractDevice
 import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
-import com.easylinker.v3.modules.device.form.UpdateForm
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
@@ -126,7 +125,7 @@ class SceneController extends AbstractController {
                             appUser: getCurrentUser(),
                             scene: scene,
                             deviceProtocol: DeviceProtocol.HTTP)
-                    deviceService.add(httpDevice)
+                    deviceService.create(httpDevice)
                 }
 
                 return R.ok("场景创建成功")
@@ -147,7 +146,7 @@ class SceneController extends AbstractController {
                             appUser: getCurrentUser(),
                             scene: scene,
                             deviceProtocol: DeviceProtocol.HTTP)
-                    deviceService.add(httpDevice)
+                    deviceService.create(httpDevice)
                 }
 
                 return R.ok("场景创建成功")
@@ -173,7 +172,7 @@ class SceneController extends AbstractController {
                             appUser: getCurrentUser(),
                             scene: scene,
                             deviceProtocol: DeviceProtocol.MQTT)
-                    deviceService.add(mqttDevice)
+                    deviceService.create(mqttDevice)
 
                 }
                 return R.ok("场景创建成功")
@@ -198,7 +197,7 @@ class SceneController extends AbstractController {
                             appUser: getCurrentUser(),
                             scene: scene,
                             deviceProtocol: DeviceProtocol.MQTT)
-                    deviceService.add(mqttDevice)
+                    deviceService.create(mqttDevice)
                 }
                 return R.ok("场景创建成功")
 
@@ -239,7 +238,7 @@ class SceneController extends AbstractController {
             return R.error("场景不存在")
         }
 
-        Page<AbstractDevice> scenePage = deviceService.listDeviceByScene(scene, deviceProtocol, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
+        Page<AbstractDevice> scenePage = deviceService.listDeviceBySceneSecurityId(sceneSecurityId, deviceProtocol, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createTime")))
         return R.okWithData(scenePage)
     }
 
@@ -250,13 +249,13 @@ class SceneController extends AbstractController {
      */
     @PostMapping("/update")
     R update(@RequestBody UpdateSceneForm updateForm) {
-        Scene scene=sceneService.findBySecurityId(updateForm.securityId)
-        if(scene){
+        Scene scene = sceneService.findBySecurityId(updateForm.securityId)
+        if (scene) {
             scene.setName(updateForm.name)
             scene.setInfo(updateForm.info)
             sceneService.save(scene)
             return R.ok("更新成功")
-        }else {
+        } else {
             return R.error("场景不存在")
         }
 

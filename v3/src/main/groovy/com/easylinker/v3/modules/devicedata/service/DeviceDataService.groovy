@@ -1,11 +1,8 @@
 package com.easylinker.v3.modules.devicedata.service
 
 import com.easylinker.framework.common.model.DeviceType
-import com.easylinker.v3.modules.devicedata.dao.BooleanDeviceDataRepository
-import com.easylinker.v3.modules.devicedata.dao.FileDeviceDataRepository
-import com.easylinker.v3.modules.devicedata.dao.TextDeviceDataRepository
-import com.easylinker.v3.modules.devicedata.dao.ValueDeviceDataRepository
-import com.easylinker.v3.modules.devicedata.model.DeviceData
+import com.easylinker.v3.modules.devicedata.dao.*
+import com.easylinker.v3.modules.devicedata.model.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -21,6 +18,8 @@ class DeviceDataService {
     TextDeviceDataRepository textDeviceDataRepository
     @Autowired
     ValueDeviceDataRepository valueDeviceDataRepository
+    @Autowired
+    SwitchDeviceDataRepository switchDeviceDataRepository
 
     /**
      * 查询数据
@@ -40,8 +39,41 @@ class DeviceDataService {
                 return booleanDeviceDataRepository.findAllByDeviceSecurityId(deviceSecurityId, pageable)
             case DeviceType.FILE:
                 return fileDeviceDataRepository.findAllByDeviceSecurityId(deviceSecurityId, pageable)
+            case DeviceType.SWITCH:
+                return switchDeviceDataRepository.findAllByDeviceSecurityId(deviceSecurityId, pageable)
+            default: return null
+        }
+
+    }
+    /**
+     *
+     * @param deviceSecurityId
+     * @param deviceType
+     * @param pageable
+     * @return
+     */
+
+    void save(DeviceData deviceData, DeviceType deviceType) {
+
+        switch (deviceType) {
+            case DeviceType.VALUE:
+                valueDeviceDataRepository.save(deviceData as ValueData)
+                break
+            case DeviceType.TEXT:
+                textDeviceDataRepository.save(deviceData as TextData)
+                break
+            case DeviceType.BOOLEAN:
+                booleanDeviceDataRepository.save(deviceData as BooleanData)
+                break
+            case DeviceType.FILE:
+                fileDeviceDataRepository.save(deviceData as FileData)
+                break
+            case DeviceType.SWITCH:
+                switchDeviceDataRepository.save(deviceData as SwitchData)
+                break
             default: break
         }
 
     }
+
 }

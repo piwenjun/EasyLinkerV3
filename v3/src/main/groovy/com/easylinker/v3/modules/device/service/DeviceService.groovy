@@ -56,32 +56,107 @@ class DeviceService {
     }
 
     /**
-     * 保存
+     * 保存和更新
      * @param abstractDevice
      */
+    @Transactional
     void save(AbstractDevice abstractDevice) {
         switch (abstractDevice.deviceProtocol) {
             case DeviceProtocol.HTTP:
-                httpRepository.save(abstractDevice as HTTPDevice)
+                HTTPDevice device = abstractDevice as HTTPDevice
+                if (device.scene) {
+                    device.setSceneSecurityId(device.scene.securityId)
+                }
+                httpRepository.save(device)
+
                 break
             case DeviceProtocol.CoAP:
-                coAPRepository.save(abstractDevice as CoAPDevice)
+                CoAPDevice device = abstractDevice as CoAPDevice
+                if (device.scene) {
+                    device.setSceneSecurityId(device.scene.securityId)
+                }
+                //保存的时候不用ACL
+                coAPRepository.save(device)
                 break
             case DeviceProtocol.MQTT:
-                MQTTDevice mqttDevice = abstractDevice as MQTTDevice
-                mqttRepository.save(mqttDevice)
+                MQTTDevice device = abstractDevice as MQTTDevice
+                if (device.scene) {
+                    device.setSceneSecurityId(device.scene.securityId)
+                }
+                mqttRepository.save(device)
 
                 break
             case DeviceProtocol.TCP:
-                tcpDeviceRepository.save(abstractDevice as TCPDevice)
+                TCPDevice device = abstractDevice as TCPDevice
+                if (device.scene) {
+                    device.setSceneSecurityId(device.scene.securityId)
+                }
+                tcpDeviceRepository.save(device)
+
                 break
             case DeviceProtocol.UDP:
-                udpDeviceRepository.save(abstractDevice as UDPDevice)
+                UDPDevice device = abstractDevice as UDPDevice
+                if (device.scene) {
+                    device.setSceneSecurityId(device.scene.securityId)
+                }
+                udpDeviceRepository.save(device)
                 break
             default: break
         }
 
     }
+
+    /**
+     * 新建
+     * @param abstractDevice
+     */
+    @Transactional
+    void create(AbstractDevice abstractDevice) {
+        switch (abstractDevice.deviceProtocol) {
+            case DeviceProtocol.HTTP:
+                HTTPDevice device = abstractDevice as HTTPDevice
+                if (device.scene) {
+                    device.setSceneSecurityId(device.scene.securityId)
+                }
+                httpRepository.save(device)
+
+                break
+            case DeviceProtocol.CoAP:
+                CoAPDevice device = abstractDevice as CoAPDevice
+                if (device.scene) {
+                    device.setSceneSecurityId(device.scene.securityId)
+                }
+                // 新建的时候必须有默认ACL
+                coAPRepository.save(device)
+                break
+            case DeviceProtocol.MQTT:
+                MQTTDevice device = abstractDevice as MQTTDevice
+                if (device.scene) {
+                    device.setSceneSecurityId(device.scene.securityId)
+                }
+                mqttRepository.save(device)
+                addDefaultAcls(device)
+                break
+            case DeviceProtocol.TCP:
+                TCPDevice device = abstractDevice as TCPDevice
+                if (device.scene) {
+                    device.setSceneSecurityId(device.scene.securityId)
+                }
+                tcpDeviceRepository.save(device)
+
+                break
+            case DeviceProtocol.UDP:
+                UDPDevice device = abstractDevice as UDPDevice
+                if (device.scene) {
+                    device.setSceneSecurityId(device.scene.securityId)
+                }
+                udpDeviceRepository.save(device)
+                break
+            default: break
+        }
+
+    }
+
     /**
      * 根据用户来选择统计报表
      * @param appUser
@@ -106,35 +181,6 @@ class DeviceService {
 
 
     /**
-     * 添加设备
-     * @param abstractDevice
-     */
-    void add(AbstractDevice abstractDevice) {
-        switch (abstractDevice.deviceProtocol) {
-            case DeviceProtocol.HTTP:
-                httpRepository.save(abstractDevice as HTTPDevice)
-                break
-            case DeviceProtocol.CoAP:
-                coAPRepository.save(abstractDevice as CoAPDevice)
-                break
-            case DeviceProtocol.MQTT:
-                MQTTDevice mqttDevice = abstractDevice as MQTTDevice
-                mqttRepository.save(mqttDevice)
-                addDefaultAcls(mqttDevice)
-
-                break
-            case DeviceProtocol.TCP:
-                tcpDeviceRepository.save(abstractDevice as TCPDevice)
-                break
-            case DeviceProtocol.UDP:
-                udpDeviceRepository.save(abstractDevice as UDPDevice)
-                break
-            default: break
-        }
-
-    }
-
-    /**
      * 添加默认的ACL
      * @param mqttDevice
      */
@@ -154,31 +200,9 @@ class DeviceService {
         mqttDevice.setTopicAcls(topicAcls)
         topicAclRepository.save(inAcl)
         topicAclRepository.save(outAcl)
+        topicAclRepository.save(statusAcl)
 
     }
-
-    /**
-     * 无条件查询
-     * @param pageable
-     * @return
-     */
-
-    Page<AbstractDevice> list(Pageable pageable, DeviceProtocol deviceProtocol) {
-        switch (deviceProtocol) {
-            case DeviceProtocol.HTTP:
-                return httpRepository.findAll(pageable)
-            case DeviceProtocol.CoAP:
-                return coAPRepository.findAll(pageable)
-            case DeviceProtocol.MQTT:
-                return mqttRepository.findAll(pageable)
-            case DeviceProtocol.TCP:
-                return tcpDeviceRepository.findAll(pageable)
-            case DeviceProtocol.UDP:
-                return udpDeviceRepository.findAll(pageable)
-            default: return null
-        }
-    }
-
 
     /**
      * 根据协议类型查询
@@ -298,15 +322,15 @@ class DeviceService {
     AbstractDevice detail(String securityId, DeviceProtocol deviceProtocol) {
         switch (deviceProtocol) {
             case DeviceProtocol.MQTT:
-                return mqttRepository.findBySecurityId(securityId)
+                return mqttRepository.findBySecurityId(securityId) as MQTTDevice
             case DeviceProtocol.CoAP:
-                return coAPRepository.findBySecurityId(securityId)
+                return coAPRepository.findBySecurityId(securityId) as CoAPDevice
             case DeviceProtocol.HTTP:
-                return httpRepository.findBySecurityId(securityId)
+                return httpRepository.findBySecurityId(securityId) as HTTPDevice
             case DeviceProtocol.TCP:
-                return tcpDeviceRepository.findBySecurityId(securityId)
+                return tcpDeviceRepository.findBySecurityId(securityId) as TCPDevice
             case DeviceProtocol.UDP:
-                return udpDeviceRepository.findBySecurityId(securityId)
+                return udpDeviceRepository.findBySecurityId(securityId) as UDPDevice
             default: return null
 
         }
@@ -337,5 +361,37 @@ class DeviceService {
 
         }
     }
+
+
+    /**
+     * 根据Sid查询
+     * @param sceneSecurityId
+     * @param deviceProtocol
+     * @param pageable
+     * @return
+     */
+    Page<AbstractDevice> listDeviceBySceneSecurityId(String sceneSecurityId, DeviceProtocol deviceProtocol, Pageable pageable) {
+        switch (deviceProtocol) {
+            case DeviceProtocol.MQTT:
+                return mqttRepository.findAllBySceneSecurityIdAndDeviceProtocol(sceneSecurityId, deviceProtocol, pageable)
+
+            case DeviceProtocol.CoAP:
+                return coAPRepository.findAllBySceneSecurityIdAndDeviceProtocol(sceneSecurityId, deviceProtocol, pageable)
+
+            case DeviceProtocol.HTTP:
+                return httpRepository.findAllBySceneSecurityIdAndDeviceProtocol(sceneSecurityId, deviceProtocol, pageable)
+
+            case DeviceProtocol.TCP:
+                return tcpDeviceRepository.findAllBySceneSecurityIdAndDeviceProtocol(sceneSecurityId, deviceProtocol, pageable)
+
+            case DeviceProtocol.UDP:
+                return udpDeviceRepository.findAllBySceneSecurityIdAndDeviceProtocol(sceneSecurityId, deviceProtocol, pageable)
+
+            default: return null
+
+        }
+    }
+
+
 }
 

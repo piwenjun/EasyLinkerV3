@@ -18,17 +18,19 @@ import javax.persistence.ManyToOne
  */
 @Entity
 class CoAPDevice extends AbstractDevice {
+
     private String token
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private AppUser appUser
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Scene scene
 
     Scene getScene() {
         return scene
     }
+
 
     void setScene(Scene scene) {
         this.scene = scene

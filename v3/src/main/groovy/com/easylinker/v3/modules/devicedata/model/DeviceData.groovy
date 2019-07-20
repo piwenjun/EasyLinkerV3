@@ -1,15 +1,44 @@
 package com.easylinker.v3.modules.devicedata.model
 
 import com.easylinker.framework.common.model.AbstractModel
+import com.easylinker.framework.common.model.DeviceType
 
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
+import javax.persistence.MappedSuperclass
+
+
+enum DeviceDataType {
+
+
+}
 
 /**
  * 设备数据抽象
  */
-@Entity
+@MappedSuperclass
 class DeviceData extends AbstractModel {
     private String deviceSecurityId
+    private String info
+    @Enumerated(EnumType.STRING)
+    private DeviceType deviceType
+
+    DeviceType getDeviceType() {
+        return deviceType
+    }
+
+    void setDeviceType(DeviceType deviceType) {
+        this.deviceType = deviceType
+    }
+
+    String getInfo() {
+        return info
+    }
+
+    void setInfo(String info) {
+        this.info = info
+    }
 
     String getDeviceSecurityId() {
         return deviceSecurityId
@@ -27,15 +56,15 @@ class DeviceData extends AbstractModel {
 @Entity
 class ValueData extends DeviceData {
     //数据值
-    private float value
+    private float[] value
     //数据单位
     private String unit
 
-    float getValue() {
+    float[] getValue() {
         return value
     }
 
-    void setValue(float value) {
+    void setValue(float[] value) {
         this.value = value
     }
 
@@ -65,18 +94,34 @@ class TextData extends DeviceData {
     }
 }
 /**
- * 布尔数据
+ * 开关
  */
 @Entity
-class BooleanData extends DeviceData {
+class SwitchData extends DeviceData {
 
-    private boolean data
+    private String data
 
     boolean getData() {
         return data
     }
 
-    void setData(boolean data) {
+    void setData(String data) {
+        this.data = data
+    }
+}
+/**
+ * 布尔数据
+ */
+@Entity
+class BooleanData extends DeviceData {
+
+    private String data
+
+    boolean getData() {
+        return data
+    }
+
+    void setData(String data) {
         this.data = data
     }
 }

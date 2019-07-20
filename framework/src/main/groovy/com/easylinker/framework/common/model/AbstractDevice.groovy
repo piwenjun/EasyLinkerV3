@@ -39,6 +39,15 @@ class AbstractDevice extends AbstractModel {
      */
     @Enumerated(EnumType.STRING)
     DeviceStatus deviceStatus = DeviceStatus.OFFLINE
+    private String sceneSecurityId
+
+    String getSceneSecurityId() {
+        return sceneSecurityId
+    }
+
+    void setSceneSecurityId(String sceneSecurityId) {
+        this.sceneSecurityId = sceneSecurityId
+    }
 
     String getSn() {
         return sn
@@ -110,7 +119,8 @@ enum DeviceProtocol {
 enum DeviceType {
     VALUE("数值型设备"),
     TEXT("文本型设备"),
-    BOOLEAN("开关型设备"),
+    BOOLEAN("布尔型设备"),
+    SWITCH("开关型设备"),
     FILE("文件型设备"),
     STREAM("流媒体型设备"),
     TERMINAL_HOST("终端型设备"),

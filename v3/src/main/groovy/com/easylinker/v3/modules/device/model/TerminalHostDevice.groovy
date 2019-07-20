@@ -25,6 +25,8 @@ class TerminalHostDevice extends AbstractDevice{
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     private Scene scene
+    private String sceneSecurityId
+
 
     AppUser getAppUser() {
         return appUser

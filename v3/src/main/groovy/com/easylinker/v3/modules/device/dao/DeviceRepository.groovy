@@ -1,5 +1,6 @@
 package com.easylinker.v3.modules.device.dao
 
+
 import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceStatus
 import com.easylinker.framework.common.model.DeviceType
@@ -87,7 +88,14 @@ interface CommonRepository<T> {
                                                                                             String sn,
                                                                                             Pageable pageable)
 
+    /**
+     * 考虑到以后要脱离外键，后期 根据SceneSID 查询
+     * @param appUser
+     * @param sceneSecurityId
+     * @return
+     */
 
+    Page<T> findAllBySceneSecurityIdAndDeviceProtocol(String sceneSecurityId, DeviceProtocol deviceProtocol, Pageable pageable)
 }
 /**
  * HTTP

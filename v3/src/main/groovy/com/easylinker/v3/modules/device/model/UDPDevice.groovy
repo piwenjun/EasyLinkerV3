@@ -28,6 +28,7 @@ class UDPDevice extends AbstractDevice{
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     private Scene scene
 
+
     AppUser getAppUser() {
         return appUser
     }
