@@ -9,7 +9,6 @@ import com.easylinker.framework.common.web.R
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.devicedata.model.DeviceData
-import com.easylinker.v3.modules.devicedata.model.SwitchData
 import com.easylinker.v3.modules.devicedata.service.DeviceDataService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
@@ -71,11 +70,11 @@ class TestController extends AbstractController {
                 case DeviceProtocol.MQTT:
                     MQTTDevice device = abstractDevice as MQTTDevice
                     if (device.deviceType == DeviceType.BOOLEAN) {
-                        DeviceData data = new SwitchData()
+                        DeviceData data = new DeviceData()
                         data.setInfo("测试开关数据")
                         data.setDeviceSecurityId(device.securityId)
                         data.setData(pushForm.data.toString())
-                        deviceDataService.save(data, device.deviceType)
+                        deviceDataService.save(data)
                         return R.ok("数据提交成功")
                     } else {
                         return R.ok("测试数据")
