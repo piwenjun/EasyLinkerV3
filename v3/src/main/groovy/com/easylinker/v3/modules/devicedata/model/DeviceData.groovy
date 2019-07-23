@@ -3,14 +3,14 @@ package com.easylinker.v3.modules.devicedata.model
 import com.easylinker.framework.common.model.AbstractModel
 import com.easylinker.framework.common.model.DeviceType
 
+import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.persistence.MappedSuperclass
 
 /**
  * 设备数据抽象
  */
-@MappedSuperclass
+@Entity
 class DeviceData extends AbstractModel {
     /**
      * 数据
