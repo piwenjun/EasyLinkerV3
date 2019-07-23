@@ -1,5 +1,6 @@
 package com.easylinker.framework.common.service
 
+
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
@@ -21,3 +22,4 @@ abstract class AbstractService<T> {
     abstract void deleteById(long id)
 
 }
+

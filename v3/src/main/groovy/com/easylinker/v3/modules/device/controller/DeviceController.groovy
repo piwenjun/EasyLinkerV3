@@ -366,7 +366,13 @@ class DeviceController extends AbstractController {
      */
     @GetMapping("/detail")
     R detail(@RequestParam @Valid String securityId, @RequestParam DeviceProtocol deviceProtocol) {
-        return R.okWithData(deviceService.detail(securityId, deviceProtocol))
+        AbstractDevice abstractDevice = deviceService.detail(securityId, deviceProtocol)
+        if (abstractDevice) {
+            return R.okWithData(abstractDevice)
+
+        } else {
+            return R.error("设备不存在")
+        }
 
     }
 
