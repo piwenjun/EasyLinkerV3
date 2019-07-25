@@ -1,42 +1,42 @@
 package com.easylinker.framework.modules.syslog.service
 
 import com.easylinker.framework.common.service.AbstractService
-import com.easylinker.framework.modules.syslog.dao.SystemLogRepository
 import com.easylinker.framework.modules.syslog.model.SystemLog
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 
 @Service
 class SystemLogService extends AbstractService<SystemLog> {
     @Autowired
-    SystemLogRepository systemLogRepository
+    MongoTemplate mongoTemplate
 
     @Override
     void save(SystemLog systemLog) {
-        systemLogRepository.save(systemLog)
+        mongoTemplate.save(systemLog, "SYSTEMLOG")
     }
 
     @Override
     Page<SystemLog> page(Pageable pageable) {
-        return systemLogRepository.findAll(pageable)
     }
 
     @Override
     SystemLog getById(long id) {
-        return systemLogRepository.findById(id).get()
     }
 
     @Override
     void delete(SystemLog systemLog) {
 
-        systemLogRepository.delete(systemLog)
     }
 
     @Override
     void deleteById(long id) {
-        systemLogRepository.deleteById(id)
     }
 
 
@@ -46,7 +46,16 @@ class SystemLogService extends AbstractService<SystemLog> {
      * @param pageable
      * @return
      */
-    Page<SystemLog> listByUser(String userSecurityId, Pageable pageable) {
-        return systemLogRepository.findByUserSecurityId(userSecurityId, pageable)
+    Page<SystemLog> list(String userSecurityId, Pageable pageable) {
+
+        Query query = new Query()
+        Criteria criteria = Criteria.where("userSecurityId").is(userSecurityId)
+        query.addCriteria(criteria)
+        query.with(new Sort(new Sort.Order(Sort.Direction.DESC, "createTime")))
+        query.with(pageable)
+        List<SystemLog> deviceDataList = mongoTemplate.find(query, SystemLog.class, "SYSTEMLOG")
+        long total = mongoTemplate.count(query, SystemLog.class)
+        return new PageImpl(deviceDataList, pageable, total)
+
     }
 }

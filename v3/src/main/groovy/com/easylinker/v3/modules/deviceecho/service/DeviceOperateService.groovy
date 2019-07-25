@@ -1,13 +1,16 @@
 package com.easylinker.v3.modules.deviceecho.service
 
 import com.easylinker.framework.common.service.AbstractService
-import com.easylinker.v3.modules.deviceecho.dao.DeviceOperateEchoRepository
-import com.easylinker.v3.modules.deviceecho.dao.DeviceOperateLogRepository
 import com.easylinker.v3.modules.deviceecho.model.DeviceOperateEcho
 import com.easylinker.v3.modules.deviceecho.model.DeviceOperateLog
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 
 /**
@@ -16,14 +19,19 @@ import org.springframework.stereotype.Service
  * 瞅啥瞅？代码拿过来我看看有没有BUG。
  *
  */
+
+/**
+ * 设备操作日志
+ */
 @Service
 class DeviceOperateLogService extends AbstractService<DeviceOperateLog> {
     @Autowired
-    DeviceOperateLogRepository deviceOperateLogRepository
+    MongoTemplate mongoTemplate
 
     @Override
     void save(DeviceOperateLog deviceOperateLog) {
 
+        mongoTemplate.save(deviceOperateLog, "DEVICE_OPERATE_LOG")
     }
 
     @Override
@@ -46,44 +54,59 @@ class DeviceOperateLogService extends AbstractService<DeviceOperateLog> {
 
     }
 
-    Page<DeviceOperateLog> list(String v1, String v2, Pageable v3) {
-        return deviceOperateLogRepository.findAllByUserSecurityIdAndDeviceSecurityId(v1, v2, v3)
+    Page<DeviceOperateLog> list(String userSecurityId, String deviceSecurityId, Pageable pageable) {
+        Query query = new Query()
+        Criteria criteria = Criteria.where("userSecurityId").is(userSecurityId).and("deviceSecurityId").is(deviceSecurityId)
+        query.addCriteria(criteria)
+        query.with(new Sort(new Sort.Order(Sort.Direction.DESC, "createTime")))
+        query.with(pageable)
+        List<DeviceOperateLog> deviceDataList = mongoTemplate.find(query, DeviceOperateLog.class, "DEVICE_OPERATE_ECHO")
+        long total = mongoTemplate.count(query, DeviceOperateLog.class)
+        return new PageImpl(deviceDataList, pageable, total)
+
+
     }
 }
-
+/**
+ * 设备操作反馈，和操作记录是 一对一的关系
+ */
 @Service
 class DeviceOperateEchoService extends AbstractService<DeviceOperateEcho> {
     @Autowired
-    DeviceOperateEchoRepository deviceOperateEchoRepository
+    MongoTemplate mongoTemplate
 
     @Override
     void save(DeviceOperateEcho deviceOperateEcho) {
-        deviceOperateEchoRepository.save(deviceOperateEcho)
+        mongoTemplate.save(deviceOperateEcho, "DEVICE_OPERATE_ECHO")
     }
 
     @Override
     Page<DeviceOperateEcho> page(Pageable pageable) {
-        return deviceOperateEchoRepository.findAll(pageable)
     }
 
     @Override
     DeviceOperateEcho getById(long id) {
-        return deviceOperateEchoRepository.getOne(id)
     }
 
     @Override
     void delete(DeviceOperateEcho deviceOperateEcho) {
 
-        deviceOperateEchoRepository.delete(deviceOperateEcho)
     }
 
     @Override
     void deleteById(long id) {
-        deviceOperateEchoRepository.deleteById(id)
     }
 
-    Page<DeviceOperateEcho> list(String var1, Pageable var2) {
+    Page<DeviceOperateEcho> list(String deviceOperateSecurityId, Pageable pageable) {
+        Query query = new Query()
+        Criteria criteria = Criteria.where("deviceOperateSecurityId").is(deviceOperateSecurityId)
+        query.addCriteria(criteria)
+        query.with(new Sort(new Sort.Order(Sort.Direction.DESC, "createTime")))
+        query.with(pageable)
+        List<DeviceOperateEcho> deviceDataList = mongoTemplate.find(query, DeviceOperateEcho.class, "DEVICE_OPERATE_ECHO")
+        long total = mongoTemplate.count(query, DeviceOperateEcho.class)
+        return new PageImpl(deviceDataList, pageable, total)
 
-        return deviceOperateEchoRepository.findAllByDeviceOperateLogSecurityId(var1, var2)
+
     }
 }

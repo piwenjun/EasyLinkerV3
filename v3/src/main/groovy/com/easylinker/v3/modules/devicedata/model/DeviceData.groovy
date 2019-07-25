@@ -1,17 +1,36 @@
 package com.easylinker.v3.modules.devicedata.model
 
-import com.easylinker.framework.common.model.AbstractModel
 import com.easylinker.framework.common.model.DeviceType
 
-import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 
 /**
  * 设备数据抽象
  */
-@Entity
-class DeviceData extends AbstractModel {
+
+class DeviceData {
+
+    /**
+     * 安全ID，对外如果用到数据库id的时候用词ID代替
+     * 主要是为了考虑被人猜测破解规律
+     */
+    private String securityId = UUID.randomUUID().toString().replace("-", "")
+    /**
+     * 项目创建时间
+     */
+    private Date createTime = new Date()
+
+    /**
+     * 是否软删除
+     */
+    private boolean isDelete = false
+
+    /**
+     * 项目更新时间
+     */
+    private Date updateTime = new Date()
+
     /**
      * 数据
      */

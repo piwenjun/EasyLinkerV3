@@ -9,7 +9,6 @@ import com.easylinker.framework.common.web.ReturnEnum
 import com.easylinker.framework.modules.entry.form.LoginForm
 import com.easylinker.framework.modules.entry.form.SignUpForm
 import com.easylinker.framework.modules.syslog.model.SystemLog
-import com.easylinker.framework.modules.syslog.service.SystemLogService
 import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.framework.modules.user.model.Role
 import com.easylinker.framework.modules.user.service.RoleService
@@ -19,6 +18,7 @@ import com.easylinker.framework.utils.JwtUtils
 import com.easylinker.framework.utils.RedisUtils
 import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
@@ -46,7 +46,7 @@ class EntryController extends AbstractController {
     RedisUtils redisUtils
 
     @Autowired
-    SystemLogService systemLogService
+    MongoTemplate mongoTemplate
 
     EntryController(HttpServletRequest httpServletRequest) {
         super(httpServletRequest)
@@ -79,10 +79,10 @@ class EntryController extends AbstractController {
             dataMap.put("principle", appUser.principle)
             dataMap.put("token", JwtUtils.token(jwtMap))
             redisUtils.set("USER:" + appUser.securityId, JSONObject.toJSONString(dataMap), 3_600_0000L)
-            systemLogService.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆成功,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId))
+            mongoTemplate.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆成功,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId), "SYSTEMLOG")
             return R.okWithData(dataMap)
         } else {
-            systemLogService.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆失败,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId))
+            mongoTemplate.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆失败,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId), "SYSTEMLOG")
 
             throw new XException("登陆失败!")
         }

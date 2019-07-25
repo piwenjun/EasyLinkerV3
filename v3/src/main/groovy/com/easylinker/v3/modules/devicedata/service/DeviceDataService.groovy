@@ -1,17 +1,21 @@
 package com.easylinker.v3.modules.devicedata.service
 
 import com.easylinker.framework.common.model.DeviceType
-import com.easylinker.v3.modules.devicedata.dao.DeviceDataRepository
 import com.easylinker.v3.modules.devicedata.model.DeviceData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.query.Criteria
+import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 
 @Service
 class DeviceDataService {
     @Autowired
-    DeviceDataRepository deviceDataRepository
+    MongoTemplate mongoTemplate
 
     /**
      * 查询数据
@@ -22,7 +26,15 @@ class DeviceDataService {
      */
     Page<DeviceData> list(String deviceSecurityId, DeviceType deviceType, Pageable pageable) {
 
-        return deviceDataRepository.findAllByDeviceSecurityIdAndDeviceType(deviceSecurityId,deviceType, pageable)
+        Query query = new Query()
+        Criteria criteria = Criteria.where("deviceSecurityId").is(deviceSecurityId).and("deviceType").is(deviceType)
+        query.addCriteria(criteria)
+        query.with(new Sort(new Sort.Order(Sort.Direction.DESC, "createTime")))
+        query.with(pageable)
+        List<DeviceData> deviceDataList = mongoTemplate.find(query, DeviceData.class, "DEVICE_DATA")
+        long total = mongoTemplate.count(query, DeviceData.class)
+        return new PageImpl(deviceDataList, pageable, total)
+
 
     }
 
@@ -36,7 +48,7 @@ class DeviceDataService {
 
     void save(DeviceData deviceData) {
 
-        deviceDataRepository.save(deviceData)
+        mongoTemplate.save(deviceData, "DEVICE_DATA")
     }
 }
 

@@ -72,6 +72,7 @@ class TestController extends AbstractController {
                     if (device.deviceType == DeviceType.BOOLEAN) {
                         DeviceData data = new DeviceData()
                         data.setInfo("测试开关数据")
+                        data.setDeviceType(DeviceType.BOOLEAN)
                         data.setDeviceSecurityId(device.securityId)
                         data.setData(pushForm.data.toString())
                         deviceDataService.save(data)

@@ -1,9 +1,4 @@
 package com.easylinker.v3.modules.deviceecho.model
-
-import com.easylinker.framework.common.model.AbstractModel
-
-import javax.persistence.Entity
-
 /**
  * @author wwhai* @date 2019/7/23 22:51
  * @email:751957846 @qq.com
@@ -15,8 +10,8 @@ import javax.persistence.Entity
  * 设备操作日志:
  * 12:35:25[张三]给【001】号设备发送了【关机】指令
  */
-@Entity
-class DeviceOperateLog extends AbstractModel {
+
+class DeviceOperateLog {
     /**
      * 发起人
      */
@@ -81,8 +76,8 @@ class DeviceOperateLog extends AbstractModel {
 /**
  * 设备操作返回结果
  */
-@Entity
-class DeviceOperateEcho extends AbstractModel {
+
+class DeviceOperateEcho {
     /**
      * 设备
      */

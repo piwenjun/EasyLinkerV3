@@ -4,12 +4,10 @@ import com.easylinker.framework.common.model.AbstractModel
 
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.persistence.MappedSuperclass
 
 /**
  * 模块的外挂组件【模块】
  */
-@MappedSuperclass
 class DeviceModule extends AbstractModel {
     private String deviceSecurityId
 

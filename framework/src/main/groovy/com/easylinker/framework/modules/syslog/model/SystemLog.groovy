@@ -1,17 +1,21 @@
 package com.easylinker.framework.modules.syslog.model
 
-import com.easylinker.framework.common.model.AbstractModel
-
-import javax.persistence.Entity
-
-@Entity
-class SystemLog extends AbstractModel{
+class SystemLog {
     private String reason
     private String info
     private String userSecurityId
+    private Date createTime = new Date()
 
     String getReason() {
         return reason
+    }
+
+    Date getCreateTime() {
+        return createTime
+    }
+
+    void setCreateTime(Date createTime) {
+        this.createTime = createTime
     }
 
     void setReason(String reason) {

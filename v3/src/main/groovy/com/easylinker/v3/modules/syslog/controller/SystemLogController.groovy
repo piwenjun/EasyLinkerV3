@@ -34,6 +34,6 @@ class SystemLogController extends AbstractController {
     R listByUser(@RequestParam(required = true) int page,
                  @RequestParam(required = true) int size) {
 
-        return R.okWithData(systemLogService.listByUser(getCurrentUser().securityId, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"))))
+        return R.okWithData(systemLogService.list(getCurrentUser().securityId, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"))))
     }
 }
