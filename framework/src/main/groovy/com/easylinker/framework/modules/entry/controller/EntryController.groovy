@@ -112,7 +112,7 @@ class EntryController extends AbstractController {
         )
         userService.save(appUser)
         roleService.save(new Role(name: "BASE_ROLE", info: "基本权限", appUser: appUser))
-        systemLogService.save(new SystemLog(reason: "注册", info: "用户:" + appUser.name + " 注册成功", userSecurityId: ""))
+        mongoTemplate.save(new SystemLog(reason: "注册", info: "用户:" + appUser.name + " 注册成功", userSecurityId: ""),"SYSTEMLOG")
         return R.ok("注册成功")
 
     }
