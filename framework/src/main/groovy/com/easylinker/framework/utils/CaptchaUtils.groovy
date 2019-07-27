@@ -18,6 +18,8 @@ import java.awt.image.BufferedImage
 class CaptchaUtils {
     @Autowired
     Producer producer
+    @Autowired
+    RedisUtils redisUtils
 
     BufferedImage getCaptcha(String uuid) {
         if (!uuid) {
@@ -25,6 +27,7 @@ class CaptchaUtils {
         }
         String code = producer.createText()
         println("生成的验证码:${code},对应的UUID:${uuid}")
+        redisUtils.set("CAPTCHA:" + uuid, code, 600000L)
         producer.createImage(code)
     }
     /**
@@ -37,7 +40,18 @@ class CaptchaUtils {
         //1 根据uuid在数据库查找code
         //2 判断是否和穿进来的凑得匹配
         //3 返回结果 同时删除记录
-        true
+//        String code =redisUtils.get("CAPTCHA:"+uuid)
+//        if (code==captchaCode){
+//            redisUtils.del("CAPTCHA:"+uuid)
+//            return true
+//        }else {
+//            redisUtils.del("CAPTCHA:"+uuid)
+//            return false
+//        }
+//
+        //开发阶段去了验证码  生产阶段取消注释
+
+        return true
 
     }
 

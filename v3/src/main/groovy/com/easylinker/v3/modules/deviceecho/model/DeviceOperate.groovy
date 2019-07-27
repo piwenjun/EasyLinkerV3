@@ -12,6 +12,8 @@ package com.easylinker.v3.modules.deviceecho.model
  */
 
 class DeviceOperateLog {
+
+    private String securityId
     /**
      * 发起人
      */
@@ -33,8 +35,27 @@ class DeviceOperateLog {
      */
     private String data
 
+    //
+    private Date createTime
+
+    Date getCreateTime() {
+        return createTime
+    }
+
+    void setCreateTime(Date createTime) {
+        this.createTime = createTime
+    }
+
     String getUserSecurityId() {
         return userSecurityId
+    }
+
+    String getSecurityId() {
+        return securityId
+    }
+
+    void setSecurityId(String securityId) {
+        this.securityId = securityId
     }
 
     void setUserSecurityId(String userSecurityId) {
@@ -87,6 +108,8 @@ class DeviceOperateEcho {
      * 具体回显的内容
      */
     private String data
+    //
+    private Date createTime
 
     String getDeviceOperateLogSecurityId() {
         return deviceOperateLogSecurityId
@@ -102,5 +125,13 @@ class DeviceOperateEcho {
 
     void setData(String data) {
         this.data = data
+    }
+
+    Date getCreateTime() {
+        return createTime
+    }
+
+    void setCreateTime(Date createTime) {
+        this.createTime = createTime
     }
 }

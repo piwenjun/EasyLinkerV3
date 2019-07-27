@@ -1,5 +1,6 @@
 package com.easylinker.v3.modules.test
 
+
 import com.easylinker.framework.common.config.security.RequireAuthRoles
 import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.model.AbstractDevice
@@ -10,11 +11,11 @@ import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.devicedata.model.DeviceData
 import com.easylinker.v3.modules.devicedata.service.DeviceDataService
+import com.easylinker.v3.modules.deviceecho.model.DeviceOperateEcho
+import com.easylinker.v3.modules.deviceecho.model.DeviceOperateLog
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
 
@@ -86,6 +87,40 @@ class TestController extends AbstractController {
 
             }
         }
+
+        return R.ok("测试数据")
+
+    }
+
+    /**
+     * 测试添加操作日志数据
+     * @param pushForm
+     * @return
+     */
+
+    @Autowired
+    MongoTemplate mongoTemplate
+
+    @GetMapping("/testOperate")
+    R testOperate(@RequestParam String sid) {
+        for (int i = 0; i < 36; i++) {
+            DeviceOperateLog deviceOperateLog = new DeviceOperateLog()
+            deviceOperateLog.setSecurityId("c6d56ebc13b9490795e15d7a4ee5f5cc")
+            deviceOperateLog.setData("01010101")
+            deviceOperateLog.setEvent("关机")
+            // deviceOperateLog.setCreateTime(new Date())
+            deviceOperateLog.setOperate("按钮点击")
+            deviceOperateLog.setDeviceSecurityId(sid)
+            mongoTemplate.save(deviceOperateLog, "DEVICE_OPERATE_LOG")
+            DeviceOperateEcho deviceOperateEcho = new DeviceOperateEcho()
+            deviceOperateEcho.setDeviceOperateLogSecurityId(deviceOperateLog.securityId)
+            deviceOperateEcho.setData("操作成功")
+            //deviceOperateEcho.setCreateTime(new Date())
+
+            mongoTemplate.save(deviceOperateEcho, "DEVICE_OPERATE_ECHO")
+
+        }
+
 
         return R.ok("测试数据")
 

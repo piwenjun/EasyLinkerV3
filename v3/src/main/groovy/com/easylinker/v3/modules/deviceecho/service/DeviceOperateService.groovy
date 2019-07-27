@@ -1,5 +1,6 @@
 package com.easylinker.v3.modules.deviceecho.service
 
+import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.service.AbstractService
 import com.easylinker.v3.modules.deviceecho.model.DeviceOperateEcho
 import com.easylinker.v3.modules.deviceecho.model.DeviceOperateLog
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.aggregation.Aggregation
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
@@ -54,58 +56,59 @@ class DeviceOperateLogService extends AbstractService<DeviceOperateLog> {
 
     }
 
-    Page<DeviceOperateLog> list(String userSecurityId, String deviceSecurityId, Pageable pageable) {
+    /**
+     * 操作日志  反馈
+     * @param userSecurityId
+     * @param deviceSecurityId
+     * @param pageable
+     * @return
+     */
+    Page<JSONObject> list(String deviceSecurityId, Pageable pageable) {
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("deviceSecurityId").is(deviceSecurityId)),
+                Aggregation.project("securityId", "operate", "event", "data", "createTime"),
+                Aggregation.sort(new Sort(new Sort.Order(Sort.Direction.DESC, "createTime"))),
+                Aggregation.skip((long) pageable.pageNumber * pageable.pageSize),
+                Aggregation.limit(pageable.pageSize),
+
+        )
+        //改成聚合查询
+        List<DeviceOperateLog> deviceDataList = mongoTemplate.aggregate(aggregation, "DEVICE_OPERATE_LOG", DeviceOperateLog.class).mappedResults
+
+        //最终返回的结果
+        List<JSONObject> dataList = new ArrayList<>()
+        //遍历操作记录表
+        for (DeviceOperateLog log : deviceDataList) {
+            //构造一个JSON用来返回
+            JSONObject jsonData = new JSONObject()
+//            Query query = new Query()
+//            query.addCriteria(Criteria.where("deviceOperateLogSecurityId").is(log.securityId))
+//            query.with(new Sort(new Sort.Order(Sort.Direction.DESC, "createTime"))).limit(1)
+            //
+            Aggregation aggregation1 = Aggregation.newAggregation(
+                    Aggregation.match(Criteria.where("deviceOperateLogSecurityId").is(log.securityId)),
+                    Aggregation.project("data", "createTime"),
+                    Aggregation.sort(new Sort(new Sort.Order(Sort.Direction.DESC, "createTime"))),
+                    Aggregation.limit(1)
+
+            )
+            //查询该操作记录的返回记录
+            DeviceOperateEcho deviceOperateEcho = mongoTemplate.aggregate(aggregation1, "DEVICE_OPERATE_ECHO", DeviceOperateEcho.class).mappedResults[0]
+            jsonData.put("operate", log)
+            if (deviceOperateEcho) {
+                jsonData.put("echo", deviceOperateEcho)
+            } else {
+                jsonData.put("echo", [])
+            }
+            dataList.add(jsonData)
+        }
+        //构造分页
         Query query = new Query()
-        Criteria criteria = Criteria.where("userSecurityId").is(userSecurityId).and("deviceSecurityId").is(deviceSecurityId)
-        query.addCriteria(criteria)
+        query.addCriteria(Criteria.where("deviceSecurityId").is(deviceSecurityId))
         query.with(new Sort(new Sort.Order(Sort.Direction.DESC, "createTime")))
         query.with(pageable)
-        List<DeviceOperateLog> deviceDataList = mongoTemplate.find(query, DeviceOperateLog.class, "DEVICE_OPERATE_ECHO")
         long total = mongoTemplate.count(query, DeviceOperateLog.class)
-        return new PageImpl(deviceDataList, pageable, total)
-
-
-    }
-}
-/**
- * 设备操作反馈，和操作记录是 一对一的关系
- */
-@Service
-class DeviceOperateEchoService extends AbstractService<DeviceOperateEcho> {
-    @Autowired
-    MongoTemplate mongoTemplate
-
-    @Override
-    void save(DeviceOperateEcho deviceOperateEcho) {
-        mongoTemplate.save(deviceOperateEcho, "DEVICE_OPERATE_ECHO")
-    }
-
-    @Override
-    Page<DeviceOperateEcho> page(Pageable pageable) {
-    }
-
-    @Override
-    DeviceOperateEcho getById(long id) {
-    }
-
-    @Override
-    void delete(DeviceOperateEcho deviceOperateEcho) {
-
-    }
-
-    @Override
-    void deleteById(long id) {
-    }
-
-    Page<DeviceOperateEcho> list(String deviceOperateSecurityId, Pageable pageable) {
-        Query query = new Query()
-        Criteria criteria = Criteria.where("deviceOperateSecurityId").is(deviceOperateSecurityId)
-        query.addCriteria(criteria)
-        query.with(new Sort(new Sort.Order(Sort.Direction.DESC, "createTime")))
-        query.with(pageable)
-        List<DeviceOperateEcho> deviceDataList = mongoTemplate.find(query, DeviceOperateEcho.class, "DEVICE_OPERATE_ECHO")
-        long total = mongoTemplate.count(query, DeviceOperateEcho.class)
-        return new PageImpl(deviceDataList, pageable, total)
+        return new PageImpl<JSONObject>(dataList, pageable, total)
 
 
     }
