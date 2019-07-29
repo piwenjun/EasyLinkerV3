@@ -19,6 +19,7 @@
         <option value="$PROJECT_DIR$/udp-service/pom.xml" />
         <option value="$PROJECT_DIR$/file-service/pom.xml" />
         <option value="$PROJECT_DIR$/terminal-service/pom.xml" />
+        <option value="$PROJECT_DIR$/eureka-server/pom.xml" />
       </list>
     </option>
   </component>

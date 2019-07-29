@@ -1,0 +1,14 @@
+# COAP Î¢·þÎñ
+spring:
+  application:
+    name: service-coap
+  devtools:
+    livereload:
+      port: 35297
+server:
+  port: 5500
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:4500/eureka/
