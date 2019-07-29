@@ -9,6 +9,9 @@ server:
   port: 5500
 
 eureka:
+  instance:
+    hostname: service-coap1
   client:
+
     serviceUrl:
       defaultZone: http://localhost:4500/eureka/
