@@ -1,9 +1,9 @@
 package com.easylinker.v3.modules.analyze.controller
 
-import com.easylinker.framework.common.config.security.RequireAuthRoles
-import com.easylinker.framework.common.controller.AbstractController
 import com.easylinker.framework.common.web.R
+import com.easylinker.v3.config.security.RequireAuthRoles
 import com.easylinker.v3.modules.analyze.service.AnalyzeService
+import com.easylinker.v3.modules.controller.AbstractController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

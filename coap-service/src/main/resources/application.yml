@@ -1,11 +1,23 @@
 spring:
   application:
     name: service-coap
+  data:
+    mongodb:
+      database: EASYLINKER
+      host: localhost
+      port: 27017
 
 server:
-  port: 8001
+  port: 8002
 
+# Eureka
 eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8000/eureka/
+
+# Coap Server
+coap:
+  server:
+    hostname: localhost
+    port: 5863

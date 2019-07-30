@@ -1,12 +1,12 @@
 package com.easylinker.v3.modules.device.dao
 
 
-import com.easylinker.framework.common.model.DeviceProtocol
-import com.easylinker.framework.common.model.DeviceStatus
-import com.easylinker.framework.common.model.DeviceType
-import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.device.model.*
+import com.easylinker.v3.modules.model.DeviceProtocol
+import com.easylinker.v3.modules.model.DeviceStatus
+import com.easylinker.v3.modules.model.DeviceType
 import com.easylinker.v3.modules.scene.model.Scene
+import com.easylinker.v3.modules.user.model.AppUser
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository

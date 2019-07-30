@@ -26,7 +26,7 @@ class ServiceGatewayApplication {
                     r.path("/jianshu")  .uri("https://www.jianshu.com/p/1328898190e6").filter(new GatewayFilter() {
                         @Override
                         Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-                            println "百度的请求:" + exchange.getRequest().remoteAddress
+                            println "请求:" + exchange.getRequest().remoteAddress
                             println(exchange.getRequest().getURI())
                             return chain.filter(exchange)
                         }

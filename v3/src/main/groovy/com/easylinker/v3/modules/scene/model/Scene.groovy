@@ -1,7 +1,8 @@
 package com.easylinker.v3.modules.scene.model
 
-import com.easylinker.framework.common.model.AbstractModel
-import com.easylinker.framework.modules.user.model.AppUser
+
+import com.easylinker.v3.modules.model.AbstractModel
+import com.easylinker.v3.modules.user.model.AppUser
 import com.fasterxml.jackson.annotation.JsonIgnore
 
 import javax.persistence.*

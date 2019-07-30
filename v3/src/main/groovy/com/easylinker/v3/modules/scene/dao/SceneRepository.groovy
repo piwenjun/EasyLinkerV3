@@ -1,7 +1,8 @@
 package com.easylinker.v3.modules.scene.dao
 
-import com.easylinker.framework.modules.user.model.AppUser
+
 import com.easylinker.v3.modules.scene.model.Scene
+import com.easylinker.v3.modules.user.model.AppUser
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository

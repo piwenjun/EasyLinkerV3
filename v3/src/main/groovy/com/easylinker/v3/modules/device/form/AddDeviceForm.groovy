@@ -1,6 +1,7 @@
 package com.easylinker.v3.modules.device.form
 
-import com.easylinker.framework.common.model.DeviceType
+
+import com.easylinker.v3.modules.model.DeviceType
 
 /**
  * @author wwhai* @date 2019/6/29 23:14

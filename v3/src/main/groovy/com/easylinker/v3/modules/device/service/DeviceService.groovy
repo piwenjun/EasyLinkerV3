@@ -1,13 +1,13 @@
 package com.easylinker.v3.modules.device.service
 
-import com.easylinker.framework.common.model.AbstractDevice
-import com.easylinker.framework.common.model.DeviceProtocol
-import com.easylinker.framework.common.model.DeviceType
-import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.device.dao.*
 import com.easylinker.v3.modules.device.model.*
+import com.easylinker.v3.modules.model.AbstractDevice
+import com.easylinker.v3.modules.model.DeviceProtocol
+import com.easylinker.v3.modules.model.DeviceType
 import com.easylinker.v3.modules.scene.dao.SceneRepository
 import com.easylinker.v3.modules.scene.model.Scene
+import com.easylinker.v3.modules.user.model.AppUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Example
 import org.springframework.data.domain.ExampleMatcher

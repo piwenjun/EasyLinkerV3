@@ -1,15 +1,14 @@
 package com.easylinker.v3.modules.scene.controller
 
 import cn.hutool.crypto.digest.DigestUtil
-import com.easylinker.framework.common.controller.AbstractController
-import com.easylinker.framework.common.model.AbstractDevice
-import com.easylinker.framework.common.model.DeviceProtocol
-import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
+import com.easylinker.v3.modules.controller.AbstractController
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
+import com.easylinker.v3.modules.model.AbstractDevice
+import com.easylinker.v3.modules.model.DeviceProtocol
 import com.easylinker.v3.modules.scene.form.AddSceneForm
 import com.easylinker.v3.modules.scene.form.UpdateSceneForm
 import com.easylinker.v3.modules.scene.model.PreInstallTemplate

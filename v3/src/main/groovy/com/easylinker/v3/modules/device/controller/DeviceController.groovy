@@ -1,20 +1,20 @@
 package com.easylinker.v3.modules.device.controller
 
 import cn.hutool.crypto.digest.DigestUtil
-import com.easylinker.framework.common.controller.AbstractController
-import com.easylinker.framework.common.model.AbstractDevice
-import com.easylinker.framework.common.model.DeviceProtocol
-import com.easylinker.framework.common.model.DeviceStatus
-import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
-import com.easylinker.framework.modules.user.model.AppUser
-import com.easylinker.framework.modules.user.service.UserService
+import com.easylinker.v3.modules.controller.AbstractController
 import com.easylinker.v3.modules.device.form.*
 import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
+import com.easylinker.v3.modules.model.AbstractDevice
+import com.easylinker.v3.modules.model.DeviceProtocol
+import com.easylinker.v3.modules.model.DeviceStatus
+import com.easylinker.v3.modules.model.DeviceType
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.scene.service.SceneService
+import com.easylinker.v3.modules.user.model.AppUser
+import com.easylinker.v3.modules.user.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort

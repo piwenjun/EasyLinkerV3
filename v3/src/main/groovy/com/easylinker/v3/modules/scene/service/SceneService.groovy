@@ -1,14 +1,13 @@
 package com.easylinker.v3.modules.scene.service
 
 import com.easylinker.framework.common.service.AbstractService
-import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.scene.dao.SceneRepository
 import com.easylinker.v3.modules.scene.model.Scene
+import com.easylinker.v3.modules.user.model.AppUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-
 
 @Service
 class SceneService extends AbstractService<Scene> {

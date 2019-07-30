@@ -1,10 +1,11 @@
 package com.easylinker.v3.modules.schedule.controller
 
-import com.easylinker.framework.common.controller.AbstractController
+
+import com.easylinker.v3.modules.controller.AbstractController
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest
 
 /**
  * 定时计划任务

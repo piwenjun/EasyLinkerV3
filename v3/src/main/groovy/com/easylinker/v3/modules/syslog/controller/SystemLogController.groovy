@@ -1,8 +1,9 @@
 package com.easylinker.v3.modules.syslog.controller
 
-import com.easylinker.framework.common.controller.AbstractController
+
 import com.easylinker.framework.common.web.R
-import com.easylinker.framework.modules.syslog.service.SystemLogService
+import com.easylinker.v3.modules.controller.AbstractController
+import com.easylinker.v3.modules.syslog.service.SystemLogService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort

@@ -1,8 +1,8 @@
 package com.easylinker.v3.modules.device.model
 
-import com.easylinker.framework.common.model.AbstractDevice
-import com.easylinker.framework.modules.user.model.AppUser
+import com.easylinker.v3.modules.model.AbstractDevice
 import com.easylinker.v3.modules.scene.model.Scene
+import com.easylinker.v3.modules.user.model.AppUser
 import com.fasterxml.jackson.annotation.JsonIgnore
 
 import javax.persistence.CascadeType

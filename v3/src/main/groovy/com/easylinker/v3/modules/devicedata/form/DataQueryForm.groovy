@@ -1,7 +1,7 @@
 package com.easylinker.v3.modules.devicedata.form
 
 
-import com.easylinker.framework.common.model.DeviceType
+import com.easylinker.v3.modules.model.DeviceType
 
 /**
  * 辅助查询

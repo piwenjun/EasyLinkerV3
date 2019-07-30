@@ -7,16 +7,15 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="eureka-server" />
-        <module name="mqtt-service" />
+        <module name="tcp-service" />
         <module name="coap-service" />
         <module name="udp-service" />
         <module name="service-gateway" />
-        <module name="framework" />
         <module name="terminal-service" />
         <module name="v3" />
         <module name="http-service" />
         <module name="file-service" />
-        <module name="tcp-service" />
+        <module name="mqtt-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
