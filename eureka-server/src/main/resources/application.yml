@@ -1,12 +1,13 @@
 spring:
   application:
-    name: spring-cloud-demo-eureka
+    name: spring-cloud-eureka-server
 
 server:
   port: 8000
 
 eureka:
   instance:
+
     hostname: localhost
   client:
     registerWithEureka: false

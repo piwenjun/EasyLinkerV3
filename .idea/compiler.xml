@@ -8,7 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="gateway" />
         <module name="eureka-server" />
-        <module name="tcp-service" />
+        <module name="mqtt-service" />
         <module name="coap-service" />
         <module name="udp-service" />
         <module name="framework" />
@@ -16,9 +16,12 @@
         <module name="v3" />
         <module name="http-service" />
         <module name="file-service" />
-        <module name="mqtt-service" />
+        <module name="tcp-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="spring-cloud-demo-service-admin" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -29,6 +32,7 @@
       <module name="gateway" options="-parameters" />
       <module name="http-service" options="-parameters" />
       <module name="mqtt-service" options="-parameters" />
+      <module name="spring-cloud-demo-service-admin" options="-parameters" />
       <module name="tcp-service" options="-parameters" />
       <module name="terminal-service" options="-parameters" />
       <module name="udp-service" options="-parameters" />
