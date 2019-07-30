@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="gateway" />
         <module name="eureka-server" />
         <module name="mqtt-service" />
         <module name="coap-service" />
         <module name="udp-service" />
+        <module name="service-gateway" />
         <module name="framework" />
         <module name="terminal-service" />
         <module name="v3" />
@@ -20,6 +20,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="gateway" target="1.8" />
       <module name="spring-cloud-demo-service-admin" target="1.8" />
     </bytecodeTargetLevel>
   </component>
@@ -32,6 +33,7 @@
       <module name="gateway" options="-parameters" />
       <module name="http-service" options="-parameters" />
       <module name="mqtt-service" options="-parameters" />
+      <module name="service-gateway" options="-parameters" />
       <module name="spring-cloud-demo-service-admin" options="-parameters" />
       <module name="tcp-service" options="-parameters" />
       <module name="terminal-service" options="-parameters" />

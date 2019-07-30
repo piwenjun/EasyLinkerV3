@@ -1,4 +1,4 @@
-package com.easylinker.gateway
+package com.easylinker.servicegateway
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner
 
 @RunWith(SpringRunner)
 @SpringBootTest
-class GatewayApplicationTests {
+class ServiceGatewayApplicationTests {
 
     @Test
     void contextLoads() {
