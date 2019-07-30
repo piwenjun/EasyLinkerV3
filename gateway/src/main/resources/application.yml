@@ -11,13 +11,3 @@ eureka:
 spring:
   application:
     name: api-gateway
-
-#自定义路由映射
-zuul:
-  routes:
-    order-service: /apigateway/order/**
-    product-service: /apigateway/product/**
-  #统一入口为上面的配置，其他入口忽略
-  ignored-patterns: /*-service/**
-  #处理http请求头为空的问题
-  sensitive-headers:
