@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/coap-service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/coap-service/src/main/resources/application.yml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/eureka-server" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/file-service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/framework" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gateway" charset="UTF-8" />

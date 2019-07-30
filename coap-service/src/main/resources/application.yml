@@ -1,17 +1,11 @@
-# COAP Î¢·þÎñ
 spring:
   application:
-    name: service-coap
-  devtools:
-    livereload:
-      port: 35297
+    name: spring-cloud-demo-service-admin
+
 server:
-  port: 5500
+  port: 8001
 
 eureka:
-  instance:
-    hostname: service-coap1
   client:
-
     serviceUrl:
-      defaultZone: http://localhost:4500/eureka/
+      defaultZone: http://localhost:8000/eureka/

@@ -6,7 +6,6 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient
 
 @SpringBootApplication
 @EnableEurekaClient
-//@EnableDiscoveryClient
 class CoAPServiceApplication {
 
     static void main(String[] args) {
