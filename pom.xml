@@ -18,7 +18,7 @@
         <module>http-service</module>
         <module>mqtt-service</module>
         <module>file-service</module>
-
+        <module>eureka-server</module>
         <module>v3</module>
     </modules>
 
