@@ -20,4 +20,4 @@ eureka:
 coap:
   server:
     hostname: localhost
-    port: 5863
+    port: 5683
