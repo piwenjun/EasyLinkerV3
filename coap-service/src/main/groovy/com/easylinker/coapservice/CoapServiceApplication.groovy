@@ -2,10 +2,11 @@ package com.easylinker.coapservice
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient
+import org.springframework.context.annotation.ComponentScan
 
 @SpringBootApplication
-@EnableEurekaClient
+//@EnableEurekaClient
+@ComponentScan(basePackages = ['com.easylinker.*', 'com.easylinker.framework.common.config.*'])
 class CoapServiceApplication {
 
     static void main(String[] args) {

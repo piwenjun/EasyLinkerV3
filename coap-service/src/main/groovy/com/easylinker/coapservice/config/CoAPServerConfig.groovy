@@ -3,8 +3,8 @@ package com.easylinker.coapservice.config
 import com.alibaba.fastjson.JSONObject
 import com.easylinker.coapservice.model.DeviceData
 import com.easylinker.framework.common.web.R
+import com.easylinker.framework.utils.RedisUtils
 import com.mbed.coap.exception.CoapCodeException
-import com.mbed.coap.packet.CoapPacket
 import com.mbed.coap.packet.Code
 import com.mbed.coap.server.CoapExchange
 import com.mbed.coap.server.CoapServer
@@ -34,8 +34,10 @@ class CoAPServerConfig {
      * MongoDB的缓存表名字
      *
      */
-    private static final String CACHE_INFO_TABLE = "COAP_CATCH_INFO"
-    private static final String MYSQL_QUERY_SQL = "select sn,token,security_id,device_type, from coapdevice where token = ?"
+    private static final String CACHE_INFO_TABLE = "COAP_CACHE_INFO"
+    private static final String COAP_DATA_TABLE = "COAP_DATA"
+
+    private static final String MYSQL_QUERY_SQL = "select sn,token,security_id,device_type from coapdevice where token = ?"
 
     @Autowired
     JdbcTemplate jdbcTemplate
@@ -58,9 +60,7 @@ class CoAPServerConfig {
     CoapServer coapServer() {
         final CoapServer server = CoapServer.builder() .transport(port).build()
         /**
-         * 【重要】此接口需要限制频率，目前先限制为每个客户端的上传时间间隔为2秒;具体
-         * 实现方法：push的时候，先redis.get(deviceSecurityId);如果没有拿到说明没有限制，数据放行;
-         * 否则拦截并且:redis.set(deviceSecurityId,2s)
+
          * --------------------------------------------------------------------------------------------
          * 1 消息到来的时候 先检查【token】的合法性【这里需要调用V3的一个接口：/coap/isValid?token=[token]】
          *  [问题：一个请求会经过两次微服务，势必会影响性能，考虑如何优化这部分]
@@ -80,19 +80,21 @@ class CoAPServerConfig {
 
             @Override
             void post(CoapExchange coapExchange) throws CoapCodeException {
-                println("客户端POST:" + coapExchange.getRequestBodyString())
-
-
+                //println("客户端POST:" + coapExchange.getRequestBodyString())
                 //检查请求合法性
+
                 if (!coapExchange.getRequestBodyString()) {
                     coapResponse(coapExchange, R.error("Error,Empty payload!"), Code.C400_BAD_REQUEST)
+                    return
                 }
                 if (coapExchange.getRequestBodyString().length() > 1024) {
                     coapResponse(coapExchange, R.error("Data too long!Most 1024KB!"), Code.C400_BAD_REQUEST)
 
                 } else {
                     JSONObject dataJson = new JSONObject()
-
+                    /**
+                     * 都是一些合法性判断
+                     */
                     try {
                         dataJson = JSONObject.parseObject(coapExchange.request.payloadString)
                     } catch (Exception e) {
@@ -101,11 +103,9 @@ class CoAPServerConfig {
                         return
 
                     }
-                    //JSON 可能解析异常
-                    //数据入库请求
                     String token
                     try {
-                        token = dataJson.getString().toString()
+                        token = dataJson.getString("token").toString()
                     } catch (Exception e) {
                         coapResponse(coapExchange, R.error("Invalid token!"), Code.C401_UNAUTHORIZED)
                         logger.error(e.message)
@@ -113,22 +113,31 @@ class CoAPServerConfig {
                         return
                     }
                     /**
-                     * String token【必填】
-                     * String data【必填】
-                     * String unit【选填】
-                     * String info【选填】
+                     * 频率限制 2S
                      */
-                    String data = dataJson.getString("token")
+                    if (requestIsLimit(token)) {
+                        coapResponse(coapExchange, R.error("High frequency request!"), Code.C502_BAD_GATEWAY)
+                        return
+                    }
+
+                    /**
+                     * String token【必填】
+                     * String data 【必填】
+                     * String unit 【选填】
+                     * String info 【选填】
+                     */
+                    String data = dataJson.getString("data")
                     String unit = dataJson.getString("unit")
                     String info = dataJson.getString("info")
 
                     //请求【V3】保存数据
                     if ((!token)) {
                         coapResponse(coapExchange, R.error("Invalid token!"), Code.C401_UNAUTHORIZED)
+                        return
                     }
                     if (!data) {
                         coapResponse(coapExchange, R.error("Invalid data!"), Code.C400_BAD_REQUEST)
-
+                        return
                     }
 
                     /**
@@ -151,13 +160,15 @@ class CoAPServerConfig {
                                 createTime: new Date(),
                                 updateTime: new Date(),
                                 data: data,
-                                unit: unit ? "" : unit,
+                                unit: unit ? "-" : unit,
                                 deviceSecurityId: cacheInfo.get("security_id").toString(),
-                                info: info ? "" : info
+                                info: info ? "-" : info
                         )
+                        // println ("有缓存了")
+
                         //保存设备数据到MongoDb
-                        mongoTemplate.save(deviceData, "COAP_DATA")
-                        coapResponse(coapExchange, R.ok("Post Success!!"), Code.C201_CREATED)
+                        mongoTemplate.save(deviceData, COAP_DATA_TABLE)
+                        coapResponse(coapExchange, R.ok("Post Success!"), Code.C201_CREATED)
                         //
                     } else {
                         //还存不存在,查Mysql:[sn,token,security_id,device_type]
@@ -167,10 +178,7 @@ class CoAPServerConfig {
                         } catch (Exception ex) {
                             //ex.printStackTrace()
                             logger.error(ex.message)
-                            //TODO
-                            //这里会报一个空指针，但是不清楚啥原因
                             coapResponse(coapExchange, R.error("Device not exist!"), Code.C400_BAD_REQUEST)
-
                             return
 
                         }
@@ -184,12 +192,15 @@ class CoAPServerConfig {
                                 deviceSecurityId: deviceMap.get("security_id").toString(),
                                 info: info ? "" : info
                         )
+                        // println ("第一次必定走这一步")
                         //保存数据
-                        mongoTemplate.save(deviceData, "COAP_DATA")
+                        mongoTemplate.save(deviceData, COAP_DATA_TABLE)
                         //更新缓存
+                        //TODO:这里有个重要的细节，后面版本更新的时候完善：删除设备的时候，缓存也要刷新干净，不然会导致冗余数据
+                        //TODO：后台会跑一个定时任务，每天定时清空缓存表【COAP_CACHE_TABLE】
                         mongoTemplate.save(deviceMap, CACHE_INFO_TABLE)
-                        coapResponse(coapExchange, R.ok("Post Success!!"), Code.C201_CREATED)
-
+                        //返回提示信息
+                        coapResponse(coapExchange, R.ok("Post Success!"), Code.C201_CREATED)
                     }
 
                 }
@@ -232,12 +243,32 @@ class CoAPServerConfig {
      * @param response
      */
 
-    private static void coapResponse(CoapExchange coapExchange, R r, Code code) {
-        CoapPacket coapPacket=new CoapPacket()
-        coapPacket.setCode(code)
-        coapPacket.setPayload(r.toJSONString())
-        coapExchange.setResponse(coapPacket)
+    private static void coapResponse(final CoapExchange coapExchange, R r, Code code) {
+        coapExchange.setResponseCode(code)
+        coapExchange.setResponseBody(r.toJSONString())
         coapExchange.sendResponse()
+    }
+
+    /**
+     * 检查请求频率【每一个设备最少2秒间隔频率】否则会被拦截{自己可以根据需求调整}* 【重要】此接口需要限制频率，目前先限制为每个客户端的上传时间间隔为2秒;具体
+     * 实现方法：push的时候，先redis.get(deviceSecurityId);如果没有拿到说明没有限制，数据放行;
+     * 否则拦截并且:redis.set(deviceSecurityId,2s)
+     * @param token
+     */
+    @Autowired
+    RedisUtils redisUtils
+
+    private boolean requestIsLimit(String token) {
+        try {
+            redisUtils.get("COAP_REQUEST_FREQUENCY:" + token)
+            return true
+
+        } catch (Exception e) {
+            //设置两秒过期时间
+            redisUtils.set("COAP_REQUEST_FREQUENCY:" + token, token, 2000)
+            return false
+        }
+
     }
 }
 

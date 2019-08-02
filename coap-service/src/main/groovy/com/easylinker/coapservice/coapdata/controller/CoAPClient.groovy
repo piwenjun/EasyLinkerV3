@@ -7,19 +7,18 @@ import com.mbed.coap.client.CoapClientBuilder
 import com.mbed.coap.packet.CoapPacket
 import com.mbed.coap.packet.MediaTypes
 
+/**
+ * 测试客户端【这货很坑不要用，用Python客户端测试】
+ */
 class CoAPClient {
 
     static void main(String[] args) throws InterruptedException {
         /**
-         *{*     "createTime":1564732582469,
+         *{
          *     "data":"123",
-         *     "dataType":"VALVE",
-         *     "deviceSecurityId":"5051744f357f4cfa8f9689019716100a",
          *     "info":"温度",
          *     "isDelete":false,
-         *     "securityId":"b9793949fd00414ea52768312eafe9f3",
          *     "unit":"'C",
-         *     "updateTime":1564732582469
          *}*/
 
         DeviceData deviceData = new DeviceData(
