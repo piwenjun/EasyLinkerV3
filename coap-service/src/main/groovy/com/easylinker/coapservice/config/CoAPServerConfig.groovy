@@ -167,10 +167,8 @@ class CoAPServerConfig {
                         } catch (Exception ex) {
                             //ex.printStackTrace()
                             logger.error(ex.message)
-
-//                            coapExchange.setResponseBody(R.error("Device not exist!").toJSONString())
-//                            coapExchange.setResponseCode( Code.C400_BAD_REQUEST)
-//                            coapExchange.sendResponse()
+                            //TODO
+                            //这里会报一个空指针，但是不清楚啥原因
                             coapResponse(coapExchange, R.error("Device not exist!"), Code.C400_BAD_REQUEST)
 
                             return
