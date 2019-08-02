@@ -1,10 +1,7 @@
 package com.easylinker.coapservice.coapdata.controller
 
-import com.easylinker.coapservice.coapdata.form.PushDataForm
 import com.easylinker.framework.common.web.R
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 /**
@@ -15,16 +12,14 @@ import org.springframework.web.bind.annotation.RestController
  *
  */
 @RestController
-@RequestMapping("/CoAPData")
 class CoAPDataController {
     /**
      * CoAP 终端设备上传数据接口
      * @param pushDataForm
      * @return
      */
-    @PostMapping("/push")
-    R push(@RequestBody PushDataForm pushDataForm) {
-
-        return R.ok("Push Success")
+    @GetMapping("/")
+    R i() {
+        return R.ok("COAP Service ok")
     }
 }

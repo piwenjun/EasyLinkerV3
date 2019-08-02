@@ -1,7 +1,7 @@
 package com.easylinker.v3.modules.schedule.controller
 
 
-import com.easylinker.v3.modules.controller.AbstractController
+import com.easylinker.v3.common.controller.AbstractController
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 

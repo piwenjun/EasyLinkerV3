@@ -1,4 +1,4 @@
-package com.easylinker.v3.modules.controller
+package com.easylinker.v3.common.controller
 
 
 import com.easylinker.v3.utils.CaptchaUtils

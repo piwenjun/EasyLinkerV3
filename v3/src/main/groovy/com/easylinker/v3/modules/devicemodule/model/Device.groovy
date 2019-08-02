@@ -1,8 +1,8 @@
 package com.easylinker.v3.modules.devicemodule.model
 
 import com.easylinker.framework.utils.SerialNumberUtils
-import com.easylinker.v3.modules.model.AbstractDevice
-import com.easylinker.v3.modules.model.DeviceProtocol
+import com.easylinker.v3.common.model.AbstractDevice
+import com.easylinker.v3.common.model.DeviceProtocol
 
 import javax.persistence.EnumType
 import javax.persistence.Enumerated

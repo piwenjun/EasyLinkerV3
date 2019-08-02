@@ -2,7 +2,7 @@ package com.easylinker.v3.modules.user.controller
 
 import cn.hutool.json.JSONArray
 import com.easylinker.framework.common.web.R
-import com.easylinker.v3.modules.controller.AbstractController
+import com.easylinker.v3.common.controller.AbstractController
 import com.easylinker.v3.modules.device.form.UpdateForm
 import com.easylinker.v3.modules.user.model.AppUser
 import com.easylinker.v3.modules.user.model.Role
@@ -58,7 +58,7 @@ class UserController extends AbstractController {
     R update(@RequestBody @Valid UpdateForm updateForm) {
         AppUser appUser = userService.findBySecurityId(getCurrentUser().securityId)
         if (appUser) {
-            appUser.setName(updateForm.name)
+            appUser.setName(updateForm.getName())
             appUser.setEmail(updateForm.email)
             userService.save(appUser)
             return R.ok("用户信息更新成功")

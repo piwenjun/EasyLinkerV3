@@ -1,4 +1,4 @@
-package com.easylinker.v3.modules.model
+package com.easylinker.v3.common.model
 
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType

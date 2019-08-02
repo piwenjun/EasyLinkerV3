@@ -2,13 +2,13 @@ package com.easylinker.v3.modules.scene.controller
 
 import cn.hutool.crypto.digest.DigestUtil
 import com.easylinker.framework.common.web.R
-import com.easylinker.v3.modules.controller.AbstractController
+import com.easylinker.v3.common.controller.AbstractController
 import com.easylinker.v3.modules.device.model.HTTPDevice
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
-import com.easylinker.v3.modules.model.AbstractDevice
-import com.easylinker.v3.modules.model.DeviceProtocol
+import com.easylinker.v3.common.model.AbstractDevice
+import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.modules.scene.form.AddSceneForm
 import com.easylinker.v3.modules.scene.form.UpdateSceneForm
 import com.easylinker.v3.modules.scene.model.PreInstallTemplate
@@ -88,7 +88,7 @@ class SceneController extends AbstractController {
         switch (addSceneForm.sceneType) {
             case SceneType.CUSTOM:
                 //新建一个类型
-                Scene scene = new Scene(name: addSceneForm.name,
+                Scene scene = new Scene(name: addSceneForm.getName(),
                         sceneType: SceneType.CUSTOM,
                         info: addSceneForm.info,
                         appUser: getCurrentUser())
@@ -111,7 +111,7 @@ class SceneController extends AbstractController {
     private R handPreInstallTemplate(AddSceneForm addSceneForm) {
         switch (addSceneForm.preInstallTemplate) {
             case PreInstallTemplate.HUMIDITY_TEMPERATURE_TEMPLATE:
-                Scene scene = new Scene(name: addSceneForm.name,
+                Scene scene = new Scene(name: addSceneForm.getName(),
                         sceneType: SceneType.PRE_INSTALL_TEMPLATE,
                         info: addSceneForm.info,
                         appUser: getCurrentUser())
@@ -132,7 +132,7 @@ class SceneController extends AbstractController {
                 /**
                  * GPS有2个坐标，默认是HTTP设备
                  */
-                Scene scene = new Scene(name: addSceneForm.name,
+                Scene scene = new Scene(name: addSceneForm.getName(),
                         sceneType: SceneType.PRE_INSTALL_TEMPLATE,
                         info: addSceneForm.info,
                         appUser: getCurrentUser())
@@ -155,7 +155,7 @@ class SceneController extends AbstractController {
                  * 通用开关是MQTT类型的设备
                  */
 
-                Scene scene = new Scene(name: addSceneForm.name,
+                Scene scene = new Scene(name: addSceneForm.getName(),
                         sceneType: SceneType.PRE_INSTALL_TEMPLATE,
                         info: addSceneForm.info,
                         appUser: getCurrentUser())
@@ -180,7 +180,7 @@ class SceneController extends AbstractController {
                 /**
                  * 串口屏是文本类型的设备
                  */
-                Scene scene = new Scene(name: addSceneForm.name,
+                Scene scene = new Scene(name: addSceneForm.getName(),
                         sceneType: SceneType.PRE_INSTALL_TEMPLATE,
                         info: addSceneForm.info,
                         appUser: getCurrentUser())
@@ -250,7 +250,7 @@ class SceneController extends AbstractController {
     R update(@RequestBody UpdateSceneForm updateForm) {
         Scene scene = sceneService.findBySecurityId(updateForm.securityId)
         if (scene) {
-            scene.setName(updateForm.name)
+            scene.setName(updateForm.getName())
             scene.setInfo(updateForm.info)
             sceneService.save(scene)
             return R.ok("更新成功")

@@ -2,15 +2,15 @@ package com.easylinker.v3.modules.device.controller
 
 import cn.hutool.crypto.digest.DigestUtil
 import com.easylinker.framework.common.web.R
-import com.easylinker.v3.modules.controller.AbstractController
+import com.easylinker.v3.common.controller.AbstractController
 import com.easylinker.v3.modules.device.form.*
 import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
-import com.easylinker.v3.modules.model.AbstractDevice
-import com.easylinker.v3.modules.model.DeviceProtocol
-import com.easylinker.v3.modules.model.DeviceStatus
-import com.easylinker.v3.modules.model.DeviceType
+import com.easylinker.v3.common.model.AbstractDevice
+import com.easylinker.v3.common.model.DeviceProtocol
+import com.easylinker.v3.common.model.DeviceStatus
+import com.easylinker.v3.common.model.DeviceType
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.scene.service.SceneService
 import com.easylinker.v3.modules.user.model.AppUser
@@ -54,7 +54,7 @@ class DeviceController extends AbstractController {
             Scene scene = sceneService.findBySecurityId(httpDeviceForm.sceneSecurityId)
             if (scene) {
 
-                HTTPDevice httpDevice = new HTTPDevice(name: httpDeviceForm.name,
+                HTTPDevice httpDevice = new HTTPDevice(name: httpDeviceForm.getName(),
                         info: httpDeviceForm.info,
                         deviceType: httpDeviceForm.deviceType,
                         appUser: getCurrentUser(),
@@ -70,7 +70,7 @@ class DeviceController extends AbstractController {
 
         } else {
 
-            HTTPDevice httpDevice = new HTTPDevice(name: httpDeviceForm.name,
+            HTTPDevice httpDevice = new HTTPDevice(name: httpDeviceForm.getName(),
                     info: httpDeviceForm.info,
                     deviceType: httpDeviceForm.deviceType,
                     appUser: getCurrentUser(),
@@ -95,7 +95,7 @@ class DeviceController extends AbstractController {
             Scene scene = sceneService.findBySecurityId(coAPDeviceForm.sceneSecurityId)
             if (scene) {
 
-                CoAPDevice CoAPDevice = new CoAPDevice(name: coAPDeviceForm.name,
+                CoAPDevice CoAPDevice = new CoAPDevice(name: coAPDeviceForm.getName(),
                         info: coAPDeviceForm.info,
                         token: UUID.randomUUID().toString().replace("-", ""),
                         deviceType: coAPDeviceForm.deviceType,
@@ -111,7 +111,7 @@ class DeviceController extends AbstractController {
 
         } else {
 
-            CoAPDevice CoAPDevice = new CoAPDevice(name: CoAPDeviceForm.name,
+            CoAPDevice CoAPDevice = new CoAPDevice(name: CoAPDeviceForm.getName(),
                     info: coAPDeviceForm.info,
                     token: UUID.randomUUID().toString().replace("-", ""),
                     deviceType: coAPDeviceForm.deviceType,
@@ -141,7 +141,7 @@ class DeviceController extends AbstractController {
         if (mqttDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(mqttDeviceForm.sceneSecurityId)
             if (scene) {
-                MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.name,
+                MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.getName(),
                         info: mqttDeviceForm.info,
                         clientId: UUID.randomUUID().toString().replace("-", ""),
                         password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
@@ -160,7 +160,7 @@ class DeviceController extends AbstractController {
             }
 
         } else {
-            MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.name,
+            MQTTDevice mqttDevice = new MQTTDevice(name: mqttDeviceForm.getName(),
                     info: mqttDeviceForm.info,
                     clientId: UUID.randomUUID().toString().replace("-", ""),
                     password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
@@ -187,7 +187,7 @@ class DeviceController extends AbstractController {
         if (terminalHostDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(terminalHostDeviceForm.sceneSecurityId)
             if (scene) {
-                TerminalHostDevice terminalHostDevice = new TerminalHostDevice(name: terminalHostDeviceForm.name,
+                TerminalHostDevice terminalHostDevice = new TerminalHostDevice(name: terminalHostDeviceForm.getName(),
                         info: terminalHostDeviceForm.info,
                         sshUsername: terminalHostDeviceForm.sshUsername,
                         sshPassword: terminalHostDeviceForm.sshPassword,
@@ -205,7 +205,7 @@ class DeviceController extends AbstractController {
 
             }
         } else {
-            TerminalHostDevice terminalHostDevice = new TerminalHostDevice(name: terminalHostDeviceForm.name,
+            TerminalHostDevice terminalHostDevice = new TerminalHostDevice(name: terminalHostDeviceForm.getName(),
                     info: terminalHostDeviceForm.info,
                     sshUsername: terminalHostDeviceForm.sshUsername,
                     sshPassword: terminalHostDeviceForm.sshPassword,
@@ -232,7 +232,7 @@ class DeviceController extends AbstractController {
         if (tcpDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(tcpDeviceForm.sceneSecurityId)
             if (scene) {
-                TCPDevice tcpDevice = new TCPDevice(name: tcpDeviceForm.name,
+                TCPDevice tcpDevice = new TCPDevice(name: tcpDeviceForm.getName(),
                         info: tcpDeviceForm.info,
                         token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                         password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
@@ -251,7 +251,7 @@ class DeviceController extends AbstractController {
             }
 
         } else {
-            TCPDevice tcpDevice = new TCPDevice(name: tcpDeviceForm.name,
+            TCPDevice tcpDevice = new TCPDevice(name: tcpDeviceForm.getName(),
                     info: tcpDeviceForm.info,
                     token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                     password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
@@ -277,7 +277,7 @@ class DeviceController extends AbstractController {
         if (udpDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(udpDeviceForm.sceneSecurityId)
             if (scene) {
-                UDPDevice udpDevice = new UDPDevice(name: udpDeviceForm.name,
+                UDPDevice udpDevice = new UDPDevice(name: udpDeviceForm.getName(),
                         info: udpDeviceForm.info,
                         token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                         deviceType: udpDeviceForm.deviceType,
@@ -294,7 +294,7 @@ class DeviceController extends AbstractController {
             }
 
         } else {
-            UDPDevice udpDevice = new UDPDevice(name: udpDeviceForm.name,
+            UDPDevice udpDevice = new UDPDevice(name: udpDeviceForm.getName(),
                     info: udpDeviceForm.info,
                     token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                     deviceType: udpDeviceForm.deviceType,
@@ -516,7 +516,7 @@ class DeviceController extends AbstractController {
             switch (updateForm.deviceProtocol) {
                 case DeviceProtocol.MQTT:
                     device = abstractDevice as MQTTDevice
-                    device.setName(updateForm.name)
+                    device.setName(updateForm.getName())
                     device.setInfo(updateForm.info)
                     if (scene)
                         device.setScene(scene)
@@ -525,7 +525,7 @@ class DeviceController extends AbstractController {
 
                 case DeviceProtocol.CoAP:
                     device = abstractDevice as MQTTDevice
-                    device.setName(updateForm.name)
+                    device.setName(updateForm.getName())
                     device.setInfo(updateForm.info)
                     if (scene)
                         device.setScene(scene)
@@ -534,7 +534,7 @@ class DeviceController extends AbstractController {
 
                 case DeviceProtocol.HTTP:
                     device = abstractDevice as MQTTDevice
-                    device.setName(updateForm.name)
+                    device.setName(updateForm.getName())
                     device.setInfo(updateForm.info)
                     if (scene)
                         device.setScene(scene)
@@ -543,7 +543,7 @@ class DeviceController extends AbstractController {
 
                 case DeviceProtocol.TCP:
                     device = abstractDevice as MQTTDevice
-                    device.setName(updateForm.name)
+                    device.setName(updateForm.getName())
                     device.setInfo(updateForm.info)
                     if (scene)
                         device.setScene(scene)
@@ -552,7 +552,7 @@ class DeviceController extends AbstractController {
 
                 case DeviceProtocol.UDP:
                     device = abstractDevice as MQTTDevice
-                    device.setName(updateForm.name)
+                    device.setName(updateForm.getName())
                     device.setInfo(updateForm.info)
                     if (scene)
                         device.setScene(scene)

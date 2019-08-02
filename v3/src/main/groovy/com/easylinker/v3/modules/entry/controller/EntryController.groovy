@@ -6,7 +6,7 @@ import com.easylinker.framework.common.exception.XException
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.common.web.ReturnEnum
 import com.easylinker.framework.utils.RedisUtils
-import com.easylinker.v3.modules.controller.AbstractController
+import com.easylinker.v3.common.controller.AbstractController
 import com.easylinker.v3.modules.entry.form.LoginForm
 import com.easylinker.v3.modules.entry.form.SignUpForm
 import com.easylinker.v3.modules.syslog.model.SystemLog
@@ -108,7 +108,7 @@ class EntryController extends AbstractController {
         AppUser appUser = new AppUser(principle: signUpForm.principle,
                 password: DigestUtils.sha256Hex(signUpForm.password),
                 email: signUpForm.email,
-                name: signUpForm.name
+                name: signUpForm.getName()
         )
         userService.save(appUser)
         roleService.save(new Role(name: "BASE_ROLE", info: "基本权限", appUser: appUser))

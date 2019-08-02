@@ -1,7 +1,7 @@
 package com.easylinker.v3.modules.devicedata.model
 
 
-import com.easylinker.v3.modules.model.DeviceType
+import com.easylinker.v3.common.model.DeviceType
 
 import javax.persistence.EnumType
 import javax.persistence.Enumerated

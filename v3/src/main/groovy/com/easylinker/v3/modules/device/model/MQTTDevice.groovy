@@ -1,7 +1,7 @@
 package com.easylinker.v3.modules.device.model
 
-import com.easylinker.v3.modules.model.AbstractDevice
-import com.easylinker.v3.modules.model.AbstractModel
+import com.easylinker.v3.common.model.AbstractDevice
+import com.easylinker.v3.common.model.AbstractModel
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.user.model.AppUser
 import com.fasterxml.jackson.annotation.JsonIgnore

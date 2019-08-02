@@ -48,7 +48,8 @@ class R extends JSONObject {
 
         }
         r.put("msg", ReturnEnum.SUCCESS.message)
-        r
+        return r
+
     }
     /**
      * 错误返回数据
@@ -68,7 +69,8 @@ class R extends JSONObject {
 
         }
         r.put("msg", ReturnEnum.SUCCESS.message)
-        r
+        return r
+
     }
     //--------------------------------------
     /**
@@ -81,14 +83,17 @@ class R extends JSONObject {
         R r = new R()
         r.put("code", code)
         r.put("msg", message)
-        r
+        return r
+
 
     }
+
     static R error(String message) {
         R r = new R()
         r.put("code", ReturnEnum.FAIL.code)
         r.put("msg", message)
-        r
+        return r
+
 
     }
     /**
@@ -100,7 +105,8 @@ class R extends JSONObject {
         R r = new R()
         r.put("code", ReturnEnum.FAIL.code)
         r.put("msg", ReturnEnum.FAIL.message)
-        r
+        return r
+
     }
     /**
      * 内置错误
@@ -112,7 +118,8 @@ class R extends JSONObject {
         R r = new R()
         r.put("code", returnEnum.code)
         r.put("msg", returnEnum.message)
-        r
+        return r
+
     }
     //----------------------------------------
     /**
@@ -125,7 +132,8 @@ class R extends JSONObject {
         R r = new R()
         r.put("code", code)
         r.put("msg", message)
-        r
+        return r
+
 
     }
     /**
@@ -136,7 +144,8 @@ class R extends JSONObject {
         R r = new R()
         r.put("code", ReturnEnum.SUCCESS.code)
         r.put("msg", ReturnEnum.SUCCESS.message)
-        r
+        return r
+
     }
     /**
      * 内置成功
@@ -147,7 +156,7 @@ class R extends JSONObject {
         R r = new R()
         r.put("code", returnEnum.code)
         r.put("msg", returnEnum.message)
-        r
+        return r
 
     }
 
@@ -155,7 +164,7 @@ class R extends JSONObject {
         R r = new R()
         r.put("code", ReturnEnum.SUCCESS.code)
         r.put("msg", msg)
-        r
+        return r
 
     }
 
@@ -163,7 +172,7 @@ class R extends JSONObject {
         R r = new R()
         r.put("code", 401)
         r.put("msg", "没有权限")
-        r
+        return r
     }
 
     static void main(String[] args) {

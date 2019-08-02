@@ -1,4 +1,4 @@
-package com.easylinker.v3.modules.controller
+package com.easylinker.v3.common.controller
 
 import com.easylinker.framework.common.exception.XException
 import com.easylinker.v3.modules.user.model.AppUser

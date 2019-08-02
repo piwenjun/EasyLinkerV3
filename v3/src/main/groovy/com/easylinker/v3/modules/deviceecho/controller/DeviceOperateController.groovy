@@ -2,7 +2,7 @@ package com.easylinker.v3.modules.deviceecho.controller
 
 
 import com.easylinker.framework.common.web.R
-import com.easylinker.v3.modules.controller.AbstractController
+import com.easylinker.v3.common.controller.AbstractController
 import com.easylinker.v3.modules.deviceecho.service.DeviceOperateLogService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest

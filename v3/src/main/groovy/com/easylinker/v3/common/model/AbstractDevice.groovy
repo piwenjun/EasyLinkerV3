@@ -1,4 +1,4 @@
-package com.easylinker.v3.modules.model
+package com.easylinker.v3.common.model
 
 import com.easylinker.framework.utils.SerialNumberUtils
 import lombok.Data
