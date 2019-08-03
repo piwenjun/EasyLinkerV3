@@ -99,7 +99,7 @@ class DeviceController extends AbstractController {
             Scene scene = sceneService.findBySecurityId(coAPDeviceForm.sceneSecurityId)
             if (scene) {
 
-                CoAPDevice coAPDevice = new CoAPDevice(name: coAPDeviceForm.getName(),
+                CoAPDevice coAPDevice = new CoAPDevice(name: coAPDeviceForm.name,
                         info: coAPDeviceForm.info,
                         token: UUID.randomUUID().toString().replace("-", ""),
                         deviceType: coAPDeviceForm.deviceType,
@@ -117,7 +117,7 @@ class DeviceController extends AbstractController {
 
         } else {
 
-            CoAPDevice coAPDevice = new CoAPDevice(name: CoAPDeviceForm.getName(),
+            CoAPDevice coAPDevice = new CoAPDevice(name: coAPDeviceForm.getName(),
                     info: coAPDeviceForm.info,
                     token: UUID.randomUUID().toString().replace("-", ""),
                     deviceType: coAPDeviceForm.deviceType,
