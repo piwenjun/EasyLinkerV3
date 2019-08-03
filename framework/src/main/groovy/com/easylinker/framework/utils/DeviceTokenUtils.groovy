@@ -48,7 +48,7 @@ class DeviceTokenUtils {
         //1 剔除[]
         text = text.substring(1, text.length() - 1)
         if (text.split(",").length == 2) {
-            return text.split(",")
+            return [text.split(",")[0].trim(), text.split(",")[1].trim()]
         } else {
             return []
         }

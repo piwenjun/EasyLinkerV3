@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
  *
  */
 @RestController
-@RequestMapping("/ext")
+@RequestMapping("/sysParam")
 class ExtController {
     /**
      * 获取支持的设备类型
