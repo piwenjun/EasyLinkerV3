@@ -84,7 +84,7 @@ class DeviceTokenUtils {
         String token = token(hello)
         println("不用密钥的：" + Base64.encoder.encodeToString(hello.bytes))
         println("用密钥的：" + token)
-        println("乱码解密:" + parse("TCdO/n1EkN29TexIF=="))
+        println("解密:" + parse("QavnDUqEUX8xSCdqWuPYpEvkH6vg/uWvxlw6ptdTqkZv7DQXoX8mDCtQhwaWmEQRT/XAmO49dvIO1a1YHFzW1U5JWLIQkQCI"))
         println("原文：" + parse(token))
     }
 }
