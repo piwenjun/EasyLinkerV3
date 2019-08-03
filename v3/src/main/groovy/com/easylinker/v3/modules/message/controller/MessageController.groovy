@@ -1,7 +1,8 @@
 package com.easylinker.v3.modules.message.controller
 
-import com.easylinker.framework.common.controller.AbstractController
+
 import com.easylinker.framework.common.web.R
+import com.easylinker.v3.common.controller.AbstractController
 import com.easylinker.v3.modules.message.model.Message
 import com.easylinker.v3.modules.message.model.MessageState
 import com.easylinker.v3.modules.message.service.MessageService

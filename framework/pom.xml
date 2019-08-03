@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>framework</name>
     <description>EasyBoot框架底层的依赖</description>
+    <packaging>pom</packaging>
 
 
     <properties>
@@ -23,7 +24,6 @@
         <commons.codec.version>1.12</commons.codec.version>
         <commons.configuration.version>2.5</commons.configuration.version>
         <jwt.version>0.7.0</jwt.version>
-        <mysql.version>8.0.11</mysql.version>
         <hutool.version>4.1.12</hutool.version>
         <fastjson.version>1.2.56</fastjson.version>
         <kaptcha.version>2.3.2</kaptcha.version>
@@ -32,15 +32,15 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-quartz</artifactId>-->
+        <!--        </dependency>-->
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-thymeleaf</artifactId>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -61,23 +61,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
-            <version>LATEST</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.11</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
@@ -92,16 +75,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <!--    <dependency>-->
-        <!--        <groupId>org.apache.shiro</groupId>-->
-        <!--        <artifactId>shiro-spring</artifactId>-->
-        <!--        <version>1.4.0</version>-->
-        <!--    </dependency>-->
 
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -169,6 +142,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.4</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <profiles>

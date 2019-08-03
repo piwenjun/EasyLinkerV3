@@ -1,9 +1,9 @@
 package com.easylinker.v3.modules.devicedata.controller
 
-import com.easylinker.framework.common.controller.AbstractController
-import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
+import com.easylinker.v3.common.controller.AbstractController
 import com.easylinker.v3.modules.devicedata.service.DeviceDataService
+import com.easylinker.v3.common.model.DeviceType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.GetMapping

@@ -2,16 +2,16 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="gateway" />
         <module name="eureka-server" />
         <module name="tcp-service" />
         <module name="coap-service" />
         <module name="udp-service" />
-        <module name="framework" />
+        <module name="service-gateway" />
         <module name="terminal-service" />
         <module name="v3" />
         <module name="http-service" />
@@ -19,6 +19,10 @@
         <module name="mqtt-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="gateway" target="1.8" />
+      <module name="spring-cloud-demo-service-admin" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -29,6 +33,8 @@
       <module name="gateway" options="-parameters" />
       <module name="http-service" options="-parameters" />
       <module name="mqtt-service" options="-parameters" />
+      <module name="service-gateway" options="-parameters" />
+      <module name="spring-cloud-demo-service-admin" options="-parameters" />
       <module name="tcp-service" options="-parameters" />
       <module name="terminal-service" options="-parameters" />
       <module name="udp-service" options="-parameters" />

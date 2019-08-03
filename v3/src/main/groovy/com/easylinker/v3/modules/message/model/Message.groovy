@@ -1,6 +1,7 @@
 package com.easylinker.v3.modules.message.model
 
-import com.easylinker.framework.common.model.AbstractModel
+
+import com.easylinker.v3.common.model.AbstractModel
 
 import javax.persistence.Entity
 import javax.persistence.EnumType

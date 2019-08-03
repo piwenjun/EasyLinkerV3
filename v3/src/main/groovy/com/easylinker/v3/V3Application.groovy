@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.ComponentScan
 
+//@EnableEurekaClient
+
 @SpringBootApplication
 //当有多个模块的时候，这里需要配置包路径，不然SpringBoot默认扫描当前模块
 @ComponentScan(basePackages = ['com.easylinker.*', 'com.easylinker.framework.common.config.*'])

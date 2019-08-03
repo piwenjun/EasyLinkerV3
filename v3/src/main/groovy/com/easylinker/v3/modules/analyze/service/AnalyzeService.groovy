@@ -1,7 +1,8 @@
 package com.easylinker.v3.modules.analyze.service
 
-import com.easylinker.framework.modules.user.model.AppUser
+
 import com.easylinker.v3.modules.device.service.DeviceService
+import com.easylinker.v3.modules.user.model.AppUser
 import com.sun.management.OperatingSystemMXBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

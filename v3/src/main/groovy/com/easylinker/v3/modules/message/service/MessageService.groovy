@@ -1,10 +1,10 @@
 package com.easylinker.v3.modules.message.service
 
 import com.easylinker.framework.common.service.AbstractService
-import com.easylinker.framework.modules.user.model.AppUser
 import com.easylinker.v3.modules.message.dao.MessageRepository
 import com.easylinker.v3.modules.message.model.Message
 import com.easylinker.v3.modules.message.model.MessageState
+import com.easylinker.v3.modules.user.model.AppUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
