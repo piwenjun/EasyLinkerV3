@@ -99,14 +99,7 @@ class DeviceTokenUtils {
         println("不用密钥的：" + Base64.encoder.encodeToString(hello.bytes))
         println("用密钥的：" + token)
         println("原文：" + parse(token))
-        //
         String listString = parse("Du7Rg40X41Iqc5cYCbl2rdgYXNO8/e9ooc5DWXxJyM99eMGMvpqPck5JWLIQkQCI")
-        //
-        println(Arrays.asList(listString)[0])
-        //
-        String lll = "[581a71658384,428b9181680,42e413b8a, VALUE]"
-        println(getInfo(lll))
-
 
     }
 }
