@@ -16,16 +16,19 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.stereotype.Component
 
 /**
+ * 【8-3号更新】此拦截器因为性能问题废弃，后面全部换B64TokenHandlerResource;
+ * 保留是因为部分代码后期使用
+ * -------------------------
  * CoAP设备数据处理器
  * @author wwhai* @date 2019/8/3 17:56
  * @email:751957846 @qq.com
  * 瞅啥瞅？代码拿过来我看看有没有BUG。
  *
  */
-@Component
+
+@Deprecated
 class CacheTokenResource extends CoapResource {
     private Logger logger = LoggerFactory.getLogger(getClass())
     /**
@@ -33,8 +36,13 @@ class CacheTokenResource extends CoapResource {
      *
      */
     private static final String CACHE_INFO_TABLE = "COAP_CACHE_INFO"
-    private static final String COAP_DATA_TABLE = "COAP_DATA"
-
+    /**
+     * COAP 设备数据保存表
+     */
+    private static final String COAP_DATA_TABLE = "DEVICE_DATA"
+    /**
+     * 强行验证设备的SQL
+     */
     private static final String MYSQL_QUERY_SQL = "select sn,token,security_id,device_type from coapdevice where token = ?"
 
     @Autowired

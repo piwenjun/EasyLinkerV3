@@ -97,6 +97,7 @@ class AbstractDevice extends AbstractModel {
         this.info = info
     }
 }
+
 /**
  * 协议类型枚举
  */

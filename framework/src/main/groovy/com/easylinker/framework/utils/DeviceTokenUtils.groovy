@@ -41,6 +41,19 @@ class DeviceTokenUtils {
     }
 
     /**
+     * 获取设备信息，目前的版本是必须有2个信息：SID和TYPE
+     * @return
+     */
+    static String[] getInfo(String text) {
+        //1 剔除[]
+        text = text.substring(1, text.length() - 1)
+        if (text.split(",").length == 2) {
+            return text.split(",")
+        } else {
+            return []
+        }
+    }
+    /**
      * des 加密
      * @param plainText
      * @param desKeyParameter 加密秘钥
@@ -78,13 +91,22 @@ class DeviceTokenUtils {
         return decryptedData
     }
 
+
     static void main(String[] args) {
         String hello = "hello world"
 
         String token = token(hello)
         println("不用密钥的：" + Base64.encoder.encodeToString(hello.bytes))
         println("用密钥的：" + token)
-        println("解密:" + parse("QavnDUqEUX8xSCdqWuPYpEvkH6vg/uWvxlw6ptdTqkZv7DQXoX8mDCtQhwaWmEQRT/XAmO49dvIO1a1YHFzW1U5JWLIQkQCI"))
         println("原文：" + parse(token))
+        //
+        String listString = parse("Du7Rg40X41Iqc5cYCbl2rdgYXNO8/e9ooc5DWXxJyM99eMGMvpqPck5JWLIQkQCI")
+        //
+        println(Arrays.asList(listString)[0])
+        //
+        String lll = "[581a71658384,428b9181680,42e413b8a, VALUE]"
+        println(getInfo(lll))
+
+
     }
 }

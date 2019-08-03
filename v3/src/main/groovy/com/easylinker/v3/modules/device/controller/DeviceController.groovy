@@ -62,7 +62,11 @@ class DeviceController extends AbstractController {
                         appUser: getCurrentUser(),
                         scene: scene,
                         deviceProtocol: DeviceProtocol.HTTP)
-                httpDevice.setToken(DeviceTokenUtils.token(httpDevice.securityId))
+                //token
+                httpDevice.setToken(DeviceTokenUtils.token([
+                        httpDevice.securityId,
+                        httpDevice.deviceType
+                ].toString()))
                 deviceService.create(httpDevice)
                 return R.ok("添加成功")
 
@@ -79,7 +83,11 @@ class DeviceController extends AbstractController {
                     token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                     deviceProtocol: DeviceProtocol.HTTP)
             httpDevice.setToken(DeviceTokenUtils.token(httpDevice.securityId))
-
+            //token
+            httpDevice.setToken(DeviceTokenUtils.token([
+                    httpDevice.securityId,
+                    httpDevice.deviceType
+            ].toString()))
             deviceService.create(httpDevice)
             return R.ok("添加成功")
 
@@ -102,18 +110,13 @@ class DeviceController extends AbstractController {
 
                 CoAPDevice coAPDevice = new CoAPDevice(name: coAPDeviceForm.name,
                         info: coAPDeviceForm.info,
-                        token: UUID.randomUUID().toString().replace("-", ""),
                         deviceType: coAPDeviceForm.deviceType,
                         scene: scene,
                         appUser: getCurrentUser(),
                         deviceProtocol: DeviceProtocol.CoAP)
                 //token
-                coAPDevice.setToken(DeviceTokenUtils.token([
-                        "securityId":
-                                coAPDevice.securityId,
-                        "deviceType":
-                                coAPDevice.deviceType
-                ].toString()))
+
+                coAPDevice.setToken(DeviceTokenUtils.token([coAPDevice.securityId, coAPDevice.deviceType].toString()))
                 deviceService.create(coAPDevice)
                 return R.ok("添加成功")
             } else {
@@ -125,17 +128,11 @@ class DeviceController extends AbstractController {
 
             CoAPDevice coAPDevice = new CoAPDevice(name: coAPDeviceForm.getName(),
                     info: coAPDeviceForm.info,
-                    token: UUID.randomUUID().toString().replace("-", ""),
                     deviceType: coAPDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.CoAP)
-            coAPDevice.setToken(DeviceTokenUtils.token([
-                    "securityId":
-                            coAPDevice.securityId,
-                    "deviceType":
-                            coAPDevice.deviceType
-            ].toString()))
-
+            //token
+            coAPDevice.setToken(DeviceTokenUtils.token([coAPDevice.securityId, coAPDevice.deviceType].toString()))
             deviceService.create(coAPDevice)
             return R.ok("添加成功")
 
@@ -253,14 +250,14 @@ class DeviceController extends AbstractController {
             if (scene) {
                 TCPDevice tcpDevice = new TCPDevice(name: tcpDeviceForm.getName(),
                         info: tcpDeviceForm.info,
-                        token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                         password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                         username: UUID.randomUUID().toString().replace("-", ""),
                         deviceType: tcpDeviceForm.deviceType,
                         appUser: getCurrentUser(),
                         scene: scene,
                         deviceProtocol: DeviceProtocol.TCP)
-
+                //token
+                tcpDevice.setToken(DeviceTokenUtils.token([tcpDevice.securityId, tcpDevice.deviceType].toString()))
                 deviceService.create(tcpDevice)
                 return R.ok("添加成功")
 
@@ -272,12 +269,13 @@ class DeviceController extends AbstractController {
         } else {
             TCPDevice tcpDevice = new TCPDevice(name: tcpDeviceForm.getName(),
                     info: tcpDeviceForm.info,
-                    token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                     password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                     username: UUID.randomUUID().toString().replace("-", ""),
                     deviceType: tcpDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.TCP)
+            //token
+            tcpDevice.setToken(DeviceTokenUtils.token([tcpDevice.securityId, tcpDevice.deviceType].toString()))
             deviceService.create(tcpDevice)
             return R.ok("添加成功")
         }
@@ -302,12 +300,7 @@ class DeviceController extends AbstractController {
                         appUser: getCurrentUser(),
                         scene: scene,
                         deviceProtocol: DeviceProtocol.UDP)
-                udpDevice.setToken(DeviceTokenUtils.token([
-                        "securityId":
-                                udpDevice.securityId,
-                        "deviceType":
-                                udpDevice.deviceType
-                ].toString()))
+                udpDevice.setToken(DeviceTokenUtils.token([udpDevice.securityId, udpDevice.deviceType].toString()))
                 deviceService.create(udpDevice)
                 return R.ok("添加成功")
 
@@ -322,12 +315,8 @@ class DeviceController extends AbstractController {
                     deviceType: udpDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.UDP)
-            udpDevice.setToken(DeviceTokenUtils.token([
-                    "securityId":
-                            udpDevice.securityId,
-                    "deviceType":
-                            udpDevice.deviceType
-            ].toString()))
+            //token
+            udpDevice.setToken(DeviceTokenUtils.token([udpDevice.securityId, udpDevice.deviceType].toString()))
             deviceService.create(udpDevice)
             return R.ok("添加成功")
         }
@@ -336,6 +325,7 @@ class DeviceController extends AbstractController {
     }
 
 /**
+ * TODO: 此处不能直接返回enum的值，需要数据库进行配置
  * 获取支持的设备类型
  * @return
  */
@@ -353,6 +343,7 @@ class DeviceController extends AbstractController {
         return R.okWithData(list)
     }
 /**
+ * TODO: 此处不能直接返回enum的值，需要数据库进行配置
  * 获取支持的设备类型
  * @return
  */
@@ -371,6 +362,7 @@ class DeviceController extends AbstractController {
     }
 
 /**
+ * TODO: 此处不能直接返回enum的值，需要数据库进行配置
  * 获取支持的协议类型
  * @return
  */

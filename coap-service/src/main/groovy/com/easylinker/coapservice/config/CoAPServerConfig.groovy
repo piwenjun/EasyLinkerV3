@@ -22,7 +22,7 @@ class CoAPServerConfig {
     @Value(value = '${coap.server.port}')
     int port
     @Autowired
-    CacheTokenResource cacheTokenResource
+    B64TokenHandlerResource b64TokenHandlerResource
     /**
      * 添加CoAP协议处理器:考虑到COAP设备可能通过Get来传数据，所以两种形式都支持【用GET来提交数据在HTTP里面是不推荐的】
      * COAP设备上传的数据，必须有以下几个字段:
@@ -47,7 +47,7 @@ class CoAPServerConfig {
          * --------------------------------------------------------------------------------------------
          */
 
-        server.addRequestHandler("/post", cacheTokenResource)
+        server.addRequestHandler("/post", b64TokenHandlerResource)
         server.start()
         if (server.isRunning()) {
             logger.info("-----------------------------------------------------")
