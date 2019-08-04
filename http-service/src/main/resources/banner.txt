@@ -1,0 +1,5 @@
+${AnsiColor.BRIGHT_GREEN}
+-----------------------------------------------------------------------
+| EasyLinkerV3|0.0.1|EasyLinkerTeam|2019|A LightWeight Iot Platform!|||
+| QQ:751957846|Mail:wangwenhai@shinelinker.com|QQ Group:475512169 |||||
+-----------------------------------------------------------------------
