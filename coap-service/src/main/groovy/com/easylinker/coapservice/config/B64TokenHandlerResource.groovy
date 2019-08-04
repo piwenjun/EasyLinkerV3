@@ -13,7 +13,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
 
 /**
@@ -32,8 +31,7 @@ class B64TokenHandlerResource extends CoapResource {
      */
     private static final String COAP_DATA_TABLE = "DEVICE_DATA"
 
-    @Autowired
-    JdbcTemplate jdbcTemplate
+
     @Autowired
     MongoTemplate mongoTemplate
 
