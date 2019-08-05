@@ -1,0 +1,27 @@
+# Server Info
+server:
+  port: 8003
+  tomcat:
+    uri-encoding: UTF-8
+# Spring
+spring:
+  application:
+    name: service-mqtt
+  data:
+    #Mongodb
+    mongodb:
+      database: EASYLINKER
+      host: localhost
+      port: 27017
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  redis:
+    host: localhost
+    port: 6379
+    # password: root
+# MQTT proxy client for easylinkerV3
+proxy:
+  mqtt:
+    host: 10.168.1.191
+    port: 1883

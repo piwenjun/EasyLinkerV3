@@ -16,7 +16,7 @@ import javax.persistence.MappedSuperclass
 @MappedSuperclass
 @Data
 class AbstractDevice extends AbstractModel {
-
+    private String token
     private String name
     private String info
     private String sn = SerialNumberUtils.getSerialNumber()
@@ -95,6 +95,22 @@ class AbstractDevice extends AbstractModel {
 
     void setInfo(String info) {
         this.info = info
+    }
+
+    String getToken() {
+        return token
+    }
+
+    void setToken(String token) {
+        this.token = token
+    }
+
+    DeviceStatus getDeviceStatus() {
+        return deviceStatus
+    }
+
+    void setDeviceStatus(DeviceStatus deviceStatus) {
+        this.deviceStatus = deviceStatus
     }
 }
 

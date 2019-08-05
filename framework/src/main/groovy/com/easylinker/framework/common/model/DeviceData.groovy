@@ -1,10 +1,4 @@
-package com.easylinker.v3.modules.devicedata.model
-
-
-import com.easylinker.v3.common.model.DeviceType
-
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
+package com.easylinker.framework.common.model
 
 /**
  * 设备数据抽象
@@ -51,7 +45,6 @@ class DeviceData {
     /**
      * 数据类型（检索的时候用）
      */
-    @Enumerated(EnumType.STRING)
     private DeviceType deviceType
 
     String getData() {

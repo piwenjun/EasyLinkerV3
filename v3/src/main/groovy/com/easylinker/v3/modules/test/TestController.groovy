@@ -1,18 +1,17 @@
 package com.easylinker.v3.modules.test
 
-
+import com.easylinker.framework.common.model.DeviceData
 import com.easylinker.framework.common.web.R
-import com.easylinker.v3.config.security.RequireAuthRoles
 import com.easylinker.v3.common.controller.AbstractController
-import com.easylinker.v3.modules.device.model.MQTTDevice
-import com.easylinker.v3.modules.device.service.DeviceService
-import com.easylinker.v3.modules.devicedata.model.DeviceData
-import com.easylinker.v3.modules.devicedata.service.DeviceDataService
-import com.easylinker.v3.modules.deviceecho.model.DeviceOperateEcho
-import com.easylinker.v3.modules.deviceecho.model.DeviceOperateLog
 import com.easylinker.v3.common.model.AbstractDevice
 import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.common.model.DeviceType
+import com.easylinker.v3.config.security.RequireAuthRoles
+import com.easylinker.v3.modules.device.model.MQTTDevice
+import com.easylinker.v3.modules.device.service.DeviceService
+import com.easylinker.v3.modules.devicedata.service.DeviceDataService
+import com.easylinker.v3.modules.deviceecho.model.DeviceOperateEcho
+import com.easylinker.v3.modules.deviceecho.model.DeviceOperateLog
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.web.bind.annotation.*
@@ -73,7 +72,7 @@ class TestController extends AbstractController {
                     if (device.deviceType == DeviceType.BOOLEAN) {
                         DeviceData data = new DeviceData()
                         data.setInfo("测试开关数据")
-                        data.setDeviceType(DeviceType.BOOLEAN)
+                        data.setDataType(DeviceType.BOOLEAN.toString())
                         data.setDeviceSecurityId(device.securityId)
                         data.setData(pushForm.data.toString())
                         deviceDataService.save(data)
