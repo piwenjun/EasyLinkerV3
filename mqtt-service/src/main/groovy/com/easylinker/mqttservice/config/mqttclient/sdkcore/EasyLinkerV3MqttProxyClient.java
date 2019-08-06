@@ -12,7 +12,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-public final class ServerMqttClient implements IServerMqttClient {
+public final class EasyLinkerV3MqttProxyClient implements IServerMqttClient {
     private boolean isConnected;
     private String host;
     private int port;
@@ -28,7 +28,7 @@ public final class ServerMqttClient implements IServerMqttClient {
      * @param username
      * @param password
      */
-    public ServerMqttClient(String host, int port, String clientId, String username, String password) {
+    public EasyLinkerV3MqttProxyClient(String host, int port, String clientId, String username, String password) {
 
         this.host = host;
         this.port = port;
@@ -57,8 +57,7 @@ public final class ServerMqttClient implements IServerMqttClient {
             return true;
 
         } catch (Exception e) {
-            e.printStackTrace();
-
+            messageHandler.onError(e);
             isConnected = false;
             return false;
         }

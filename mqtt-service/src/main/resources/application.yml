@@ -19,9 +19,15 @@ spring:
   redis:
     host: localhost
     port: 6379
-    # password: root
+    password: fourthpay-redis
 # MQTT proxy client for easylinkerV3
 proxy:
   mqtt:
-    host: 10.168.1.191
+    host: localhost
     port: 1883
+    # Broker support:
+    # Activemq 5.X
+    # EMQX 3.X
+    # Value:EMQ|AMQ
+    broker: AMQ
+

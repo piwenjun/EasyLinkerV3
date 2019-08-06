@@ -17,7 +17,6 @@ public abstract class MessageHandler implements MqttCallback {
      * @param throwable
      */
     public void connectionLost(Throwable throwable) {
-        throwable.printStackTrace();
         onError(throwable);
 
     }
@@ -28,15 +27,13 @@ public abstract class MessageHandler implements MqttCallback {
      * @throws Exception
      */
     public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-
-        System.out.println("Topic：" + topic + "  MSG:" + mqttMessage.toString());
+        System.out.println("收到的消息类型:" + mqttMessage.getId());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("topic", topic);
         jsonObject.put("payload", new String(mqttMessage.getPayload(), StandardCharsets.UTF_8));
         jsonObject.put("retain", mqttMessage.isRetained());
         jsonObject.put("dup", mqttMessage.isDuplicate());
         jsonObject.put("messageId", mqttMessage.getId());
-
         messageArrived(jsonObject);
     }
 
@@ -60,6 +57,11 @@ public abstract class MessageHandler implements MqttCallback {
      * 出错处理
      */
     public abstract void onError(Throwable throwable);
+
+    /**
+     * 出错处理
+     */
+    public abstract void onError(Exception e);
 
     /**
      *
