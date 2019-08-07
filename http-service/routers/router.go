@@ -17,6 +17,7 @@ func Router() *gin.Engine {
 	v3 := r.Group("/v3")
 	{
 		v3.POST("/:token/publish", controllers.Publish)
+		v3.POST("/:token/file/:filename", controllers.UpYunUpload)
 	}
 	r.Use(gin.Logger())
 	return r

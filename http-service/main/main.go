@@ -4,8 +4,10 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
+	"http-service/cdn"
 	"http-service/conf"
 	"http-service/db"
 	"http-service/routers"
@@ -25,12 +27,17 @@ func main() {
 	cmd.BoolVar(&cmd.debug, "debug", true, "open debug log")
 	cmd.BoolVar(&cmd.help, "h", false, "help")
 
+	err := cmd.Parse(os.Args[1:])
+	if err != nil {
+		os.Exit(0)
+	}
+
 	if cmd.help {
 		cmd.Usage()
 		return
 	}
 	config := conf.NewConfig()
-	err := config.Load(cmd.appConf)
+	err = config.Load(cmd.appConf)
 	if err != nil {
 		log.Fatal("conf load err:", err)
 	}
@@ -40,6 +47,8 @@ func main() {
 	}
 
 	db.SetMgoDB(mgodb)
+
+	cdn.SetCdn(cdn.NewCdn(config))
 
 	r := routers.Router()
 	s := &http.Server{
