@@ -44,13 +44,12 @@ class MqttProxyClientConfig {
             /**
              *{*
              *    topic
-             *    payload:{
+             *    payload:{*
              *            String token【必填】
              *            String data 【必填】
              *            String unit 【选填】
              *            String info 【选填】
-             *    }
-             *    retain
+             *}*    retain
              *    dup
              *    messageId
              *}*
@@ -59,6 +58,15 @@ class MqttProxyClientConfig {
             @Override
             void messageArrived(JSONObject receivedMessage) {
                 println "收到消息:" + receivedMessage
+                String topic = receivedMessage.getStr("topic")
+                if (topic) {
+                    if (topic.endsWith('/connected')) {
+                        println "设备上线" + topic
+                    }
+                    if (topic.endsWith('/disconnected'))
+                        println "设备下线" + topic
+
+                }
             }
 
             void onError(Throwable throwable) {
@@ -83,37 +91,9 @@ class MqttProxyClientConfig {
                  *
                  */
                 if (broker == "AMQ") {
-//                    /**
-//                     * 上下线[因为AMQ的topic分隔符不一样，需要兼容，解析器还没写。目前版本不支持]
-//                     */
-//                    serverMqttClient.subscribe('ActiveMQ.Advisory.Connection.>', 2, new SubscribeHandler() {
-//                        @Override
-//                        void onSuccess(String topic, int qos) {
-//                            logger.info("Proxy subscribe:" + topic + " with QOS:" + qos + " for monitor device offline.")
-//
-//                        }
-//
-//                        @Override
-//                        void onError(Exception e) {
-//                            logger.info("Proxy subscribe failed with error message:" + e.message)
-//
-//                        }
-//                    })
-//
-//                    //监控消息
-//                    serverMqttClient.subscribe('#', 2, new SubscribeHandler() {
-//                        @Override
-//                        void onSuccess(String topic, int qos) {
-//                            logger.info("Proxy subscribe:" + topic + " with QOS:" + qos + " for monitor device offline.")
-//
-//                        }
-//
-//                        @Override
-//                        void onError(Exception e) {
-//                            logger.info("Proxy subscribe failed with error message:" + e.message)
-//
-//                        }
-//                    })
+                    //
+                    logger.info("Current version only support EMQX 3.X")
+
                 }
                 if (broker == "EMQ") {
                     /**

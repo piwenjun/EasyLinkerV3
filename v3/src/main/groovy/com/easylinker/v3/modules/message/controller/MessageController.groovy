@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
 /**
+ * 系统邮件
  * Created by admin on 2019/6/11 10:19
  *
  */

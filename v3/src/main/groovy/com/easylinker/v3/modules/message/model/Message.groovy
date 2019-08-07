@@ -10,7 +10,7 @@ import javax.persistence.Enumerated
 /**
  * Created by admin on 2019/6/11 10:20
  *
- * 系统内部提示消息
+ * 系统内部提示消息【邮件】
  */
 
 @Entity
