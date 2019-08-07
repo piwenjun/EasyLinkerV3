@@ -11,6 +11,7 @@ func NewConfig() *Config {
 type Config struct {
 	Port    string   `toml:"port"`
 	MongoDB *MongoDB `toml:"mongo-db"`
+	Upyun   *Upyun   `toml:"upyun"`
 }
 
 type MongoDB struct {
@@ -22,6 +23,13 @@ type MongoDB struct {
 	PassWd    string `toml:"pass-wd"`
 	TimeOut   int64  `toml:"time-out"`
 	DbName    string `toml:"db-name"`
+}
+
+type Upyun struct {
+	Operator string `toml:"operator"`
+	Bucket   string `toml:"bucket"`
+	Password string `toml:"passwd"`
+	Host     string `toml:"host"`
 }
 
 // Load loads config options from a toml file.

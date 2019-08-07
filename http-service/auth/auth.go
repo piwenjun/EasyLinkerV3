@@ -1,9 +1,8 @@
 package auth
 
 import (
-	"errors"
+	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -64,10 +63,16 @@ func (j *JWT) ParseToken(tokenString string) (*CustomClaims, error) {
 		return j.signingKey, nil
 	})
 	if err != nil {
+		if ve, ok := err.(*jwt.ValidationError); ok && ve.Errors&jwt.ValidationErrorExpired != 0 {
+			fmt.Println("过期了 ")
+			if claims, ok := token.Claims.(*CustomClaims); ok {
+				return claims, nil
+			}
+		}
 		return nil, err
 	}
 	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
 		return claims, nil
 	}
-	return nil, TokenInvalid
+	return nil, err
 }
