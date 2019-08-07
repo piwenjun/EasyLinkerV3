@@ -27,10 +27,6 @@ coap:
   server:
     hostname: localhost
     port: 5683
-# V3
-easylinkerV3:
-  host: localhost
-  port: 2500
 
 # actuator
 info:

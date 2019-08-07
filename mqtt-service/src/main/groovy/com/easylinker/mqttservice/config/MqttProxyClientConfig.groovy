@@ -12,24 +12,32 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.stereotype.Component
 
 @Configuration
+@Component
 class MqttProxyClientConfig {
     Logger logger = LoggerFactory.getLogger(getClass())
 
+//    @Autowired
+//    MqttProxyConfig mqttProxyConfig
     @Autowired
     MongoTemplate mongoTemplate
-    @Value('${proxy.mqtt.host}')
+
+    @Value('${proxy.broker.host}')
     String host
-    @Value('${proxy.mqtt.broker}')
+
+    @Value('${proxy.broker.broker}')
     String broker
-    @Value('${proxy.mqtt.port}')
+
+    @Value('${proxy.broker.port}')
     int port
 
     @Bean
     EasyLinkerV3MqttProxyClient mqttClient() {
-        EasyLinkerV3MqttProxyClient serverMqttClient = new EasyLinkerV3MqttProxyClient(host,
-                1883,
+        EasyLinkerV3MqttProxyClient serverMqttClient = new EasyLinkerV3MqttProxyClient(
+                host,
+                port,
                 "EasyLinkerV3Proxy",
                 "EasyLinkerV3Proxy",
                 "EasyLinkerV3Proxy")
