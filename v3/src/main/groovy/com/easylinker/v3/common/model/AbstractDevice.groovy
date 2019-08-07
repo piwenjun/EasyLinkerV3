@@ -16,7 +16,7 @@ import javax.persistence.MappedSuperclass
 @MappedSuperclass
 @Data
 class AbstractDevice extends AbstractModel {
-
+    private String token
     private String name
     private String info
     private String sn = SerialNumberUtils.getSerialNumber()
@@ -96,6 +96,22 @@ class AbstractDevice extends AbstractModel {
     void setInfo(String info) {
         this.info = info
     }
+
+    String getToken() {
+        return token
+    }
+
+    void setToken(String token) {
+        this.token = token
+    }
+
+    DeviceStatus getDeviceStatus() {
+        return deviceStatus
+    }
+
+    void setDeviceStatus(DeviceStatus deviceStatus) {
+        this.deviceStatus = deviceStatus
+    }
 }
 
 /**
@@ -115,7 +131,10 @@ enum DeviceProtocol {
     }
 }
 /**
- * 设备类型
+ * 设备类型：
+ * [8-4号备注]：这里的设备类型主要用途：
+ * 1 数据摘选查找，比如X类型的设备的数据一定是X类型，方便统一数据
+ * 2 后期的设备模板可以使用
  */
 enum DeviceType {
     VALUE("数值型设备"),

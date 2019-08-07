@@ -166,7 +166,11 @@ class DeviceController extends AbstractController {
                         appUser: getCurrentUser(),
                         scene: scene,
                         deviceProtocol: DeviceProtocol.MQTT)
-
+                //token
+                mqttDevice.setToken(DeviceTokenUtils.token([
+                        mqttDevice.securityId,
+                        mqttDevice.deviceType
+                ].toString()))
                 deviceService.create(mqttDevice)
                 return R.ok("添加成功")
 
@@ -184,6 +188,11 @@ class DeviceController extends AbstractController {
                     deviceType: mqttDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.MQTT)
+            //token
+            mqttDevice.setToken(DeviceTokenUtils.token([
+                    mqttDevice.securityId,
+                    mqttDevice.deviceType
+            ].toString()))
             deviceService.create(mqttDevice)
             return R.ok("添加成功")
         }

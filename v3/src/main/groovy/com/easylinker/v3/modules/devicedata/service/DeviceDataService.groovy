@@ -1,7 +1,7 @@
 package com.easylinker.v3.modules.devicedata.service
 
+import com.easylinker.framework.common.model.DeviceData
 import com.easylinker.v3.common.model.DeviceType
-import com.easylinker.v3.modules.devicedata.model.DeviceData
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
