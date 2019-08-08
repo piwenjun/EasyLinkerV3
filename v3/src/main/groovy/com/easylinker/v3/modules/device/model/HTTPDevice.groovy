@@ -34,14 +34,6 @@ class HTTPDevice extends AbstractDevice{
         this.scene = scene
     }
 
-    String getToken() {
-        return token
-    }
-
-    void setToken(String token) {
-        this.token = token
-    }
-
     AppUser getAppUser() {
         return appUser
     }

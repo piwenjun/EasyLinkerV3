@@ -60,14 +60,6 @@ class TCPDevice extends AbstractDevice{
         this.password = password
     }
 
-    String getToken() {
-        return token
-    }
-
-    void setToken(String token) {
-        this.token = token
-    }
-
     String getIp() {
         return ip
     }

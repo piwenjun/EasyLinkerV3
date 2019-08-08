@@ -115,8 +115,8 @@ class DeviceController extends AbstractController {
                         appUser: getCurrentUser(),
                         deviceProtocol: DeviceProtocol.CoAP)
                 //token
-
-                coAPDevice.setToken(DeviceTokenUtils.token([coAPDevice.securityId, coAPDevice.deviceType].toString()))
+                String token = DeviceTokenUtils.token([coAPDevice.securityId, coAPDevice.deviceType].toString())
+                coAPDevice.setToken(token)
                 deviceService.create(coAPDevice)
                 return R.ok("添加成功")
             } else {
@@ -126,7 +126,8 @@ class DeviceController extends AbstractController {
 
         } else {
 
-            CoAPDevice coAPDevice = new CoAPDevice(name: coAPDeviceForm.getName(),
+            CoAPDevice coAPDevice = new CoAPDevice(
+                    name: coAPDeviceForm.getName(),
                     info: coAPDeviceForm.info,
                     deviceType: coAPDeviceForm.deviceType,
                     appUser: getCurrentUser(),
