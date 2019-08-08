@@ -59,7 +59,6 @@ class UserController extends AbstractController {
         AppUser appUser = userService.findBySecurityId(getCurrentUser().securityId)
         if (appUser) {
             appUser.setName(updateForm.getName())
-            appUser.setEmail(updateForm.email)
             userService.save(appUser)
             return R.ok("用户信息更新成功")
         } else {

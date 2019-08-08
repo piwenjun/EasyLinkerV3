@@ -82,7 +82,7 @@ class EntryController extends AbstractController {
             mongoTemplate.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆成功,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId), "SYSTEMLOG")
             return R.okWithData(dataMap)
         } else {
-            mongoTemplate.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆失败,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId), "SYSTEMLOG")
+            mongoTemplate.save(new SystemLog(reason: "登陆", info: "登陆失败,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId), "SYSTEMLOG")
 
             throw new XException("登陆失败!")
         }

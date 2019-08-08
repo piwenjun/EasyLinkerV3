@@ -1,10 +1,10 @@
 package com.easylinker.v3.modules.device.service
 
-import com.easylinker.v3.modules.device.dao.*
-import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.common.model.AbstractDevice
 import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.common.model.DeviceType
+import com.easylinker.v3.modules.device.dao.*
+import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.scene.dao.SceneRepository
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.user.model.AppUser
@@ -166,17 +166,29 @@ class DeviceService {
     SceneRepository sceneRepository
 
     Map analyzeDeviceData(AppUser appUser) {
-        Map data = new HashMap()
+        Map<String, Object> deviceCountMap = new HashMap<>()
         Map mqttCount = new HashMap()
         mqttCount.put("online", mqttRepository.countByOnline(true))
         mqttCount.put("total", mqttRepository.countByAppUser(appUser))
-        data.put("CoAP", coAPRepository.countByAppUser(appUser))
-        data.put("HTTP", httpRepository.countByAppUser(appUser))
-        data.put("MQTT", mqttCount)
-        data.put("TCP", tcpDeviceRepository.countByAppUser(appUser))
-        data.put("UDP", udpDeviceRepository.countByAppUser(appUser))
-        data.put("scene", sceneRepository.countByAppUser(appUser))
-        return data
+        deviceCountMap.put("CoAP", coAPRepository.countByAppUser(appUser))
+        deviceCountMap.put("HTTP", httpRepository.countByAppUser(appUser))
+        deviceCountMap.put("MQTT", mqttCount)
+        deviceCountMap.put("TCP", tcpDeviceRepository.countByAppUser(appUser))
+        deviceCountMap.put("UDP", udpDeviceRepository.countByAppUser(appUser))
+        deviceCountMap.put("scene", sceneRepository.countByAppUser(appUser))
+        //统计各种类型的设备
+        Map<String, Object> typeCountMap = new HashMap<>()
+        typeCountMap.put("VALUE", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.VALUE))
+        typeCountMap.put("TEXT", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.TEXT))
+        typeCountMap.put("BOOLEAN", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.BOOLEAN))
+        typeCountMap.put("SWITCH", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.SWITCH))
+        typeCountMap.put("FILE", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.FILE))
+
+        Map<String, Object> countMap = new HashMap<>()
+        countMap.put("deviceCount", deviceCountMap)
+        countMap.put("typeCount", typeCountMap)
+
+        return countMap
     }
 
 
@@ -190,8 +202,11 @@ class DeviceService {
         //auth.mysql.acl_query = select allow,ip AS ipaddr, username, client_id AS clientid, access, topic from topic_acl where  username = '%u' or username = '$all'  or client_id = '%c';
         //1: subscribe, 2: publish, 3: pubsub
         List<TopicAcl> topicAcls = new ArrayList<>()
+        //接受数据的TOPIC
         TopicAcl inAcl = new TopicAcl(ip: "", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/s2c", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+        //发送数据的TOPIC
         TopicAcl outAcl = new TopicAcl(ip: "", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/c2s", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+        //上报状态的
         TopicAcl statusAcl = new TopicAcl(ip: "", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/status", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
 
         topicAcls.add(inAcl)
