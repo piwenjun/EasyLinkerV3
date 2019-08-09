@@ -13,12 +13,24 @@ import javax.persistence.Entity
  */
 @Entity
 class Product extends AbstractModel {
+    /**
+     * 厂家
+     */
+    private String factory
+    /**
+     * 型号
+     */
+    private String model
+    /**
+     * 名称
+     */
     private String name
     private String info
 
-    /**
-     * 最后活跃时间
-     */
+
+/**
+ * 最后活跃时间
+ */
     private Date lastActive
     /**
      * 设备sceneSecurityId
@@ -59,6 +71,22 @@ class Product extends AbstractModel {
         return sceneSecurityId
     }
 
+    String getFactory() {
+        return factory
+    }
+
+    void setFactory(String factory) {
+        this.factory = factory
+    }
+
+    String getModel() {
+        return model
+    }
+
+    void setModel(String model) {
+        this.model = model
+    }
+
     void setSceneSecurityId(String sceneSecurityId) {
         this.sceneSecurityId = sceneSecurityId
     }
@@ -85,7 +113,7 @@ class Product extends AbstractModel {
  * +--------------------------------+
  */
 @Entity
-class ProductProperty extends AbstractModel{
+class ProductProperty extends AbstractModel {
 
     /**
      * 产品

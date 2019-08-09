@@ -34,6 +34,8 @@ class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(XException.class)
     R handleXException(XException e) {
+        logger.error(e.getMessage())
+
         R.error(e.code, e.message)
     }
 
