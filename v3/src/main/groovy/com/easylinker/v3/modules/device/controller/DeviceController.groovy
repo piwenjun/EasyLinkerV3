@@ -1,6 +1,7 @@
 package com.easylinker.v3.modules.device.controller
 
 import cn.hutool.crypto.digest.DigestUtil
+import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.utils.DeviceTokenUtils
 import com.easylinker.v3.common.controller.AbstractController
@@ -10,6 +11,7 @@ import com.easylinker.v3.common.model.DeviceStatus
 import com.easylinker.v3.common.model.DeviceType
 import com.easylinker.v3.modules.device.form.*
 import com.easylinker.v3.modules.device.model.*
+import com.easylinker.v3.modules.device.service.DeviceDataFieldConfigService
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
 import com.easylinker.v3.modules.scene.model.Scene
@@ -39,8 +41,39 @@ class DeviceController extends AbstractController {
     @Autowired
     SceneService sceneService
 
+    @Autowired
+    DeviceDataFieldConfigService deviceDataFieldConfigService
+
     DeviceController(HttpServletRequest httpServletRequest) {
         super(httpServletRequest)
+    }
+
+    /**
+     * 获取字段
+     * @param deviceSecurityId
+     * @return
+     */
+    @GetMapping("/getFieldConfig")
+    R getFieldConfig(@RequestParam String deviceSecurityId) {
+        R.okWithData(deviceDataFieldConfigService.getByDevice(deviceSecurityId))
+
+    }
+
+    /**
+     * 配置数据字段
+     * @param deviceFieldConfigForm
+     * @return
+     */
+    @PostMapping("/setFieldConfig")
+    R setFieldConfig(@RequestBody @Valid DeviceFieldConfigForm deviceFieldConfigForm) {
+        DeviceDataFieldConfig deviceDataFieldConfig = deviceDataFieldConfigService.getByDevice(deviceFieldConfigForm.deviceSecurityId)
+        if (deviceDataFieldConfig) {
+            deviceDataFieldConfig.setFields(JSONObject.toJSONString(deviceFieldConfigForm.fields))
+            deviceDataFieldConfigService.save(deviceDataFieldConfig)
+            return R.ok("配置成功")
+        } else {
+            return R.error("配置不存在")
+        }
     }
 
     /**
