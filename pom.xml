@@ -20,6 +20,7 @@
         <module>file-service</module>
         <module>eureka-server</module>
         <module>v3</module>
+
     </modules>
 
 </project>
