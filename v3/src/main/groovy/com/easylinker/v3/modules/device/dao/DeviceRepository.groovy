@@ -105,13 +105,14 @@ interface CommonRepository<T> {
      */
     long countByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType)
 
+    long countByAppUser(AppUser appUser)
+
 }
 /**
  * HTTP
  */
 interface HTTPRepository extends JpaRepository<HTTPDevice, Long>, CommonRepository<HTTPDevice> {
 
-    long countByAppUser(AppUser appUser)
 
     Page<HTTPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
@@ -127,7 +128,6 @@ interface HTTPRepository extends JpaRepository<HTTPDevice, Long>, CommonReposito
  * CoAP
  */
 interface CoAPRepository extends JpaRepository<CoAPDevice, Long>, CommonRepository<CoAPDevice> {
-    long countByAppUser(AppUser appUser)
 
     CoAPDevice findBySecurityId(String securityId)
 
@@ -143,7 +143,6 @@ interface CoAPRepository extends JpaRepository<CoAPDevice, Long>, CommonReposito
  * Mqtt
  */
 interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificationExecutor<MQTTDevice>, CommonRepository<MQTTDevice> {
-    long countByAppUser(AppUser appUser)
 
     MQTTDevice findBySecurityId(String securityId)
 
@@ -161,7 +160,6 @@ interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificati
  * Host
  */
 interface TerminalHostDeviceRepository extends JpaRepository<TerminalHostDevice, Long>, CommonRepository<TerminalHostDevice> {
-    long countByAppUser(AppUser appUser)
 
     TerminalHostDevice findBySecurityId(String securityId)
 
@@ -182,7 +180,6 @@ interface TerminalHostDeviceRepository extends JpaRepository<TerminalHostDevice,
  * TCP
  */
 interface TCPDeviceRepository extends JpaRepository<TCPDevice, Long>, CommonRepository<TCPDevice> {
-    long countByAppUser(AppUser appUser)
 
     TCPDevice findBySecurityId(String securityId)
 
@@ -199,7 +196,6 @@ interface TCPDeviceRepository extends JpaRepository<TCPDevice, Long>, CommonRepo
  * Udp
  */
 interface UDPDeviceRepository extends JpaRepository<UDPDevice, Long>, CommonRepository<UDPDevice> {
-    long countByAppUser(AppUser appUser)
 
     UDPDevice findBySecurityId(String securityId)
 
