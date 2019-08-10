@@ -55,7 +55,7 @@ class ProductService extends AbstractService<Product> {
      * @param pageable
      * @return
      */
-    Page query(Product product, Pageable pageable) {
+    Page<Product> query(Product product, Pageable pageable) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matching()
                 .withMatcher("factory", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withMatcher("model", ExampleMatcher.GenericPropertyMatchers.contains())

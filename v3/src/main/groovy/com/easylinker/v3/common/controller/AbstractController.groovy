@@ -3,6 +3,8 @@ package com.easylinker.v3.common.controller
 import com.easylinker.framework.common.exception.XException
 import com.easylinker.v3.modules.user.model.AppUser
 import com.easylinker.v3.utils.JwtUtils
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import javax.servlet.http.HttpServletRequest
 
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest
  * @param < T >
  */
 abstract class AbstractController {
+    protected final static Logger logger = LoggerFactory.getLogger(getClass())
     private HttpServletRequest httpServletRequest
 
     AbstractController(HttpServletRequest httpServletRequest) {
@@ -57,6 +60,7 @@ abstract class AbstractController {
             return httpServletRequest.getHeader("token")
 
         } else {
+            logger.error("缺少Token")
             throw new XException("请求缺少Token")
         }
     }
@@ -69,6 +73,8 @@ abstract class AbstractController {
             return JwtUtils.getMap(getToken())
 
         } else {
+            logger.error("Token不合法")
+
             throw new XException("Token不合法")
 
         }
