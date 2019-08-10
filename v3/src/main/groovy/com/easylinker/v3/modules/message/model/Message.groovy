@@ -38,7 +38,7 @@ class Message extends AbstractModel {
      * 状态
      */
     @Enumerated(EnumType.STRING)
-    private MessageState messageState
+    private MessageState messageState = MessageState.NO_READ
 
     String getMsgType() {
         return msgType
