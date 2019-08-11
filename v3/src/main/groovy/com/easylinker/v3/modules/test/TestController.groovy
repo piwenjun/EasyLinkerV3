@@ -127,6 +127,7 @@ class TestController extends AbstractController {
 
 }
 
+
 class PushForm {
     String deviceSecurityId
     DeviceProtocol deviceProtocol
