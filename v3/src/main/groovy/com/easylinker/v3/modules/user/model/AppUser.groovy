@@ -16,7 +16,7 @@ class AppUser extends AbstractModel {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus = UserStatus.NORMAL
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "appUser")
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.MERGE, CascadeType.REMOVE], mappedBy = "appUser")
     private List<Role> roles
 
 
