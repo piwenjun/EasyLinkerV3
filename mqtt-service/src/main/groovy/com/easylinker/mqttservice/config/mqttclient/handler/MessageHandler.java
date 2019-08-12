@@ -27,7 +27,6 @@ public abstract class MessageHandler implements MqttCallback {
      * @throws Exception
      */
     public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-        System.out.println("收到的消息类型:" + mqttMessage.getId());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("topic", topic);
         jsonObject.put("payload", new String(mqttMessage.getPayload(), StandardCharsets.UTF_8));
