@@ -1,8 +1,12 @@
 package com.easylinker.v3.common.model
 
 import com.easylinker.framework.utils.SerialNumberUtils
+import com.vladmihalcea.hibernate.type.json.JsonStringType
 import lombok.Data
+import org.hibernate.annotations.Type
+import org.hibernate.annotations.TypeDef
 
+import javax.persistence.Column
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.MappedSuperclass
@@ -15,11 +19,19 @@ import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
 @Data
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 class AbstractDevice extends AbstractModel {
     private String token
     private String name
     private String info
     private String sn = SerialNumberUtils.getSerialNumber()
+    /**
+     * 设备的数据字段配置
+     */
+    @Type(type = "json")
+    @Column(columnDefinition = "json")
+    private List<String> dataFields = ["value"]
+
     /**
      * 设备协议：为了生成SDK和终端交互
      */
@@ -111,6 +123,14 @@ class AbstractDevice extends AbstractModel {
 
     void setDeviceStatus(DeviceStatus deviceStatus) {
         this.deviceStatus = deviceStatus
+    }
+
+    List<String> getDataFields() {
+        return dataFields
+    }
+
+    void setDataFields(List<String> dataFields) {
+        this.dataFields = dataFields
     }
 }
 

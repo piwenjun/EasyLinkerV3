@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest
 
 /**
  * 公共的基类
- * @param < T >
+ * @param <T >
  */
 abstract class AbstractController {
     protected final static Logger logger = LoggerFactory.getLogger(getClass())
@@ -43,7 +43,7 @@ abstract class AbstractController {
 
     AppUser getCurrentUser() {
 
-        new AppUser(id: getUserId(), securityId: getSecurityId())
+        new AppUser(id: getUserId(), securityId: getSecurityId(), createTime: null, isDelete: false, updateTime: null)
     }
 
     String getIp() {

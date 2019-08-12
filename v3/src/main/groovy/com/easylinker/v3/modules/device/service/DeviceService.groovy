@@ -1,6 +1,7 @@
 package com.easylinker.v3.modules.device.service
 
 import com.alibaba.fastjson.JSONObject
+import com.easylinker.framework.utils.DeviceTokenUtils
 import com.easylinker.v3.common.model.AbstractDevice
 import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.common.model.DeviceType
@@ -41,8 +42,7 @@ class DeviceService {
 
     @Autowired
     TopicAclRepository topicAclRepository
-    @Autowired
-    DeviceDataFieldConfigService deviceDataFieldConfigService
+
     /**
      * 统计报表:ADMIN看的
      * @return
@@ -115,15 +115,21 @@ class DeviceService {
      */
     @Transactional
     void create(AbstractDevice abstractDevice) {
-
+        //Token
+        abstractDevice.setToken(DeviceTokenUtils.token(JSONObject.toJSONString([
+                abstractDevice.securityId,
+                abstractDevice.deviceType,
+                JSONObject.toJSONString(abstractDevice.dataFields)
+        ])))
+        //入库
         switch (abstractDevice.deviceProtocol) {
             case DeviceProtocol.HTTP:
                 HTTPDevice device = abstractDevice as HTTPDevice
                 if (device.scene) {
                     device.setSceneSecurityId(device.scene.securityId)
                 }
+
                 httpRepository.save(device)
-                createFieldConfig(device, [])
 
                 break
             case DeviceProtocol.CoAP:
@@ -133,7 +139,6 @@ class DeviceService {
                 }
                 // 新建的时候必须有默认ACL
                 coAPRepository.save(device)
-                createFieldConfig(device, [])
 
                 break
             case DeviceProtocol.MQTT:
@@ -143,7 +148,6 @@ class DeviceService {
                 }
                 mqttRepository.save(device)
                 addDefaultAcls(device)
-                createFieldConfig(device, [])
 
                 break
             case DeviceProtocol.TCP:
@@ -152,7 +156,6 @@ class DeviceService {
                     device.setSceneSecurityId(device.scene.securityId)
                 }
                 tcpDeviceRepository.save(device)
-                createFieldConfig(device, [])
 
                 break
             case DeviceProtocol.UDP:
@@ -161,7 +164,6 @@ class DeviceService {
                     device.setSceneSecurityId(device.scene.securityId)
                 }
                 udpDeviceRepository.save(device)
-                createFieldConfig(device, [])
 
                 break
             default: break
@@ -291,11 +293,9 @@ class DeviceService {
  */
     @Transactional
     Page<AbstractDevice> search(AbstractDevice abstractDevice, Pageable pageable) {
-        ExampleMatcher matcher = ExampleMatcher.matchingAll()
-                .withMatcher("deviceType", ExampleMatcher.GenericPropertyMatchers.contains())
+        ExampleMatcher matcher = ExampleMatcher.matching()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withMatcher("sn", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withIgnoreNullValues()
                 .withIgnorePaths("id",
                         "online",
@@ -306,7 +306,9 @@ class DeviceService {
                         "createTime",
                         "updateTime",
                         "isDelete",
+                        "dataFields",
                         "lastActive")
+
 
         switch (abstractDevice.deviceProtocol) {
             case DeviceProtocol.MQTT:
@@ -329,6 +331,7 @@ class DeviceService {
                 return httpRepository.findAll(example, pageable)
 
             case DeviceProtocol.CoAP:
+
                 Example<CoAPDevice> example = Example.of(abstractDevice as CoAPDevice, matcher)
 
                 return coAPRepository.findAll(example, pageable)
@@ -420,25 +423,6 @@ class DeviceService {
         }
     }
 
-    /**
-     * 配置字段属性,默认就一个value
-     *
-     * @param abstractDevice
-     */
-
-    private void createFieldConfig(final AbstractDevice abstractDevice, List<Map<String, Object>> fields) {
-        DeviceDataFieldConfig deviceDataFieldConfig
-        if (fields && fields.size() > 0) {
-            deviceDataFieldConfig = new DeviceDataFieldConfig(deviceSecurityId: abstractDevice.securityId, fields: JSONObject.toJSONString(fields))
-        } else {
-            deviceDataFieldConfig = new DeviceDataFieldConfig(deviceSecurityId: abstractDevice.securityId, fields: JSONObject.toJSONString([[name: "value", field: "value"]]))
-
-        }
-
-        deviceDataFieldConfigService.save(deviceDataFieldConfig)
-
-
-    }
 
 }
 

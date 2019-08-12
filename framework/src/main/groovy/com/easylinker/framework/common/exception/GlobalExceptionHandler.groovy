@@ -83,7 +83,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = NullPointerException.class)
     R nullPointerExceptionHandler(NullPointerException e) {
         logger.error(e.getMessage())
-        //e.printStackTrace()
+        e.printStackTrace()
         R.error(501, "系统内部异常")
 
     }

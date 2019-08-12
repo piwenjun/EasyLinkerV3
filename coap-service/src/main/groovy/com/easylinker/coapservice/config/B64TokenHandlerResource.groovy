@@ -1,5 +1,6 @@
 package com.easylinker.coapservice.config
 
+import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.easylinker.coapservice.model.DeviceData
 import com.easylinker.framework.common.web.R
@@ -88,7 +89,16 @@ class B64TokenHandlerResource extends CoapResource {
              * String unit 【选填】
              * String info 【选填】
              */
-            String data = dataJson.getString("data")
+            JSONObject data
+            try {
+                data = dataJson.getJSONObject("data")
+
+            } catch (e) {
+                e.printStackTrace()
+
+                coapResponse(coapExchange, R.error("Invalid data!"), Code.C400_BAD_REQUEST)
+                return
+            }
             String unit = dataJson.getString("unit")
             String info = dataJson.getString("info")
 
@@ -100,38 +110,46 @@ class B64TokenHandlerResource extends CoapResource {
                 coapResponse(coapExchange, R.error("Invalid data!"), Code.C400_BAD_REQUEST)
                 return
             }
-            String[] tokenList
+            JSONArray tokenList
             try {
                 //[0cc33895a5cd46feb9483a02ca52c5d7, BOOLEAN]
-                tokenList = DeviceTokenUtils.getInfo(DeviceTokenUtils.parse(token))
+                tokenList = DeviceTokenUtils.getInfo((token))
 
             } catch (Exception e) {
+                e.printStackTrace()
                 logger.error(e.message)
                 coapResponse(coapExchange, R.error("Invalid token!"), Code.C400_BAD_REQUEST)
                 return
             }
             //非空处理
-            if (tokenList.length != 2) {
+            if (tokenList.size() < 3) {
                 coapResponse(coapExchange, R.error("Invalid token!"), Code.C400_BAD_REQUEST)
                 return
             }
             //全部过滤
             String deviceSecurityId = tokenList[0]
             String deviceType = tokenList[1]
+            JSONArray dataFields = JSONObject.parseArray(tokenList[2].toString())
             //生成数据
-            DeviceData deviceData = new DeviceData(
-                    dataType: deviceType,
-                    securityId: UUID.randomUUID().toString().replace("-", ""),
-                    createTime: new Date(),
-                    updateTime: new Date(),
-                    data: data,
-                    unit: unit ? "" : unit,
-                    deviceSecurityId: deviceSecurityId,
-                    info: info ? "" : info
-            )
-            //保存数据
-            mongoTemplate.save(deviceData, COAP_DATA_TABLE)
-            coapResponse(coapExchange, R.error("Post success!"), Code.C201_CREATED)
+            JSONObject realData = DeviceTokenUtils.xo(dataFields, data)
+            if (realData.size() > 0) {
+                DeviceData deviceData = new DeviceData(
+                        dataType: deviceType,
+                        securityId: UUID.randomUUID().toString().replace("-", ""),
+                        createTime: new Date(),
+                        updateTime: new Date(),
+                        data: realData,
+                        unit: unit ? "" : unit,
+                        deviceSecurityId: deviceSecurityId,
+                        info: info ? "" : info
+                )
+                //保存数据
+                mongoTemplate.save(deviceData, COAP_DATA_TABLE)
+                coapResponse(coapExchange, R.error("Post success!"), Code.C201_CREATED)
+            } else {
+                coapResponse(coapExchange, R.error("Data not match fields!"), Code.C201_CREATED)
+            }
+
         }
     }
     /**

@@ -1,9 +1,7 @@
 package com.easylinker.v3.modules.device.controller
 
 import cn.hutool.crypto.digest.DigestUtil
-import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.web.R
-import com.easylinker.framework.utils.DeviceTokenUtils
 import com.easylinker.v3.common.controller.AbstractController
 import com.easylinker.v3.common.model.AbstractDevice
 import com.easylinker.v3.common.model.DeviceProtocol
@@ -11,7 +9,6 @@ import com.easylinker.v3.common.model.DeviceStatus
 import com.easylinker.v3.common.model.DeviceType
 import com.easylinker.v3.modules.device.form.*
 import com.easylinker.v3.modules.device.model.*
-import com.easylinker.v3.modules.device.service.DeviceDataFieldConfigService
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
 import com.easylinker.v3.modules.scene.model.Scene
@@ -41,39 +38,9 @@ class DeviceController extends AbstractController {
     @Autowired
     SceneService sceneService
 
-    @Autowired
-    DeviceDataFieldConfigService deviceDataFieldConfigService
 
     DeviceController(HttpServletRequest httpServletRequest) {
         super(httpServletRequest)
-    }
-
-    /**
-     * 获取字段
-     * @param deviceSecurityId
-     * @return
-     */
-    @GetMapping("/getFieldConfig")
-    R getFieldConfig(@RequestParam String deviceSecurityId) {
-        R.okWithData(deviceDataFieldConfigService.getByDevice(deviceSecurityId))
-
-    }
-
-    /**
-     * 配置数据字段
-     * @param deviceFieldConfigForm
-     * @return
-     */
-    @PostMapping("/setFieldConfig")
-    R setFieldConfig(@RequestBody @Valid DeviceFieldConfigForm deviceFieldConfigForm) {
-        DeviceDataFieldConfig deviceDataFieldConfig = deviceDataFieldConfigService.getByDevice(deviceFieldConfigForm.deviceSecurityId)
-        if (deviceDataFieldConfig) {
-            deviceDataFieldConfig.setFields(JSONObject.toJSONString(deviceFieldConfigForm.fields))
-            deviceDataFieldConfigService.save(deviceDataFieldConfig)
-            return R.ok("配置成功")
-        } else {
-            return R.error("配置不存在")
-        }
     }
 
     /**
@@ -95,11 +62,10 @@ class DeviceController extends AbstractController {
                         appUser: getCurrentUser(),
                         scene: scene,
                         deviceProtocol: DeviceProtocol.HTTP)
-                //token
-                httpDevice.setToken(DeviceTokenUtils.token([
-                        httpDevice.securityId,
-                        httpDevice.deviceType
-                ].toString()))
+
+                if (httpDeviceForm.dataFields.size() > 0) {
+                    httpDevice.setDataFields(httpDeviceForm.dataFields)
+                }
                 deviceService.create(httpDevice)
                 return R.ok("添加成功")
 
@@ -115,12 +81,10 @@ class DeviceController extends AbstractController {
                     appUser: getCurrentUser(),
                     token: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
                     deviceProtocol: DeviceProtocol.HTTP)
-            httpDevice.setToken(DeviceTokenUtils.token(httpDevice.securityId))
-            //token
-            httpDevice.setToken(DeviceTokenUtils.token([
-                    httpDevice.securityId,
-                    httpDevice.deviceType
-            ].toString()))
+
+            if (httpDeviceForm.dataFields.size() > 0) {
+                httpDevice.setDataFields(httpDeviceForm.dataFields)
+            }
             deviceService.create(httpDevice)
             return R.ok("添加成功")
 
@@ -147,9 +111,10 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         appUser: getCurrentUser(),
                         deviceProtocol: DeviceProtocol.CoAP)
-                //token
-                String token = DeviceTokenUtils.token([coAPDevice.securityId, coAPDevice.deviceType].toString())
-                coAPDevice.setToken(token)
+
+                if (coAPDeviceForm.dataFields.size() > 0) {
+                    coAPDevice.setDataFields(coAPDeviceForm.dataFields)
+                }
                 deviceService.create(coAPDevice)
                 return R.ok("添加成功")
             } else {
@@ -165,9 +130,11 @@ class DeviceController extends AbstractController {
                     deviceType: coAPDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.CoAP)
-            //token
-            coAPDevice.setToken(DeviceTokenUtils.token([coAPDevice.securityId, coAPDevice.deviceType].toString()))
+            if (coAPDeviceForm.dataFields.size() > 0) {
+                coAPDevice.setDataFields(coAPDeviceForm.dataFields)
+            }
             deviceService.create(coAPDevice)
+
             return R.ok("添加成功")
 
 
@@ -200,11 +167,10 @@ class DeviceController extends AbstractController {
                         appUser: getCurrentUser(),
                         scene: scene,
                         deviceProtocol: DeviceProtocol.MQTT)
-                //token
-                mqttDevice.setToken(DeviceTokenUtils.token([
-                        mqttDevice.securityId,
-                        mqttDevice.deviceType
-                ].toString()))
+
+                if (mqttDeviceForm.dataFields.size() > 0) {
+                    mqttDevice.setDataFields(mqttDeviceForm.dataFields)
+                }
                 deviceService.create(mqttDevice)
                 return R.ok("添加成功")
 
@@ -222,11 +188,10 @@ class DeviceController extends AbstractController {
                     deviceType: mqttDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.MQTT)
-            //token
-            mqttDevice.setToken(DeviceTokenUtils.token([
-                    mqttDevice.securityId,
-                    mqttDevice.deviceType
-            ].toString()))
+
+            if (mqttDeviceForm.dataFields.size() > 0) {
+                mqttDevice.setDataFields(mqttDeviceForm.dataFields)
+            }
             deviceService.create(mqttDevice)
             return R.ok("添加成功")
         }
@@ -256,6 +221,9 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         deviceProtocol: DeviceProtocol.TCP)
 
+                if (terminalHostDeviceForm.dataFields.size() > 0) {
+                    terminalHostDevice.setDataFields(terminalHostDeviceForm.dataFields)
+                }
                 deviceService.create(terminalHostDevice)
                 return R.ok("添加成功")
 
@@ -272,6 +240,11 @@ class DeviceController extends AbstractController {
                     deviceType: terminalHostDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.TCP)
+
+
+            if (terminalHostDeviceForm.dataFields.size() > 0) {
+                terminalHostDevice.setDataFields(terminalHostDeviceForm.dataFields)
+            }
             deviceService.create(terminalHostDevice)
             return R.ok("添加成功")
         }
@@ -299,8 +272,10 @@ class DeviceController extends AbstractController {
                         appUser: getCurrentUser(),
                         scene: scene,
                         deviceProtocol: DeviceProtocol.TCP)
-                //token
-                tcpDevice.setToken(DeviceTokenUtils.token([tcpDevice.securityId, tcpDevice.deviceType].toString()))
+
+                if (tcpDeviceForm.dataFields.size() > 0) {
+                    tcpDevice.setDataFields(tcpDeviceForm.dataFields)
+                }
                 deviceService.create(tcpDevice)
                 return R.ok("添加成功")
 
@@ -317,8 +292,10 @@ class DeviceController extends AbstractController {
                     deviceType: tcpDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.TCP)
-            //token
-            tcpDevice.setToken(DeviceTokenUtils.token([tcpDevice.securityId, tcpDevice.deviceType].toString()))
+
+            if (tcpDeviceForm.dataFields.size() > 0) {
+                tcpDevice.setDataFields(tcpDeviceForm.dataFields)
+            }
             deviceService.create(tcpDevice)
             return R.ok("添加成功")
         }
@@ -343,7 +320,9 @@ class DeviceController extends AbstractController {
                         appUser: getCurrentUser(),
                         scene: scene,
                         deviceProtocol: DeviceProtocol.UDP)
-                udpDevice.setToken(DeviceTokenUtils.token([udpDevice.securityId, udpDevice.deviceType].toString()))
+                if (udpDeviceForm.dataFields.size() > 0) {
+                    udpDevice.setDataFields(udpDeviceForm.dataFields)
+                }
                 deviceService.create(udpDevice)
                 return R.ok("添加成功")
 
@@ -358,8 +337,10 @@ class DeviceController extends AbstractController {
                     deviceType: udpDeviceForm.deviceType,
                     appUser: getCurrentUser(),
                     deviceProtocol: DeviceProtocol.UDP)
-            //token
-            udpDevice.setToken(DeviceTokenUtils.token([udpDevice.securityId, udpDevice.deviceType].toString()))
+
+            if (udpDeviceForm.dataFields.size() > 0) {
+                udpDevice.setDataFields(udpDeviceForm.dataFields)
+            }
             deviceService.create(udpDevice)
             return R.ok("添加成功")
         }
@@ -494,7 +475,7 @@ class DeviceController extends AbstractController {
            @RequestParam(required = false) String sn,
            @RequestParam(required = false) String sceneSecurityId) {
         Scene scene = sceneService.findBySecurityId(sceneSecurityId)
-        AppUser appUser = userService.findBySecurityId(getCurrentUser().securityId)
+        AppUser appUser = getCurrentUser()
 
         switch (deviceProtocol) {
             case DeviceProtocol.MQTT:
