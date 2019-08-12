@@ -20,7 +20,6 @@ import javax.persistence.ManyToOne
 @Entity
 class UDPDevice extends AbstractDevice{
 
-    private String token
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     private AppUser appUser
@@ -45,11 +44,4 @@ class UDPDevice extends AbstractDevice{
         this.scene = scene
     }
 
-    String getToken() {
-        return token
-    }
-
-    void setToken(String token) {
-        this.token = token
-    }
 }

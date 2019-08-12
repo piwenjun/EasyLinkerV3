@@ -11,7 +11,6 @@
         <option value="$PROJECT_DIR$/framework/pom.xml" />
         <option value="$PROJECT_DIR$/v3/pom.xml" />
         <option value="$PROJECT_DIR$/http-service/pom.xml" />
-        <option value="$PROJECT_DIR$/mqtt-service/pom.xml" />
         <option value="$PROJECT_DIR$/tcp-service/pom.xml" />
         <option value="$PROJECT_DIR$/udpservice/pom.xml" />
         <option value="$PROJECT_DIR$/udp-service/pom.xml" />
@@ -20,7 +19,13 @@
         <option value="$PROJECT_DIR$/eureka-server/pom.xml" />
         <option value="$PROJECT_DIR$/coap-service/pom.xml" />
         <option value="$PROJECT_DIR$/service-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/mqtt-service/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/mqtt-service/activemq-auth-plugin/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">

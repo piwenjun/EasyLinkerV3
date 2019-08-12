@@ -78,13 +78,20 @@ class EntryController extends AbstractController {
             dataMap.put("roles", roleArray)
             dataMap.put("principle", appUser.principle)
             dataMap.put("token", JwtUtils.token(jwtMap))
-            redisUtils.set("USER:" + appUser.securityId, JSONObject.toJSONString(dataMap), 3_600_0000L)
-            mongoTemplate.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆成功,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId), "SYSTEMLOG")
-            return R.okWithData(dataMap)
-        } else {
-            mongoTemplate.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆失败,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId), "SYSTEMLOG")
+            //redis缓存
+            try {
+                redisUtils.set("USER:" + appUser.securityId, JSONObject.toJSONString(dataMap), 3_600_0000L)
+                mongoTemplate.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆成功,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId), "SYSTEMLOG")
+                return R.okWithData(dataMap)
 
-            throw new XException("登陆失败!")
+            } catch (e) {
+                logger.error("Redis异常:" + e.message)
+                throw new XException("内部错误")
+            }
+        } else {
+            mongoTemplate.save(new SystemLog(reason: "登陆", info: "登陆失败,登陆IP:" + getHttpServletRequest().getRemoteHost()), "SYSTEMLOG")
+
+            throw new XException("登陆失败!用户不存在!")
         }
     }
 
@@ -112,7 +119,7 @@ class EntryController extends AbstractController {
         )
         userService.save(appUser)
         roleService.save(new Role(name: "BASE_ROLE", info: "基本权限", appUser: appUser))
-        mongoTemplate.save(new SystemLog(reason: "注册", info: "用户:" + appUser.name + " 注册成功", userSecurityId: ""),"SYSTEMLOG")
+        mongoTemplate.save(new SystemLog(reason: "注册", info: "用户:" + appUser.name + " 注册成功", userSecurityId: ""), "SYSTEMLOG")
         return R.ok("注册成功")
 
     }

@@ -2,6 +2,7 @@ HELP.md
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 
+*.idea/
 
 ### STS ###
 .apt_generated
@@ -28,3 +29,6 @@ HELP.md
 
 ### VS Code ###
 .vscode/
+
+*/bin
+*/misc.xml

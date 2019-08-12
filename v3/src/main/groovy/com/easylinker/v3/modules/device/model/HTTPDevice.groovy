@@ -19,7 +19,6 @@ import javax.persistence.ManyToOne
 @Entity
 class HTTPDevice extends AbstractDevice{
 
-    private String token
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     private AppUser appUser
@@ -33,14 +32,6 @@ class HTTPDevice extends AbstractDevice{
 
     void setScene(Scene scene) {
         this.scene = scene
-    }
-
-    String getToken() {
-        return token
-    }
-
-    void setToken(String token) {
-        this.token = token
     }
 
     AppUser getAppUser() {

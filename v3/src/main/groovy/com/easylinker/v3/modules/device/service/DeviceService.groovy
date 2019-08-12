@@ -1,10 +1,12 @@
 package com.easylinker.v3.modules.device.service
 
-import com.easylinker.v3.modules.device.dao.*
-import com.easylinker.v3.modules.device.model.*
+import com.alibaba.fastjson.JSONObject
+import com.easylinker.framework.utils.DeviceTokenUtils
 import com.easylinker.v3.common.model.AbstractDevice
 import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.common.model.DeviceType
+import com.easylinker.v3.modules.device.dao.*
+import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.scene.dao.SceneRepository
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.user.model.AppUser
@@ -40,6 +42,7 @@ class DeviceService {
 
     @Autowired
     TopicAclRepository topicAclRepository
+
     /**
      * 统计报表:ADMIN看的
      * @return
@@ -112,12 +115,20 @@ class DeviceService {
      */
     @Transactional
     void create(AbstractDevice abstractDevice) {
+        //Token
+        abstractDevice.setToken(DeviceTokenUtils.token(JSONObject.toJSONString([
+                abstractDevice.securityId,
+                abstractDevice.deviceType,
+                JSONObject.toJSONString(abstractDevice.dataFields)
+        ])))
+        //入库
         switch (abstractDevice.deviceProtocol) {
             case DeviceProtocol.HTTP:
                 HTTPDevice device = abstractDevice as HTTPDevice
                 if (device.scene) {
                     device.setSceneSecurityId(device.scene.securityId)
                 }
+
                 httpRepository.save(device)
 
                 break
@@ -128,6 +139,7 @@ class DeviceService {
                 }
                 // 新建的时候必须有默认ACL
                 coAPRepository.save(device)
+
                 break
             case DeviceProtocol.MQTT:
                 MQTTDevice device = abstractDevice as MQTTDevice
@@ -136,6 +148,7 @@ class DeviceService {
                 }
                 mqttRepository.save(device)
                 addDefaultAcls(device)
+
                 break
             case DeviceProtocol.TCP:
                 TCPDevice device = abstractDevice as TCPDevice
@@ -151,11 +164,13 @@ class DeviceService {
                     device.setSceneSecurityId(device.scene.securityId)
                 }
                 udpDeviceRepository.save(device)
+
                 break
             default: break
         }
 
     }
+
 
     /**
      * 根据用户来选择统计报表
@@ -166,17 +181,29 @@ class DeviceService {
     SceneRepository sceneRepository
 
     Map analyzeDeviceData(AppUser appUser) {
-        Map data = new HashMap()
+        Map<String, Object> deviceCountMap = new HashMap<>()
         Map mqttCount = new HashMap()
         mqttCount.put("online", mqttRepository.countByOnline(true))
         mqttCount.put("total", mqttRepository.countByAppUser(appUser))
-        data.put("CoAP", coAPRepository.countByAppUser(appUser))
-        data.put("HTTP", httpRepository.countByAppUser(appUser))
-        data.put("MQTT", mqttCount)
-        data.put("TCP", tcpDeviceRepository.countByAppUser(appUser))
-        data.put("UDP", udpDeviceRepository.countByAppUser(appUser))
-        data.put("scene", sceneRepository.countByAppUser(appUser))
-        return data
+        deviceCountMap.put("CoAP", coAPRepository.countByAppUser(appUser))
+        deviceCountMap.put("HTTP", httpRepository.countByAppUser(appUser))
+        deviceCountMap.put("MQTT", mqttCount)
+        deviceCountMap.put("TCP", tcpDeviceRepository.countByAppUser(appUser))
+        deviceCountMap.put("UDP", udpDeviceRepository.countByAppUser(appUser))
+        deviceCountMap.put("scene", sceneRepository.countByAppUser(appUser))
+        //统计各种类型的设备
+        Map<String, Object> typeCountMap = new HashMap<>()
+        typeCountMap.put("VALUE", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.VALUE))
+        typeCountMap.put("TEXT", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.TEXT))
+        typeCountMap.put("BOOLEAN", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.BOOLEAN))
+        typeCountMap.put("SWITCH", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.SWITCH))
+        typeCountMap.put("FILE", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.FILE))
+
+        Map<String, Object> countMap = new HashMap<>()
+        countMap.put("deviceCount", deviceCountMap)
+        countMap.put("typeCount", typeCountMap)
+
+        return countMap
     }
 
 
@@ -190,8 +217,11 @@ class DeviceService {
         //auth.mysql.acl_query = select allow,ip AS ipaddr, username, client_id AS clientid, access, topic from topic_acl where  username = '%u' or username = '$all'  or client_id = '%c';
         //1: subscribe, 2: publish, 3: pubsub
         List<TopicAcl> topicAcls = new ArrayList<>()
+        //接受数据的TOPIC
         TopicAcl inAcl = new TopicAcl(ip: "", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/s2c", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+        //发送数据的TOPIC
         TopicAcl outAcl = new TopicAcl(ip: "", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/c2s", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+        //上报状态的
         TopicAcl statusAcl = new TopicAcl(ip: "", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/status", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
 
         topicAcls.add(inAcl)
@@ -263,11 +293,9 @@ class DeviceService {
  */
     @Transactional
     Page<AbstractDevice> search(AbstractDevice abstractDevice, Pageable pageable) {
-        ExampleMatcher matcher = ExampleMatcher.matchingAll()
-                .withMatcher("deviceType", ExampleMatcher.GenericPropertyMatchers.contains())
+        ExampleMatcher matcher = ExampleMatcher.matching()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withMatcher("sn", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withIgnoreNullValues()
                 .withIgnorePaths("id",
                         "online",
@@ -278,7 +306,9 @@ class DeviceService {
                         "createTime",
                         "updateTime",
                         "isDelete",
+                        "dataFields",
                         "lastActive")
+
 
         switch (abstractDevice.deviceProtocol) {
             case DeviceProtocol.MQTT:
@@ -301,6 +331,7 @@ class DeviceService {
                 return httpRepository.findAll(example, pageable)
 
             case DeviceProtocol.CoAP:
+
                 Example<CoAPDevice> example = Example.of(abstractDevice as CoAPDevice, matcher)
 
                 return coAPRepository.findAll(example, pageable)

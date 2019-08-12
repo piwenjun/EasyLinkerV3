@@ -34,6 +34,8 @@ class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(XException.class)
     R handleXException(XException e) {
+        logger.error(e.getMessage())
+
         R.error(e.code, e.message)
     }
 
@@ -81,7 +83,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = NullPointerException.class)
     R nullPointerExceptionHandler(NullPointerException e) {
         logger.error(e.getMessage())
-        R.error(501, "空指针异常")
+        e.printStackTrace()
+        R.error(501, "系统内部异常")
 
     }
 

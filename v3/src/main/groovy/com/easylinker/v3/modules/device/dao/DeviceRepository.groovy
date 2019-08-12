@@ -1,10 +1,9 @@
 package com.easylinker.v3.modules.device.dao
 
-
-import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.common.model.DeviceStatus
 import com.easylinker.v3.common.model.DeviceType
+import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.user.model.AppUser
 import org.springframework.data.domain.Page
@@ -25,68 +24,68 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor
  */
 interface CommonRepository<T> {
 
-    /**
-     * 模糊查询
-     * @param appUser
-     * @param deviceProtocol
-     * @param scene
-     * @param status
-     * @param deviceType
-     * @param name
-     * @param info
-     * @param sn
-     * @param pageable
-     * @return
-     */
-    Page<T> findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusAndDeviceTypeLikeAndNameLikeAndInfoLikeAndSnLike(AppUser appUser,
-                                                                                                                     DeviceProtocol deviceProtocol,
-                                                                                                                     Scene scene, DeviceStatus status,
-                                                                                                                     DeviceType deviceType,
-                                                                                                                     String name,
-                                                                                                                     String info,
-                                                                                                                     String sn,
-                                                                                                                     Pageable pageable)
-
-    /**
-     * 带 DeviceType查询
-     * @param appUser
-     * @param deviceProtocol
-     * @param status
-     * @param deviceType
-     * @param name
-     * @param info
-     * @param sn
-     * @param pageable
-     * @return
-     */
-    Page<T> findAllByAppUserAndDeviceProtocolAndDeviceStatusAndDeviceTypeLikeAndNameLikeAndInfoLikeAndSnLike(AppUser appUser,
-                                                                                                             DeviceProtocol deviceProtocol,
-                                                                                                             DeviceStatus status,
-                                                                                                             DeviceType deviceType,
-                                                                                                             String name,
-                                                                                                             String info,
-                                                                                                             String sn,
-
-                                                                                                             Pageable pageable)
-
-    /**
-     * 不带DeviceType查询
-     * @param appUser
-     * @param deviceProtocol
-     * @param status
-     * @param name
-     * @param info
-     * @param sn
-     * @param pageable
-     * @return
-     */
-    Page<T> findAllByAppUserAndDeviceProtocolAndDeviceStatusAndNameLikeAndInfoLikeAndSnLike(AppUser appUser,
-                                                                                            DeviceProtocol deviceProtocol,
-                                                                                            DeviceStatus status,
-                                                                                            String name,
-                                                                                            String info,
-                                                                                            String sn,
-                                                                                            Pageable pageable)
+//    /**
+//     * 模糊查询
+//     * @param appUser
+//     * @param deviceProtocol
+//     * @param scene
+//     * @param status
+//     * @param deviceType
+//     * @param name
+//     * @param info
+//     * @param sn
+//     * @param pageable
+//     * @return
+//     */
+//    Page<T> findAllByAppUserAndDeviceProtocolAndSceneAndDeviceStatusAndDeviceTypeLikeAndNameLikeAndInfoLikeAndSnLike(AppUser appUser,
+//                                                                                                                     DeviceProtocol deviceProtocol,
+//                                                                                                                     Scene scene, DeviceStatus status,
+//                                                                                                                     DeviceType deviceType,
+//                                                                                                                     String name,
+//                                                                                                                     String info,
+//                                                                                                                     String sn,
+//                                                                                                                     Pageable pageable)
+//
+//    /**
+//     * 带 DeviceType查询
+//     * @param appUser
+//     * @param deviceProtocol
+//     * @param status
+//     * @param deviceType
+//     * @param name
+//     * @param info
+//     * @param sn
+//     * @param pageable
+//     * @return
+//     */
+//    Page<T> findAllByAppUserAndDeviceProtocolAndDeviceStatusAndDeviceTypeLikeAndNameLikeAndInfoLikeAndSnLike(AppUser appUser,
+//                                                                                                             DeviceProtocol deviceProtocol,
+//                                                                                                             DeviceStatus status,
+//                                                                                                             DeviceType deviceType,
+//                                                                                                             String name,
+//                                                                                                             String info,
+//                                                                                                             String sn,
+//
+//                                                                                                             Pageable pageable)
+//
+//    /**
+//     * 不带DeviceType查询
+//     * @param appUser
+//     * @param deviceProtocol
+//     * @param status
+//     * @param name
+//     * @param info
+//     * @param sn
+//     * @param pageable
+//     * @return
+//     */
+//    Page<T> findAllByAppUserAndDeviceProtocolAndDeviceStatusAndNameLikeAndInfoLikeAndSnLike(AppUser appUser,
+//                                                                                            DeviceProtocol deviceProtocol,
+//                                                                                            DeviceStatus status,
+//                                                                                            String name,
+//                                                                                            String info,
+//                                                                                            String sn,
+//                                                                                            Pageable pageable)
 
     /**
      * 考虑到以后要脱离外键，后期 根据SceneSID 查询
@@ -96,13 +95,24 @@ interface CommonRepository<T> {
      */
 
     Page<T> findAllBySceneSecurityIdAndDeviceProtocol(String sceneSecurityId, DeviceProtocol deviceProtocol, Pageable pageable)
+
+
+    /**
+     * 统计各种设备类型
+     * @param appUser
+     * @param deviceType
+     * @return
+     */
+    long countByAppUserAndDeviceType(AppUser appUser, DeviceType deviceType)
+
+    long countByAppUser(AppUser appUser)
+
 }
 /**
  * HTTP
  */
 interface HTTPRepository extends JpaRepository<HTTPDevice, Long>, CommonRepository<HTTPDevice> {
 
-    long countByAppUser(AppUser appUser)
 
     Page<HTTPDevice> findAllByAppUser(Pageable page, AppUser appUser)
 
@@ -118,7 +128,6 @@ interface HTTPRepository extends JpaRepository<HTTPDevice, Long>, CommonReposito
  * CoAP
  */
 interface CoAPRepository extends JpaRepository<CoAPDevice, Long>, CommonRepository<CoAPDevice> {
-    long countByAppUser(AppUser appUser)
 
     CoAPDevice findBySecurityId(String securityId)
 
@@ -134,7 +143,6 @@ interface CoAPRepository extends JpaRepository<CoAPDevice, Long>, CommonReposito
  * Mqtt
  */
 interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificationExecutor<MQTTDevice>, CommonRepository<MQTTDevice> {
-    long countByAppUser(AppUser appUser)
 
     MQTTDevice findBySecurityId(String securityId)
 
@@ -152,7 +160,6 @@ interface MQTTRepository extends JpaRepository<MQTTDevice, Long>, JpaSpecificati
  * Host
  */
 interface TerminalHostDeviceRepository extends JpaRepository<TerminalHostDevice, Long>, CommonRepository<TerminalHostDevice> {
-    long countByAppUser(AppUser appUser)
 
     TerminalHostDevice findBySecurityId(String securityId)
 
@@ -173,7 +180,6 @@ interface TerminalHostDeviceRepository extends JpaRepository<TerminalHostDevice,
  * TCP
  */
 interface TCPDeviceRepository extends JpaRepository<TCPDevice, Long>, CommonRepository<TCPDevice> {
-    long countByAppUser(AppUser appUser)
 
     TCPDevice findBySecurityId(String securityId)
 
@@ -190,7 +196,6 @@ interface TCPDeviceRepository extends JpaRepository<TCPDevice, Long>, CommonRepo
  * Udp
  */
 interface UDPDeviceRepository extends JpaRepository<UDPDevice, Long>, CommonRepository<UDPDevice> {
-    long countByAppUser(AppUser appUser)
 
     UDPDevice findBySecurityId(String securityId)
 

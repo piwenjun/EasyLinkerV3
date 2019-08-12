@@ -220,10 +220,7 @@ class RedisUtils {
             return true
 
         } catch (Exception e) {
-
-            //e.printStackTrace()
-
-            return false
+            throw e
 
         }
 
@@ -341,10 +338,8 @@ class RedisUtils {
             return true
 
         } catch (Exception e) {
+            throw e
 
-            //e.printStackTrace()
-
-            return false
 
         }
 
@@ -380,10 +375,8 @@ class RedisUtils {
             return true
 
         } catch (Exception e) {
+            throw e
 
-            //e.printStackTrace()
-
-            return false
 
         }
     }
@@ -413,9 +406,8 @@ class RedisUtils {
 
         } catch (Exception e) {
 
-            //e.printStackTrace()
+            throw e
 
-            return false
 
         }
 
@@ -454,7 +446,8 @@ class RedisUtils {
 
         } catch (Exception e) {
 
-            return false
+            throw e
+
 
         }
 
@@ -583,9 +576,8 @@ class RedisUtils {
 
         } catch (Exception e) {
 
-            //e.printStackTrace()
+            throw e
 
-            return false
 
         }
 
@@ -676,9 +668,7 @@ class RedisUtils {
     long setRemove(String key, Object... values) {
 
 
-        Long count = redisTemplate.opsForSet().remove(key, values)
-
-        count
+        return redisTemplate.opsForSet().remove(key, values)
 
 
     }
@@ -704,7 +694,7 @@ class RedisUtils {
     List<Object> lGet(String key, long start, long end) {
 
 
-        redisTemplate.opsForList().range(key, start, end)
+        return redisTemplate.opsForList().range(key, start, end)
 
 
     }
@@ -723,7 +713,7 @@ class RedisUtils {
     long lGetListSize(String key) {
 
 
-        redisTemplate.opsForList().size(key)
+        return redisTemplate.opsForList().size(key)
 
 
     }
@@ -743,7 +733,7 @@ class RedisUtils {
 
     Object lGetIndex(String key, long index) {
 
-        redisTemplate.opsForList().index(key, index)
+        return redisTemplate.opsForList().index(key, index)
 
     }
 
@@ -796,9 +786,8 @@ class RedisUtils {
 
         } catch (Exception e) {
 
-            //e.printStackTrace()
+            throw e
 
-            return false
 
         }
 
@@ -828,9 +817,8 @@ class RedisUtils {
 
         } catch (Exception e) {
 
-            //e.printStackTrace()
+            throw e
 
-            return false
 
         }
 
@@ -865,9 +853,7 @@ class RedisUtils {
 
         } catch (Exception e) {
 
-            //e.printStackTrace()
-
-            return false
+            throw e
 
         }
 
@@ -891,8 +877,8 @@ class RedisUtils {
             redisTemplate.opsForList().set(key, index, value)
             return true
         } catch (Exception e) {
-            //e.printStackTrace()
-            return false
+            throw e
+
 
         }
     }
@@ -913,7 +899,6 @@ class RedisUtils {
     long lRemove(String key, long count, Object value) {
 
         return redisTemplate.opsForList().remove(key, count, value)
-
 
     }
 }

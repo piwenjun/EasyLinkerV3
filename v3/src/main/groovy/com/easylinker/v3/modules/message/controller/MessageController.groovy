@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
 /**
+ * 系统邮件
  * Created by admin on 2019/6/11 10:19
  *
  */
@@ -58,7 +59,7 @@ class MessageController extends AbstractController {
      * 标记阅读
      * @return
      */
-    @PostMapping("/markRead")
+    @PutMapping("/markRead")
     R markRead(@RequestParam(required = true) String securityId) {
 
         Message message = messageService.getByUserSecurityId(securityId)
@@ -66,7 +67,7 @@ class MessageController extends AbstractController {
             messageService.markRead(message)
             return R.ok()
         } else {
-            return R.error()
+            return R.error("消息不存在")
         }
     }
 }

@@ -1,8 +1,12 @@
 package com.easylinker.v3.common.model
 
 import com.easylinker.framework.utils.SerialNumberUtils
+import com.vladmihalcea.hibernate.type.json.JsonStringType
 import lombok.Data
+import org.hibernate.annotations.Type
+import org.hibernate.annotations.TypeDef
 
+import javax.persistence.Column
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.MappedSuperclass
@@ -15,11 +19,19 @@ import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
 @Data
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 class AbstractDevice extends AbstractModel {
-
+    private String token
     private String name
     private String info
     private String sn = SerialNumberUtils.getSerialNumber()
+    /**
+     * 设备的数据字段配置
+     */
+    @Type(type = "json")
+    @Column(columnDefinition = "json")
+    private List<String> dataFields = ["value"]
+
     /**
      * 设备协议：为了生成SDK和终端交互
      */
@@ -96,7 +108,32 @@ class AbstractDevice extends AbstractModel {
     void setInfo(String info) {
         this.info = info
     }
+
+    String getToken() {
+        return token
+    }
+
+    void setToken(String token) {
+        this.token = token
+    }
+
+    DeviceStatus getDeviceStatus() {
+        return deviceStatus
+    }
+
+    void setDeviceStatus(DeviceStatus deviceStatus) {
+        this.deviceStatus = deviceStatus
+    }
+
+    List<String> getDataFields() {
+        return dataFields
+    }
+
+    void setDataFields(List<String> dataFields) {
+        this.dataFields = dataFields
+    }
 }
+
 /**
  * 协议类型枚举
  */
@@ -114,7 +151,10 @@ enum DeviceProtocol {
     }
 }
 /**
- * 设备类型
+ * 设备类型：
+ * [8-4号备注]：这里的设备类型主要用途：
+ * 1 数据摘选查找，比如X类型的设备的数据一定是X类型，方便统一数据
+ * 2 后期的设备模板可以使用
  */
 enum DeviceType {
     VALUE("数值型设备"),
@@ -122,8 +162,8 @@ enum DeviceType {
     BOOLEAN("布尔型设备"),
     SWITCH("开关型设备"),
     FILE("文件型设备"),
-    STREAM("流媒体型设备"),
-    TERMINAL_HOST("终端型设备"),
+//    STREAM("流媒体型设备"),
+//    TERMINAL_HOST("终端型设备"),
     PLACEHOLDER("暂不选择类型")
     String name
 

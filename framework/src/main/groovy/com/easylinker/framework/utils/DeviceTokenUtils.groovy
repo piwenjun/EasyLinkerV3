@@ -1,5 +1,8 @@
 package com.easylinker.framework.utils
 
+import com.alibaba.fastjson.JSONArray
+import com.alibaba.fastjson.JSONObject
+
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
@@ -41,6 +44,13 @@ class DeviceTokenUtils {
     }
 
     /**
+     * 获取设备信息，传入的是Base64文本
+     * @return
+     */
+    static JSONArray getInfo(String text) {
+        return JSONObject.parseArray(parse(text))
+    }
+    /**
      * des 加密
      * @param plainText
      * @param desKeyParameter 加密秘钥
@@ -78,13 +88,47 @@ class DeviceTokenUtils {
         return decryptedData
     }
 
+
+    /**
+     * 把设备的数据域和数据进行对比
+     * @param dataFields :数组字段 :["value", "temp", "hum"]
+     * @param dataArray :JSON:{field:"value",data:"112233"}* @return
+     */
+    static JSONObject xo(JSONArray dataFields, JSONObject dataJson) {
+        JSONObject result = new JSONObject()
+        for (String k : dataJson.keySet()) {
+            if (dataFields.contains(k)) {
+                result.put(k, dataJson.getString(k))
+            }
+        }
+        return result
+    }
+
     static void main(String[] args) {
-        String hello = "hello world"
+        String hello = '["VALUE"]'
 
         String token = token(hello)
         println("不用密钥的：" + Base64.encoder.encodeToString(hello.bytes))
         println("用密钥的：" + token)
-        println("乱码解密:" + parse("TCdO/n1EkN29TexIF=="))
         println("原文：" + parse(token))
+        String listString = parse("ByKgGhwFFOshdrS5d0D7lR/5QGjSx0/0wFXp787hSjT/mZivVhIEbiJPIZ7UI634dOyw+TEaHLWx7df94fCzAeVsJlGYdBTz3lu698vDgyI=")
+        println("测试解密:" + listString)
+        JSONArray jsonArray = getInfo("9miWMhDguMuoe73OSaI8BOiP+0T5pdshpEj50am5Su/hHMdJ4g4NPSJPIZ7UI634dOyw+TEaHLWx7df94fCzAeVsJlGYdBTz3lu698vDgyI=")
+
+        println(JSONObject.parseArray(jsonArray[2].toString()))
+//        JSONArray a1 = new JSONArray()
+//        a1.add("G")
+//        a1.add("B")
+//        a1.add("K")
+//        a1.add("C")
+//        JSONObject j2 = new JSONObject()
+//        j2.put("C", "1")
+//        j2.put("G", "2")
+//        j2.put("X", "6")
+//        j2.put("K", "6")
+//
+//
+//        println JSONObject.toJSONString(xo(a1, j2))
+
     }
 }

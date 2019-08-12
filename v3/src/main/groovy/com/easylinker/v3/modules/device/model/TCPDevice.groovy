@@ -20,7 +20,6 @@ import javax.persistence.ManyToOne
 class TCPDevice extends AbstractDevice{
     private String username
     private String password
-    private String token
     private String ip
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
@@ -59,14 +58,6 @@ class TCPDevice extends AbstractDevice{
 
     void setPassword(String password) {
         this.password = password
-    }
-
-    String getToken() {
-        return token
-    }
-
-    void setToken(String token) {
-        this.token = token
     }
 
     String getIp() {

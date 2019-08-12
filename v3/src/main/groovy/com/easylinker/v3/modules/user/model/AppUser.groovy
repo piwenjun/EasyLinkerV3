@@ -14,7 +14,7 @@ class AppUser extends AbstractModel {
     private String email
     private String name
     @Enumerated(EnumType.STRING)
-    private UserStatus userStatus
+    private UserStatus userStatus = UserStatus.NORMAL
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "appUser")
     private List<Role> roles
@@ -68,10 +68,21 @@ class AppUser extends AbstractModel {
         this.roles = roles
     }
 }
-
+/**
+ * 用户的状态标识
+ */
 enum UserStatus {
+    /**
+     * 正常
+     */
     NORMAL,
+    /**
+     * 禁止
+     */
     FORBID,
+    /**
+     * 冻结
+     */
     FREEZE,
 
 }

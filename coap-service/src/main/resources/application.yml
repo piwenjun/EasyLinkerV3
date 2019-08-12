@@ -13,12 +13,7 @@ spring:
       database: EASYLINKER
       host: localhost
       port: 27017
-  #Mysql
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    password: root
-    url: jdbc:mysql://localhost:3306/v3?serverTimezone=UTC&tinyInt1isBit=false&useSSL=false
-    username: root
+
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -27,22 +22,11 @@ spring:
     port: 6379
     # password: root
 
-# spring.redis.password=
-## Eureka
-#eureka:
-#  client:
-#    serviceUrl:
-#      defaultZone: http://localhost:8000/eureka/
-
 # Coap Server
 coap:
   server:
     hostname: localhost
     port: 5683
-# V3
-easylinkerV3:
-  host: localhost
-  port: 2500
 
 # actuator
 info:
