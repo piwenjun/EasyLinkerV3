@@ -1,6 +1,5 @@
 package com.easylinker.v3.modules.admin.controller
 
-import com.easylinker.framework.common.exception.XException
 import cn.hutool.json.JSONArray
 import com.easylinker.framework.common.web.R
 import com.easylinker.v3.common.controller.AbstractController
