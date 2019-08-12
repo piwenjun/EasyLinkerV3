@@ -1,6 +1,5 @@
 package com.easylinker.v3.modules.admin.controller
 
-import com.easylinker.framework.common.exception.XException
 import cn.hutool.json.JSONArray
 import com.easylinker.framework.common.web.R
 import com.easylinker.v3.common.controller.AbstractController
@@ -107,7 +106,7 @@ class AdminController extends AbstractController {
     * @param String securityId
     * @return
     */
-    @GetMapping("/freezeUser")
+    @PutMapping("/freezeUser")
     @Transactional
     R freezeUser(@RequestParam String securityId) {
    
@@ -126,7 +125,7 @@ class AdminController extends AbstractController {
     * @param String securityId
     * @return
     */
-    @GetMapping("/forbidUser")
+    @PutMapping("/forbidUser")
     @Transactional
     R forbidUser(@RequestParam String securityId) {
    
@@ -145,7 +144,7 @@ class AdminController extends AbstractController {
     * @param String securityId
     * @return
     */
-    @GetMapping("/unblockUser")
+    @PutMapping("/unblockUser")
     @Transactional
     R unblockUser(@RequestParam String securityId) {
    
@@ -164,9 +163,9 @@ class AdminController extends AbstractController {
     * @param String securityId
     * @return
     */
-    @GetMapping("/deleUser")
+    @DeleteMapping("/deleteUser")
     @Transactional
-    R deleUser(@RequestParam String securityId) {
+    R deleteUser(@RequestParam String securityId) {
    
         AppUser appUser = userService.findBySecurityId(securityId)
         if(appUser) {
