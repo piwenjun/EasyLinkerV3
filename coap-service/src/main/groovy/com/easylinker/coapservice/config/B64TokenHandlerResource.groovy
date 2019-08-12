@@ -2,7 +2,7 @@ package com.easylinker.coapservice.config
 
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
-import com.easylinker.coapservice.model.DeviceData
+import com.easylinker.framework.common.model.DeviceData
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.utils.DeviceTokenUtils
 import com.easylinker.framework.utils.RedisUtils
@@ -85,7 +85,7 @@ class B64TokenHandlerResource extends CoapResource {
 
             /**
              * String token【必填】
-             * String data 【必填】
+             * String data 【必填】JSON格式！！！
              * String unit 【选填】
              * String info 【选填】
              */
@@ -134,7 +134,7 @@ class B64TokenHandlerResource extends CoapResource {
             JSONObject realData = DeviceTokenUtils.xo(dataFields, data)
             if (realData.size() > 0) {
                 DeviceData deviceData = new DeviceData(
-                        dataType: deviceType,
+                        deviceType: deviceType,
                         securityId: UUID.randomUUID().toString().replace("-", ""),
                         createTime: new Date(),
                         updateTime: new Date(),
@@ -145,7 +145,7 @@ class B64TokenHandlerResource extends CoapResource {
                 )
                 //保存数据
                 mongoTemplate.save(deviceData, COAP_DATA_TABLE)
-                coapResponse(coapExchange, R.error("Post success!"), Code.C201_CREATED)
+                coapResponse(coapExchange, R.ok("Post success!"), Code.C201_CREATED)
             } else {
                 coapResponse(coapExchange, R.error("Data not match fields!"), Code.C201_CREATED)
             }

@@ -67,6 +67,46 @@ class DeviceData {
         return info
     }
 
+    String getSecurityId() {
+        return securityId
+    }
+
+    void setSecurityId(String securityId) {
+        this.securityId = securityId
+    }
+
+    Date getCreateTime() {
+        return createTime
+    }
+
+    void setCreateTime(Date createTime) {
+        this.createTime = createTime
+    }
+
+    boolean getIsDelete() {
+        return isDelete
+    }
+
+    void setIsDelete(boolean isDelete) {
+        this.isDelete = isDelete
+    }
+
+    Date getUpdateTime() {
+        return updateTime
+    }
+
+    void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime
+    }
+
+    String getUnit() {
+        return unit
+    }
+
+    void setUnit(String unit) {
+        this.unit = unit
+    }
+
     void setInfo(String info) {
         this.info = info
     }
