@@ -106,7 +106,7 @@ class AdminController extends AbstractController {
     * @param String securityId
     * @return
     */
-    @GetMapping("/freezeUser")
+    @PutMapping("/freezeUser")
     @Transactional
     R freezeUser(@RequestParam String securityId) {
    
@@ -125,7 +125,7 @@ class AdminController extends AbstractController {
     * @param String securityId
     * @return
     */
-    @GetMapping("/forbidUser")
+    @PutMapping("/forbidUser")
     @Transactional
     R forbidUser(@RequestParam String securityId) {
    
@@ -144,7 +144,7 @@ class AdminController extends AbstractController {
     * @param String securityId
     * @return
     */
-    @GetMapping("/unblockUser")
+    @PutMapping("/unblockUser")
     @Transactional
     R unblockUser(@RequestParam String securityId) {
    
@@ -163,9 +163,9 @@ class AdminController extends AbstractController {
     * @param String securityId
     * @return
     */
-    @GetMapping("/deleUser")
+    @DeleteMapping("/deleteUser")
     @Transactional
-    R deleUser(@RequestParam String securityId) {
+    R deleteUser(@RequestParam String securityId) {
    
         AppUser appUser = userService.findBySecurityId(securityId)
         if(appUser) {
