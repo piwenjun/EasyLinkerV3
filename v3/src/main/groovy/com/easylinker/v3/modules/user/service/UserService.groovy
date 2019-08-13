@@ -31,6 +31,10 @@ class UserService extends AbstractService<AppUser> {
         return userRepository.findTopBySecurityId(securityId)
 
     }
+    
+    Page<AppUser> search(String keyWords, Pageable pageable) {
+        return userRepository.search(keyWords, pageable)
+    }
 
     @Override
     void save(AppUser appUser) {
