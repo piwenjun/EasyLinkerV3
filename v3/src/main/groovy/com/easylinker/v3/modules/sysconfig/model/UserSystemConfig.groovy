@@ -1,5 +1,7 @@
 package com.easylinker.v3.modules.sysconfig.model
 
+
+import com.alibaba.fastjson.JSONObject
 import com.easylinker.v3.common.model.AbstractModel
 
 import javax.persistence.Entity
@@ -21,7 +23,7 @@ class UserSystemConfig extends AbstractModel {
      *}*     ]
      *}*/
 
-    private String displayTabs
+    private JSONObject displayTabs
     /**
      * 用户ID
      */
@@ -31,7 +33,7 @@ class UserSystemConfig extends AbstractModel {
         return displayTabs
     }
 
-    void setDisplayTabs(String displayTabs) {
+    void setDisplayTabs(JSONObject displayTabs) {
         this.displayTabs = displayTabs
     }
 

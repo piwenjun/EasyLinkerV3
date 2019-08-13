@@ -51,7 +51,7 @@ class UserSystemConfigService extends AbstractService<UserSystemConfig> {
      * @return
      */
     UserSystemConfig updateConfig(AppUser appUser, List<Map<String, Object>> tabs) {
-        UserSystemConfig userSystemConfig
+        UserSystemConfig userSystemConfig =  userSystemConfigRepository.findTopByUserSecurityId(appUser.getSecurityId())
         if (userSystemConfig) {
             userSystemConfig = userSystemConfigRepository.findTopByUserSecurityId(appUser.getSecurityId())
             userSystemConfig.setDisplayTabs(JSONObject.toJSONString(tabs))
@@ -68,6 +68,22 @@ class UserSystemConfigService extends AbstractService<UserSystemConfig> {
         }
 
     }
+    /**
+     * 更新配置
+     * @param AppUser appUser
+     * @param JSONObject tabsJson
+     * @return UserSystemConfig
+     */
+    UserSystemConfig updateConfig(AppUser appUser, JSONObject tabsJson) {
+        UserSystemConfig userSystemConfig =  userSystemConfigRepository.findTopByUserSecurityId(appUser.getSecurityId())
+        if (!userSystemConfig) {
+            userSystemConfig = new UserSystemConfig()
+            userSystemConfig.setUserSecurityId(appUser.securityId)
+        }
+        userSystemConfig.setDisplayTabs(tabsJson)
+        userSystemConfigRepository.save(userSystemConfig)
+        return userSystemConfig
+    }    
     /**
      *
      * @param appUser

@@ -1,5 +1,6 @@
 package com.easylinker.v3.modules.sysconfig.controller
 
+import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.web.R
 import com.easylinker.v3.common.controller.AbstractController
 import com.easylinker.v3.modules.sysconfig.service.UserSystemConfigService
@@ -33,11 +34,13 @@ class SystemConfigController extends AbstractController {
      * @param tabs
      * @return
      */
-    @PutMapping("/update")
-    R update(@RequestBody List<Map<String, Object>> tabs) {
-        userSystemConfigService.updateConfig(getCurrentUser(), tabs)
+    @PostMapping("/update")
+    R update(@RequestBody JSONObject configBody) {
+        JSONObject tabsJson = configBody.getJSONObject("tabs")
+        userSystemConfigService.updateConfig(getCurrentUser(), tabsJson)
         return R.ok("配置更新成功")
     }
+
 
     /**
      * 获取配置
