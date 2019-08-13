@@ -75,7 +75,48 @@ class AdminController extends AbstractController {
         return R.okWithData(pageMap)
     }
 
-   /**
+    /**
+    * 管理员搜索所有用户列表
+    * @param String keyWords
+    * @param int page
+    * @param int size
+    * @return
+    */
+    @GetMapping("/search")
+    @Transactional
+    R search(@RequestParam String keyWords,
+        @RequestParam int page,
+        @RequestParam int size) {
+        JSONArray dataArray = new JSONArray()
+        Page<AppUser> userPage= userService.search(keyWords, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createTime")))
+        Map<String, Object> pageMap = new HashMap<>()
+        pageMap.put("page", userPage.getNumber())
+        pageMap.put("totalElements", userPage.getTotalElements())
+        pageMap.put("totalPages", userPage.getTotalPages())
+        pageMap.put("size", userPage.getSize())
+        pageMap.put("isLast", userPage.isLast())
+        pageMap.put("isFirst", userPage.isFirst())
+
+        for (AppUser appUser : userPage.getContent()) {
+            Map<String, Object> userInfo = new HashMap<>()
+            JSONArray roleArray = new JSONArray()
+            List<Role> roles = appUser.roles
+            for (Role role : roles) {
+                roleArray.add(role.name)
+            }
+            userInfo.put("roles", roleArray)
+            userInfo.put("principle", appUser.principle)
+            userInfo.put("email", appUser.email)
+            userInfo.put("name", appUser.name)
+            /*传出 securityId ,方便从列表中选择查看详情*/
+            userInfo.put("securityId", appUser.securityId)
+            dataArray.add(userInfo);
+        }
+        pageMap.put("data", dataArray)
+        return R.okWithData(pageMap)
+    }
+
+    /**
     * 查看用户详情
     * @param String securityId
     * @return
