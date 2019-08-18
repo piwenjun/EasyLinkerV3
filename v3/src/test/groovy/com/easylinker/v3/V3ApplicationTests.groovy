@@ -5,6 +5,10 @@ import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.common.model.DeviceType
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
+import com.easylinker.v3.modules.scene.model.Scene
+import com.easylinker.v3.modules.scene.service.SceneService
+import com.easylinker.v3.modules.schedule.model.JobEntity
+import com.easylinker.v3.modules.schedule.service.SchedulePostJobService
 import com.easylinker.v3.modules.user.model.AppUser
 import com.easylinker.v3.modules.user.model.Role
 import com.easylinker.v3.modules.user.service.RoleService
@@ -36,7 +40,27 @@ class V3ApplicationTests {
         //addAdmin()
     }
 
+    /**
+     * 测试添加一个任务
+     */
+    @Autowired
+    SchedulePostJobService schedulePostJobService
 
+    @Test
+    void addJob() {
+        JobEntity jobEntity = new JobEntity(
+                userSecurityId: 1,
+                bizSecurityId: "1000000",
+                jobName: "HelloWorld",
+                jobGroup: "Group",
+                bizJobData: [K1: "V1", K2: "V2"],
+                cron: "0/3 * * * * ? ",
+                status: "NORMAL",
+                jobDescription: "测试Job"
+        )
+
+        schedulePostJobService.save(jobEntity)
+    }
     /**
      * 添加一个管理员
      */
@@ -55,6 +79,9 @@ class V3ApplicationTests {
      * 添加一个普通用户
      */
 
+    @Autowired
+    SceneService sceneService
+
     void addUser() {
         AppUser appUser = new AppUser(principle: "easylinker",
                 password: DigestUtils.sha256Hex("public"),
@@ -64,6 +91,8 @@ class V3ApplicationTests {
         userService.save(appUser)
         roleService.save(new Role(name: "BASE_ROLE", info: "基本权限", appUser: appUser))
 
+        Scene scene = new Scene(name: "测试场景", info: "自动生成的测试场景", appUser: appUser)
+        sceneService.save(scene)
         MQTTDevice mqttDevice = new MQTTDevice(name: "测试设备",
                 info: "临时测试设备",
                 clientId: UUID.randomUUID().toString().replace("-", ""),
@@ -71,8 +100,10 @@ class V3ApplicationTests {
                 username: UUID.randomUUID().toString().replace("-", ""),
                 deviceType: DeviceType.VALUE,
                 appUser: appUser,
-                scene: null,
+                scene: scene,
                 deviceProtocol: DeviceProtocol.MQTT)
         deviceService.save(mqttDevice)
     }
+
+
 }
