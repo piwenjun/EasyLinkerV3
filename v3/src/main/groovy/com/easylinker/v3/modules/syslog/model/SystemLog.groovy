@@ -1,9 +1,16 @@
 package com.easylinker.v3.modules.syslog.model
 
+import com.alibaba.fastjson.annotation.JSONField
+
 class SystemLog {
     private String reason
     private String info
     private String userSecurityId
+
+    /**
+     * 创建时间
+     */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createTime = new Date()
 
     String getReason() {
