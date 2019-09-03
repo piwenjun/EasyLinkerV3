@@ -1,5 +1,6 @@
 package com.easylinker.v3.modules.sysconfig.service
 
+import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.service.AbstractService
 import com.easylinker.v3.modules.sysconfig.dao.UserSystemConfigRepository
@@ -46,35 +47,35 @@ class UserSystemConfigService extends AbstractService<UserSystemConfig> {
         userSystemConfigRepository.deleteById(id)
     }
 
-    /**
-     * 更新配置
-     * @return
-     */
-    UserSystemConfig updateConfig(AppUser appUser, List<Map<String, Object>> tabs) {
-        UserSystemConfig userSystemConfig =  userSystemConfigRepository.findTopByUserSecurityId(appUser.getSecurityId())
-        if (userSystemConfig) {
-            userSystemConfig = userSystemConfigRepository.findTopByUserSecurityId(appUser.getSecurityId())
-            userSystemConfig.setDisplayTabs(JSONObject.toJSONString(tabs))
-            userSystemConfigRepository.save(userSystemConfig)
-            return userSystemConfig
-
-        } else {
-            userSystemConfig = new UserSystemConfig()
-            userSystemConfig.setUserSecurityId(appUser.securityId)
-            userSystemConfig.setDisplayTabs(JSONObject.toJSONString(tabs))
-            userSystemConfigRepository.save(userSystemConfig)
-            return userSystemConfig
-
-        }
-
-    }
+//    /**
+//     * 更新配置
+//     * @return
+//     */
+//    UserSystemConfig updateConfig(AppUser appUser, List<Map<String, Object>> tabs) {
+//        UserSystemConfig userSystemConfig =  userSystemConfigRepository.findTopByUserSecurityId(appUser.getSecurityId())
+//        if (userSystemConfig) {
+//            userSystemConfig = userSystemConfigRepository.findTopByUserSecurityId(appUser.getSecurityId())
+//            userSystemConfig.setDisplayTabs(JSONObject.toJSONString(tabs))
+//            userSystemConfigRepository.save(userSystemConfig)
+//            return userSystemConfig
+//
+//        } else {
+//            userSystemConfig = new UserSystemConfig()
+//            userSystemConfig.setUserSecurityId(appUser.securityId)
+//            userSystemConfig.setDisplayTabs(JSONObject.toJSONString(tabs))
+//            userSystemConfigRepository.save(userSystemConfig)
+//            return userSystemConfig
+//
+//        }
+//
+//    }
     /**
      * 更新配置
      * @param AppUser appUser
      * @param JSONObject tabsJson
      * @return UserSystemConfig
      */
-    UserSystemConfig updateConfig(AppUser appUser, JSONObject tabsJson) {
+    UserSystemConfig updateConfig(AppUser appUser, JSONArray tabsJson) {
         UserSystemConfig userSystemConfig =  userSystemConfigRepository.findTopByUserSecurityId(appUser.getSecurityId())
         if (!userSystemConfig) {
             userSystemConfig = new UserSystemConfig()

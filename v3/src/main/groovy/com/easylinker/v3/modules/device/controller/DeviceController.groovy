@@ -50,7 +50,7 @@ class DeviceController extends AbstractController {
      */
 
     @PostMapping("/addHTTP")
-    R addHTTP(@RequestBody @Valid HTTPDeviceForm httpDeviceForm) {
+    R addHTTP(@RequestBody   HTTPDeviceForm httpDeviceForm) {
         if (httpDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(httpDeviceForm.sceneSecurityId)
             if (scene) {
@@ -100,7 +100,7 @@ class DeviceController extends AbstractController {
      */
 
     @PostMapping("/addCoAP")
-    R addCoAP(@RequestBody @Valid CoAPDeviceForm coAPDeviceForm) {
+    R addCoAP(@RequestBody   CoAPDeviceForm coAPDeviceForm) {
         if (coAPDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(coAPDeviceForm.sceneSecurityId)
             if (scene) {
@@ -153,7 +153,7 @@ class DeviceController extends AbstractController {
 
     @PostMapping("/addMQTT")
     @Transactional(rollbackFor = Exception.class)
-    R addMQTT(@RequestBody @Valid MQTTDeviceForm mqttDeviceForm) {
+    R addMQTT(@RequestBody   MQTTDeviceForm mqttDeviceForm) {
 
         if (mqttDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(mqttDeviceForm.sceneSecurityId)
@@ -207,7 +207,7 @@ class DeviceController extends AbstractController {
  */
     @PostMapping("/addTerminal")
     @Transactional(rollbackFor = Exception.class)
-    R addTerminal(@RequestBody @Valid TerminalHostDeviceForm terminalHostDeviceForm) {
+    R addTerminal(@RequestBody   TerminalHostDeviceForm terminalHostDeviceForm) {
         if (terminalHostDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(terminalHostDeviceForm.sceneSecurityId)
             if (scene) {
@@ -259,7 +259,7 @@ class DeviceController extends AbstractController {
  */
     @PostMapping("/addTCP")
     @Transactional(rollbackFor = Exception.class)
-    R addTCP(@RequestBody @Valid TCPDeviceForm tcpDeviceForm) {
+    R addTCP(@RequestBody   TCPDeviceForm tcpDeviceForm) {
 
         if (tcpDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(tcpDeviceForm.sceneSecurityId)
@@ -309,7 +309,7 @@ class DeviceController extends AbstractController {
  */
     @PostMapping("/addUDP")
     @Transactional(rollbackFor = Exception.class)
-    R addUDP(@RequestBody @Valid UDPDeviceForm udpDeviceForm) {
+    R addUDP(@RequestBody   UDPDeviceForm udpDeviceForm) {
 
         if (udpDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(udpDeviceForm.sceneSecurityId)
@@ -409,7 +409,7 @@ class DeviceController extends AbstractController {
  * @return
  */
     @GetMapping("/detail")
-    R detail(@RequestParam @Valid String securityId, @RequestParam DeviceProtocol deviceProtocol) {
+    R detail(@RequestParam   String securityId, @RequestParam DeviceProtocol deviceProtocol) {
         AbstractDevice abstractDevice = deviceService.detail(securityId, deviceProtocol)
         if (abstractDevice) {
             return R.okWithData(abstractDevice)
@@ -551,7 +551,7 @@ class DeviceController extends AbstractController {
  * @return
  */
     @PostMapping("/update")
-    R update(@RequestBody @Valid UpdateForm updateForm) {
+    R update(@RequestBody   UpdateForm updateForm) {
 
         AbstractDevice abstractDevice = deviceService.detail(updateForm.securityId, updateForm.deviceProtocol)
         Scene scene = sceneService.findBySecurityId(updateForm.sceneSecurityId)

@@ -83,7 +83,7 @@ class SceneController extends AbstractController {
      */
 
     @PostMapping("/add")
-    R add(@Valid @RequestBody AddSceneForm addSceneForm) {
+    R add(  @RequestBody AddSceneForm addSceneForm) {
 
         switch (addSceneForm.sceneType) {
             case SceneType.CUSTOM:

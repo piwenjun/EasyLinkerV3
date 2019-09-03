@@ -38,7 +38,7 @@ class DeviceDataController extends AbstractController {
     @GetMapping("/list")
     R list(@RequestParam int page,
            @RequestParam int size,
-           @RequestParam @Valid String deviceSecurityId,
+           @RequestParam   String deviceSecurityId,
            @RequestParam DeviceType deviceType) {
 
         return R.okWithData(deviceDataService.list(deviceSecurityId,

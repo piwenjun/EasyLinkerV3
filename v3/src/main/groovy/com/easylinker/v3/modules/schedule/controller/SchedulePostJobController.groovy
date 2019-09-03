@@ -35,7 +35,7 @@ class SchedulePostJobController extends AbstractController {
      * @return
      */
     @PostMapping("/addJob")
-    R addJob(@RequestBody @Valid AddJobForm addJobForm) {
+    R addJob(@RequestBody   AddJobForm addJobForm) {
         JobEntity jobEntity = new JobEntity(
                 userSecurityId: getCurrentUser().securityId,
                 bizSecurityId: getCurrentUser().securityId,
