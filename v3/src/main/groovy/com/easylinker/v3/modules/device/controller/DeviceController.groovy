@@ -63,9 +63,9 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         deviceProtocol: DeviceProtocol.HTTP)
 
-                if (httpDeviceForm.dataFields.size() > 0) {
-                    httpDevice.setDataFields(httpDeviceForm.dataFields)
-                }
+//                if (httpDeviceForm.dataFields.size() > 0) {
+//                    httpDevice.setDataFields(httpDeviceForm.dataFields)
+//                }
                 deviceService.create(httpDevice)
                 return R.ok("添加成功")
 
@@ -577,7 +577,7 @@ class DeviceController extends AbstractController {
                     return R.ok("更新成功")
 
                 case DeviceProtocol.HTTP:
-                    device = abstractDevice as MQTTDevice
+                    device = abstractDevice as HTTPDevice
                     device.setName(updateForm.getName())
                     device.setInfo(updateForm.info)
                     if (scene)
