@@ -142,8 +142,8 @@ enum DeviceProtocol {
     CoAP("CoAP协议设备"),
     MQTT("MQTT协议设备"),
     UDP("UDP协议设备"),
-    TCP("TCP协议设备"),
-    PLACEHOLDER("暂不选择协议")
+    TCP("TCP协议设备")
+   // PLACEHOLDER("暂不选择协议")
     String name
 
     DeviceProtocol(String name) {

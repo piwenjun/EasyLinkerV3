@@ -54,7 +54,7 @@ class UserController extends AbstractController {
      * @param updateForm
      * @return
      */
-    @PostMapping("/update")
+    @PutMapping("/update")
     R update(@RequestBody   UpdateForm updateForm) {
         AppUser appUser = userService.findBySecurityId(getCurrentUser().securityId)
         if (appUser) {

@@ -1,5 +1,7 @@
 package com.easylinker.v3.common.model
 
+import org.springframework.format.annotation.DateTimeFormat
+
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -20,6 +22,8 @@ abstract class AbstractModel {
     /**
      * 项目创建时间
      */
+    @DateTimeFormat(pattern="yyyy-MM-dd:HH:MM:ss")
+
     private Date createTime = new Date()
 
     /**
@@ -30,6 +34,8 @@ abstract class AbstractModel {
     /**
      * 项目更新时间
      */
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+
     private Date updateTime = new Date()
 
     Long getId() {

@@ -35,8 +35,8 @@ class SystemConfigController extends AbstractController {
      * @param tabs
      * @return
      */
-    @PostMapping("/updateTabsConfig")
-    R update(@RequestBody JSONObject configBody) {
+    @PostMapping("/tabsConfig")
+    R updateTabsConfig(@RequestBody JSONObject configBody) {
         JSONArray tabsJson = configBody.getJSONArray("tabs")
         userSystemConfigService.updateConfig(getCurrentUser(), tabsJson)
         return R.ok("配置更新成功")
@@ -47,8 +47,8 @@ class SystemConfigController extends AbstractController {
      * 获取配置
      * @return
      */
-    @GetMapping("/getTabsConfig")
-    R getConfig() {
+    @GetMapping("/tabsConfig")
+    R getTabsConfig() {
         return R.okWithData(userSystemConfigService.getByAppUser(getCurrentUser()))
     }
 }
