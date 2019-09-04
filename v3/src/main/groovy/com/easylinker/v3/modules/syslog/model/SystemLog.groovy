@@ -45,3 +45,4 @@ class SystemLog {
         this.userSecurityId = userSecurityId
     }
 }
+
