@@ -131,7 +131,10 @@ class AdminController extends AbstractController {
         JSONArray roleArray = new JSONArray()
         List<Role> roles = appUser.roles
         for (Role role : roles) {
-            roleArray.add(role.name)
+            Map<String,Object>map=new HashMap<>()
+            map.put("name",role.getName())
+            map.put("info",role.getInfo())
+            roleArray.add(map)
         }
        
         userInfo.put("roles", roleArray)

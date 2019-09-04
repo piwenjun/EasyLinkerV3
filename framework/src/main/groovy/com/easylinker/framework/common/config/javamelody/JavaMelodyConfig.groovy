@@ -53,7 +53,7 @@ class JavaMelodyConfig implements ServletContextInitializer{
         FilterRegistrationBean javaMelody = new FilterRegistrationBean()
         javaMelody.setFilter(new MonitoringFilter())
         javaMelody.setAsyncSupported(true)
-        javaMelody.setName("EasyLinkerV3")
+        javaMelody.setName("EasyLinkerV3性能监控")
         javaMelody.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ASYNC)
         javaMelody.addInitParameter(Parameter.LOG.getCode(), "true")
         return javaMelody
