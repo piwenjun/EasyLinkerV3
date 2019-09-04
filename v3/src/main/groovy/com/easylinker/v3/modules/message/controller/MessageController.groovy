@@ -62,7 +62,7 @@ class MessageController extends AbstractController {
     @PutMapping("/markRead")
     R markRead(@RequestParam(required = true) String securityId) {
 
-        Message message = messageService.getByUserSecurityId(securityId)
+        Message message = messageService.getBySecurityId(securityId)
         if (message) {
             messageService.markRead(message)
             return R.ok()

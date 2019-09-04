@@ -14,7 +14,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 
 interface MessageRepository extends JpaRepository<Message, Long> {
-    Message findTopByUserSecurityId(String userSecurityId)
-
+    Message findTopBySecurityId(String securityId)
     Page<Message> findAllByUserSecurityIdAndMessageState(String userSecurityId, MessageState messageState, Pageable pageable)
 }

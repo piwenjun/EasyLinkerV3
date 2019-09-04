@@ -3,7 +3,6 @@ package com.easylinker.framework.common.config.javamelody
 import net.bull.javamelody.MonitoringFilter
 import net.bull.javamelody.Parameter
 import net.bull.javamelody.SessionListener
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.boot.web.servlet.ServletContextInitializer
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
@@ -15,8 +14,7 @@ import javax.servlet.DispatcherType
 import javax.servlet.ServletContext
 
 @Configuration
-class JavaMelodyConfig implements ServletContextInitializer{
-
+class JavaMelodyConfig implements ServletContextInitializer {
 
 
     /**
@@ -34,7 +32,7 @@ class JavaMelodyConfig implements ServletContextInitializer{
     }
 
     /**
-     *  配置javamelody监听器sessionListener
+     *  配置java melody监听器sessionListener
      */
     @Bean
     ServletListenerRegistrationBean<SessionListener> servletListenerRegistrationBean() {
@@ -44,16 +42,16 @@ class JavaMelodyConfig implements ServletContextInitializer{
     }
 
     @Override
-     void onStartup(ServletContext servletContext) {
+    void onStartup(ServletContext servletContext) {
         servletContext.addListener(new SessionListener())
     }
 
     @Bean
-     FilterRegistrationBean registrationBean() {
+    FilterRegistrationBean registrationBean() {
         FilterRegistrationBean javaMelody = new FilterRegistrationBean()
         javaMelody.setFilter(new MonitoringFilter())
         javaMelody.setAsyncSupported(true)
-        javaMelody.setName("EasyLinkerV3性能监控")
+        javaMelody.setName("EasyLinkerV3MelodyMonitor")
         javaMelody.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.ASYNC)
         javaMelody.addInitParameter(Parameter.LOG.getCode(), "true")
         return javaMelody

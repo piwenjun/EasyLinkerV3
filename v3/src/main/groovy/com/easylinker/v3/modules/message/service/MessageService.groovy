@@ -68,8 +68,8 @@ class MessageService extends AbstractService<Message> {
      * @param securityId
      * @return
      */
-    Message getByUserSecurityId(String securityId){
-        return messageRepository.findTopByUserSecurityId(securityId)
+    Message getBySecurityId(String securityId){
+        return messageRepository.findTopBySecurityId(securityId)
     }
 
 }
