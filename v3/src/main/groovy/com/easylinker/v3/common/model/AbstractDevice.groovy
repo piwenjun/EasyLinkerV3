@@ -33,6 +33,20 @@ class AbstractDevice extends AbstractModel {
     private List<String> dataFields = ["value"]
 
     /**
+     * 设备的运行状态参数
+     */
+    @Type(type = "json")
+    @Column(columnDefinition = "json")
+    private List<String> deviceParam = ["online"]
+
+    List<String> getDeviceParam() {
+        return deviceParam
+    }
+
+    void setDeviceParam(List<String> deviceParam) {
+        this.deviceParam = deviceParam
+    }
+    /**
      * 设备协议：为了生成SDK和终端交互
      */
     @Enumerated(EnumType.STRING)

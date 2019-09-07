@@ -11,12 +11,27 @@ import com.easylinker.v3.common.model.DeviceType
  */
 class BaseDeviceForm{
     private String token
+    /**
+     * 设备的数据字段
+     */
     private List<String>dataFields
+    /**
+     * 设备的属性字段
+     */
+    private List<String> deviceParam
+
     private String info
     private String name
     private String sceneSecurityId
     private DeviceType deviceType
 
+    List<String> getDeviceParam() {
+        return deviceParam
+    }
+
+    void setDeviceParam(List<String> deviceParam) {
+        this.deviceParam = deviceParam
+    }
 
     String getSceneSecurityId() {
         return sceneSecurityId

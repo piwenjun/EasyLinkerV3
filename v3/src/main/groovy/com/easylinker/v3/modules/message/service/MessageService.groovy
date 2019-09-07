@@ -22,7 +22,7 @@ class MessageService extends AbstractService<Message> {
 
     @Override
     void save(Message message) {
-
+        messageRepository.save(message)
     }
 
     @Override

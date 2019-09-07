@@ -298,6 +298,7 @@ class DeviceService {
                 .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withIgnoreNullValues()
                 .withIgnorePaths("id",
+                        "deviceParam",
                         "online",
                         "token",
                         "isSuperUser",

@@ -1,10 +1,16 @@
 package com.easylinker.v3
 
 import cn.hutool.crypto.digest.DigestUtil
+import com.alibaba.fastjson.JSONObject
+import com.easylinker.framework.common.model.DeviceData
 import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.common.model.DeviceType
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
+import com.easylinker.v3.modules.devicedata.service.DeviceDataService
+import com.easylinker.v3.modules.message.model.Message
+import com.easylinker.v3.modules.message.model.MessageState
+import com.easylinker.v3.modules.message.service.MessageService
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.scene.service.SceneService
 import com.easylinker.v3.modules.schedule.model.JobEntity
@@ -103,6 +109,66 @@ class V3ApplicationTests {
                 scene: scene,
                 deviceProtocol: DeviceProtocol.MQTT)
         deviceService.save(mqttDevice)
+    }
+
+
+    @Autowired
+    MessageService messageService
+
+    @Test
+    void addMessage() {
+        for (int i = 0; i < 36; i++) {
+            Message message = new Message(
+                    userSecurityId: "235735abc88d442b8a8b4aed126d2b4f",
+                    msgType: 1,
+                    producer: "Local",
+                    msgContent: "1号设备掉线，请立即检查",
+                    messageState: MessageState.NO_READ)
+            messageService.save(message)
+        }
+        //1f66793e82bd423598e8dbbadca4320b
+        for (int i = 0; i < 36; i++) {
+            Message message = new Message(
+                    userSecurityId: "1f66793e82bd423598e8dbbadca4320b",
+                    msgType: 1,
+                    producer: "Local",
+                    msgContent: "1号设备掉线，请立即检查",
+                    messageState: MessageState.NO_READ)
+            messageService.save(message)
+        }
+    }
+    /**
+     * 设备数据测试
+     */
+    @Autowired
+    DeviceDataService deviceDataService
+
+    /**
+     * [
+     *{*       "dateTime":"Jan",
+     *         "field":"temp",
+     *         "value":7
+     *},
+     *{*       "dateTime":"2019",
+     *         "field":"hum",
+     *         "value":3.9
+     *}* ]
+     */
+    @Test
+    void addData() {
+        for (int i = 0; i < 2; i++) {
+            DeviceData data = new DeviceData()
+            data.deviceSecurityId = "e3aad2c17b444a1fb835dc966976b99b"
+            JSONObject dataJson = new JSONObject()
+            dataJson.put("dateTime", 12)
+            dataJson.put("field", "Hum")
+            dataJson.put("value", 23)
+            data.setDeviceType(com.easylinker.framework.common.model.DeviceType.BOOLEAN)
+            data.setData(dataJson)
+            //deviceDataService.save(data)
+            println(JSONObject.toJSONString(data))
+        }
+
     }
 
 

@@ -1,7 +1,7 @@
 package com.easylinker.coapservice.coapdata.controller
 
 import com.alibaba.fastjson.JSONObject
-import com.easylinker.coapservice.model.DeviceData
+import com.easylinker.framework.common.model.DeviceData
 import com.mbed.coap.client.CoapClient
 import com.mbed.coap.client.CoapClientBuilder
 import com.mbed.coap.packet.CoapPacket
@@ -14,8 +14,7 @@ class CoAPClient {
 
     static void main(String[] args) throws InterruptedException {
         /**
-         *{
-         *     "data":"123",
+         *{*     "data":"123",
          *     "info":"温度",
          *     "isDelete":false,
          *     "unit":"'C",

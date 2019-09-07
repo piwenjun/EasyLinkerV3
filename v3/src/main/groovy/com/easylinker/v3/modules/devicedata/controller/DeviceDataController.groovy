@@ -1,9 +1,11 @@
 package com.easylinker.v3.modules.devicedata.controller
 
+import com.easylinker.framework.common.exception.XException
 import com.easylinker.framework.common.web.R
+import com.easylinker.framework.utils.MongoDBDateUtils
 import com.easylinker.v3.common.controller.AbstractController
-import com.easylinker.v3.modules.devicedata.service.DeviceDataService
 import com.easylinker.v3.common.model.DeviceType
+import com.easylinker.v3.modules.devicedata.service.DeviceDataService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 import javax.servlet.http.HttpServletRequest
-import javax.validation.Valid
+import java.text.SimpleDateFormat
 
 /**
  * 设备数据入口:
@@ -38,10 +40,39 @@ class DeviceDataController extends AbstractController {
     @GetMapping("/list")
     R list(@RequestParam int page,
            @RequestParam int size,
-           @RequestParam   String deviceSecurityId,
+           @RequestParam(required = false) String startDate,
+           @RequestParam(required = false) String endDate,
+           @RequestParam String deviceSecurityId,
            @RequestParam DeviceType deviceType) {
 
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        format.setCalendar(new GregorianCalendar(new SimpleTimeZone(0, "GMT")))
+        if (startDate != null) {
+            try {
+                MongoDBDateUtils.formatD(startDate)
+            } catch (Exception e) {
+                e.printStackTrace()
+                logger.error(startDate + " 时间格式错误，正确格式：yyyy-MM-dd HH:mm:ss")
+                throw new XException("时间格式错误，正确格式：yyyy-MM-dd HH:mm:ss")
+            }
+        }
+        if (endDate != null) {
+            try {
+                MongoDBDateUtils.formatD(endDate)
+            } catch (Exception e) {
+                e.printStackTrace()
+
+                logger.error(endDate + " 时间格式错误，正确格式：yyyy-MM-dd HH:mm:ss")
+
+                throw new XException("时间格式错误，正确格式：yyyy-MM-dd HH:mm:ss")
+
+            }
+        }
+        //yyyy-MM-dd HH:mm:ss.000'Z'
         return R.okWithData(deviceDataService.list(deviceSecurityId,
-                deviceType, PageRequest.of(page, size)))
+                startDate,
+                endDate,
+                deviceType,
+                PageRequest.of(page, size)))
     }
 }
