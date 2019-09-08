@@ -2,6 +2,7 @@ package com.easylinker.v3.modules.devicedata.service
 
 import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.model.DeviceData
+import com.easylinker.framework.utils.MongoDBDateUtils
 import com.easylinker.v3.common.model.DeviceType
 import org.apache.commons.lang.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,22 +35,21 @@ class DeviceDataService {
         if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             query.addCriteria(Criteria.where("deviceSecurityId").is(deviceSecurityId)
                     .and("deviceType").is(deviceType)
-                    .andOperator(Criteria.where("createTime").lt((endDate)
-                    ), Criteria.where("createTime").gte((startDate))))
+                    .and("createTime").lt(MongoDBDateUtils.formatD(endDate)).gte((MongoDBDateUtils.formatD(startDate))))
         }
         //只传了开始时间
 
         if (StringUtils.isNotEmpty(startDate) && !StringUtils.isNotEmpty(endDate)) {
             query.addCriteria(Criteria.where("deviceSecurityId").is(deviceSecurityId)
                     .and("deviceType").is(deviceType)
-                    .andOperator(Criteria.where("createTime").gte((startDate))))
+                    .and("createTime").gte((MongoDBDateUtils.formatD(startDate))))
         }
         //只传了结束时间
 
         if (!StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
             query.addCriteria(Criteria.where("deviceSecurityId").is(deviceSecurityId)
                     .and("deviceType").is(deviceType)
-                    .andOperator(Criteria.where("createTime").lt((endDate))))
+                    .and("createTime").lt((MongoDBDateUtils.formatD(endDate))))
         }
         //开始结束时间都没传
         if (!StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
@@ -73,13 +73,15 @@ class DeviceDataService {
         List<JSONObject> resultData = new ArrayList<>()
         for (DeviceData data : deviceDataList) {
             JSONObject dataJson = data.getData()
-            for (String k : dataJson.keySet()) {
-                JSONObject resultJson = new JSONObject()
-                resultJson.put("dateTime", data.getCreateTime())
-                resultJson.put("field", k)
-                resultJson.put("value", dataJson.get(k))
-                resultData.add(resultJson)
-            }
+            resultData.add(dataJson)
+
+//            for (String k : dataJson.keySet()) {
+//                JSONObject resultJson = new JSONObject()
+//                resultJson.put("createTime", data.getCreateTime())
+//                resultJson.put("f", k)
+//                resultJson.put("v", dataJson.get(k))
+//                resultData.add(resultJson)
+//            }
         }
         long total = mongoTemplate.count(query, DeviceData.class)
         return new PageImpl(resultData, pageable, total)

@@ -11,6 +11,8 @@ import com.easylinker.v3.modules.devicedata.service.DeviceDataService
 import com.easylinker.v3.modules.message.model.Message
 import com.easylinker.v3.modules.message.model.MessageState
 import com.easylinker.v3.modules.message.service.MessageService
+import com.easylinker.v3.modules.product.model.Product
+import com.easylinker.v3.modules.product.service.ProductService
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.scene.service.SceneService
 import com.easylinker.v3.modules.schedule.model.JobEntity
@@ -25,6 +27,8 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit4.SpringRunner
+
+import java.text.DecimalFormat
 
 @RunWith(SpringRunner)
 @SpringBootTest
@@ -156,20 +160,84 @@ class V3ApplicationTests {
      */
     @Test
     void addData() {
-        for (int i = 0; i < 2; i++) {
-            DeviceData data = new DeviceData()
-            data.deviceSecurityId = "e3aad2c17b444a1fb835dc966976b99b"
-            JSONObject dataJson = new JSONObject()
-            dataJson.put("dateTime", 12)
-            dataJson.put("field", "Hum")
-            dataJson.put("value", 23)
-            data.setDeviceType(com.easylinker.framework.common.model.DeviceType.BOOLEAN)
-            data.setData(dataJson)
-            //deviceDataService.save(data)
-            println(JSONObject.toJSONString(data))
+        for (int i = 0; i < 236; i++) {
+            DeviceData data0 = new DeviceData()
+            Thread.sleep(2000)
+            DeviceData data1 = new DeviceData()
+            Thread.sleep(2000)
+
+            DeviceData data2 = new DeviceData()
+            Thread.sleep(2000)
+
+            DeviceData data3 = new DeviceData()
+            Thread.sleep(2000)
+
+            data0.deviceSecurityId = "e3aad2c17b444a1fb835dc966976b99b"
+            data1.deviceSecurityId = "e3aad2c17b444a1fb835dc966976b99b"
+            data2.deviceSecurityId = "e3aad2c17b444a1fb835dc966976b99b"
+            data3.deviceSecurityId = "e3aad2c17b444a1fb835dc966976b99b"
+
+            //
+            JSONObject dataJson0 = new JSONObject()
+            dataJson0.put("createTime", new Date())
+            dataJson0.put("field", "hum")
+            dataJson0.put("value", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
+            //
+            JSONObject dataJson1 = new JSONObject()
+            dataJson1.put("createTime", new Date())
+            dataJson1.put("field", "tmp")
+            dataJson1.put("value", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
+            //
+            JSONObject dataJson2 = new JSONObject()
+            dataJson2.put("createTime", new Date())
+            dataJson2.put("field", "co2")
+            dataJson2.put("value", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
+            //
+            JSONObject dataJson3 = new JSONObject()
+            dataJson3.put("createTime", new Date())
+            dataJson3.put("field", "lex")
+            dataJson3.put("value", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
+            //
+            data0.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
+            data1.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
+            data2.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
+            data3.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
+            //
+            data0.setData(dataJson0)
+
+            data1.setData(dataJson1)
+
+            data2.setData(dataJson2)
+
+            data3.setData(dataJson3)
+
+            //
+            deviceDataService.save(data0)
+            deviceDataService.save(data1)
+            deviceDataService.save(data2)
+            deviceDataService.save(data3)
+
         }
 
     }
 
+
+    @Autowired
+    ProductService productService
+
+    @Test
+    void addProduct() {
+        for (int i = 0; i < 21; i++) {
+            Product product = new Product()
+            product.setSceneSecurityId("caccefd1d88544d7ad056ecc52734f7a")
+            product.setAppUserSecurityId("1f66793e82bd423598e8dbbadca4320b")
+            product.setName("测试产品" + i)
+            product.setInfo("测试产品" + i)
+            product.setFactory("富土康")
+            productService.save(product)
+
+        }
+
+    }
 
 }

@@ -37,6 +37,11 @@ class MongoDBDateUtils {
         return formatD(dateStr, DATE_TIME_PATTERN)
     }
 
+    static String dateToString(Date date) {
+
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date)
+    }
+
     static Date formatD(String dateStr, String format) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format)
         try {

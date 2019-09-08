@@ -67,6 +67,19 @@ class AbstractDevice extends AbstractModel {
     DeviceStatus deviceStatus = DeviceStatus.OFFLINE
     private String sceneSecurityId
 
+    /**
+     * 产品的ID
+     */
+    private String productSecurityId
+
+    String getProductSecurityId() {
+        return productSecurityId
+    }
+
+    void setProductSecurityId(String productSecurityId) {
+        this.productSecurityId = productSecurityId
+    }
+
     String getSceneSecurityId() {
         return sceneSecurityId
     }

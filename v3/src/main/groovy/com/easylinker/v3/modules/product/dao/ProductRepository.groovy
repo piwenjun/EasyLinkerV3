@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface ProductRepository extends JpaRepository<Product, Long> {
     Product findTopBySceneSecurityId(String sSid)
+
+    Product findBySecurityId(String id)
 }

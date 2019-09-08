@@ -35,6 +35,7 @@ class GlobalSecurityFilter implements HandlerInterceptor {
         allowList.add("/entry/signUp")
         allowList.add("/entry/logOut")
         allowList.add("/captcha/jpg")
+        allowList.add("/sysParam/listCode")
 
 
     }

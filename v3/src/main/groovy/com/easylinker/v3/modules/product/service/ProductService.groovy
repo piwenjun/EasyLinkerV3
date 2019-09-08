@@ -31,6 +31,10 @@ class ProductService extends AbstractService<Product> {
         return productRepository.findById(id).get()
     }
 
+    Product getBySecurityId(String securityId) {
+        return productRepository.findBySecurityId(securityId)
+    }
+
     @Override
     void delete(Product product) {
 
@@ -45,7 +49,7 @@ class ProductService extends AbstractService<Product> {
      * 查找当前Scene下的产品
      * @return
      */
-    Product getByScene(Scene scene) {
+    Product getDetail(Scene scene) {
         return productRepository.findTopBySceneSecurityId(scene.securityId)
     }
 
@@ -65,8 +69,9 @@ class ProductService extends AbstractService<Product> {
                 .withIgnoreCase(true)
                 .withIgnoreNullValues()
 
-        productRepository.findAll(Example.of(product, exampleMatcher), pageable)
+        return productRepository.findAll(Example.of(product, exampleMatcher), pageable)
 
     }
+
 
 }

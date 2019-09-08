@@ -121,4 +121,8 @@ class DeviceData {
         this.deviceSecurityId = deviceSecurityId
     }
 
+    public static void main(String[] args) {
+        println(System.currentTimeMillis())
+        println(new Date().toString())
+    }
 }

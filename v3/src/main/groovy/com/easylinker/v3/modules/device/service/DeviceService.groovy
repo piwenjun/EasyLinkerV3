@@ -8,7 +8,6 @@ import com.easylinker.v3.common.model.DeviceType
 import com.easylinker.v3.modules.device.dao.*
 import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.scene.dao.SceneRepository
-import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.user.model.AppUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Example
@@ -367,32 +366,6 @@ class DeviceService {
 
         }
     }
-/**
- * 根据场景查找设备
- * @param appUser
- * @return
- */
-    Page<AbstractDevice> listDeviceByScene(Scene scene, DeviceProtocol deviceProtocol, Pageable pageable) {
-        switch (deviceProtocol) {
-            case DeviceProtocol.MQTT:
-                return mqttRepository.findAllBySceneAndDeviceProtocol(scene, deviceProtocol, pageable)
-
-            case DeviceProtocol.CoAP:
-                return coAPRepository.findAllBySceneAndDeviceProtocol(scene, deviceProtocol, pageable)
-
-            case DeviceProtocol.HTTP:
-                return httpRepository.findAllBySceneAndDeviceProtocol(scene, deviceProtocol, pageable)
-
-            case DeviceProtocol.TCP:
-                return tcpDeviceRepository.findAllBySceneAndDeviceProtocol(scene, deviceProtocol, pageable)
-
-            case DeviceProtocol.UDP:
-                return udpDeviceRepository.findAllBySceneAndDeviceProtocol(scene, deviceProtocol, pageable)
-
-            default: return null
-
-        }
-    }
 
 
     /**
@@ -420,6 +393,65 @@ class DeviceService {
                 return udpDeviceRepository.findAllBySceneSecurityIdAndDeviceProtocol(sceneSecurityId, deviceProtocol, pageable)
 
             default: return null
+
+        }
+    }
+
+
+    /**
+     * 查询挂在产品下的设备
+     * @param productSecurityId
+     * @param deviceProtocol
+     * @param pageable
+     * @return
+     */
+    @Transactional
+    Page<AbstractDevice> listDeviceByProduct(AbstractDevice abstractDevice, Pageable pageable) {
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher("info", ExampleMatcher.GenericPropertyMatchers.contains())
+                .withIgnoreNullValues()
+                .withIgnorePaths("id",
+                        "deviceParam",
+                        "online",
+                        "token",
+                        "isSuperUser",
+                        "password",
+                        "securityId",
+                        "createTime",
+                        "updateTime",
+                        "isDelete",
+                        "dataFields",
+                        "lastActive")
+
+        switch (abstractDevice.deviceProtocol) {
+            case DeviceProtocol.MQTT:
+                Example<MQTTDevice> example = Example.of(abstractDevice as MQTTDevice, matcher)
+
+                return mqttRepository.findAll(example, pageable)
+
+            case DeviceProtocol.TCP:
+                Example<TCPDevice> example = Example.of(abstractDevice as TCPDevice, matcher)
+
+                return tcpDeviceRepository.findAll(example, pageable)
+            case DeviceProtocol.UDP:
+                Example<UDPDevice> example = Example.of(abstractDevice as UDPDevice, matcher)
+
+                return udpDeviceRepository.findAll(example, pageable)
+
+            case DeviceProtocol.HTTP:
+                Example<HTTPDevice> example = Example.of(abstractDevice as HTTPDevice, matcher)
+
+                return httpRepository.findAll(example, pageable)
+
+            case DeviceProtocol.CoAP:
+
+                Example<CoAPDevice> example = Example.of(abstractDevice as CoAPDevice, matcher)
+
+                return coAPRepository.findAll(example, pageable)
+            default:
+                return null
+
 
         }
     }

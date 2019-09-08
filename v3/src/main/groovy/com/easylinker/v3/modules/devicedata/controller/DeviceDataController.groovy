@@ -49,7 +49,8 @@ class DeviceDataController extends AbstractController {
         format.setCalendar(new GregorianCalendar(new SimpleTimeZone(0, "GMT")))
         if (startDate != null) {
             try {
-                MongoDBDateUtils.formatD(startDate)
+                Date date = MongoDBDateUtils.formatD(startDate)
+                println(date.toString())
             } catch (Exception e) {
                 e.printStackTrace()
                 logger.error(startDate + " 时间格式错误，正确格式：yyyy-MM-dd HH:mm:ss")
@@ -58,7 +59,9 @@ class DeviceDataController extends AbstractController {
         }
         if (endDate != null) {
             try {
-                MongoDBDateUtils.formatD(endDate)
+                Date date = MongoDBDateUtils.formatD(endDate)
+                println(date.toString())
+
             } catch (Exception e) {
                 e.printStackTrace()
 
