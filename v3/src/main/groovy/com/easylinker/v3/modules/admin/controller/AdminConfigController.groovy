@@ -4,10 +4,10 @@ import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.web.R
 import com.easylinker.v3.common.controller.AbstractController
 import com.easylinker.v3.config.security.RequireAuthRoles
-import com.easylinker.v3.modules.user.model.AppUser
-import com.easylinker.v3.modules.user.service.UserService
 import com.easylinker.v3.modules.sysconfig.model.UserSystemConfig
 import com.easylinker.v3.modules.sysconfig.service.UserSystemConfigService
+import com.easylinker.v3.modules.user.model.AppUser
+import com.easylinker.v3.modules.user.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
