@@ -27,6 +27,7 @@ class TerminalHostDevice extends AbstractDevice{
     private Scene scene
     private String sceneSecurityId
 
+
     String getSceneSecurityId() {
         return sceneSecurityId
     }

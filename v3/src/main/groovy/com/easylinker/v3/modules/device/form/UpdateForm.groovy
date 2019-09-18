@@ -1,6 +1,7 @@
 package com.easylinker.v3.modules.device.form
 
-import com.easylinker.v3.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceProtocol
+
 
 class UpdateForm {
     String securityId

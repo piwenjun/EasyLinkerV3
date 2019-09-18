@@ -3,8 +3,7 @@ package com.easylinker.v3
 import cn.hutool.crypto.digest.DigestUtil
 import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.model.DeviceData
-import com.easylinker.v3.common.model.DeviceProtocol
-import com.easylinker.v3.common.model.DeviceType
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.devicedata.service.DeviceDataService
@@ -198,10 +197,10 @@ class V3ApplicationTests {
             dataJson3.put("field", "lex")
             dataJson3.put("value", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
             //
-            data0.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
-            data1.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
-            data2.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
-            data3.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
+            data0.setDeviceType(DeviceType.VALUE)
+            data1.setDeviceType(DeviceType.VALUE)
+            data2.setDeviceType(DeviceType.VALUE)
+            data3.setDeviceType(DeviceType.VALUE)
             //
             data0.setData(dataJson0)
 

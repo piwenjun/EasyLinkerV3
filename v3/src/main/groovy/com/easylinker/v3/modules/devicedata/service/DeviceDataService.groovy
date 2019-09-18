@@ -2,8 +2,8 @@ package com.easylinker.v3.modules.devicedata.service
 
 import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.model.DeviceData
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.utils.MongoDBDateUtils
-import com.easylinker.v3.common.model.DeviceType
 import org.apache.commons.lang.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page

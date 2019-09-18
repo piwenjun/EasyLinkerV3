@@ -24,11 +24,10 @@ enum DeviceType {
     VALUE("数值型设备"),
     TEXT("文本型设备"),
     BOOLEAN("布尔型设备"),
-    SWITCH("开关型设备")
-//    FILE("文件型设备"),
-//    STREAM("流媒体型设备"),
-//    TERMINAL_HOST("终端型设备"),
-    //PLACEHOLDER("暂不选择类型")
+    SWITCH("开关型设备"),
+    FILE("文件型设备"),
+    STREAM("流媒体型设备"),
+    TERMINAL_HOST("终端型设备")
     String name
 
     DeviceType(String name) {

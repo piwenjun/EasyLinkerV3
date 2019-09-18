@@ -1,14 +1,12 @@
 package com.easylinker.v3.modules.scene.controller
 
-import cn.hutool.crypto.digest.DigestUtil
+
+import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.web.R
 import com.easylinker.v3.common.controller.AbstractController
-import com.easylinker.v3.modules.device.model.HTTPDevice
-import com.easylinker.v3.modules.device.model.MQTTDevice
+import com.easylinker.v3.common.model.AbstractDevice
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.device.service.TopicAclService
-import com.easylinker.v3.common.model.AbstractDevice
-import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.modules.scene.form.AddSceneForm
 import com.easylinker.v3.modules.scene.form.UpdateSceneForm
 import com.easylinker.v3.modules.scene.model.PreInstallTemplate
@@ -23,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
-import javax.validation.Valid
 
 /**
  * 场景业务
@@ -83,7 +80,7 @@ class SceneController extends AbstractController {
      */
 
     @PostMapping("/add")
-    R add(  @RequestBody AddSceneForm addSceneForm) {
+    R add(@RequestBody AddSceneForm addSceneForm) {
 
         switch (addSceneForm.sceneType) {
             case SceneType.CUSTOM:
@@ -94,116 +91,9 @@ class SceneController extends AbstractController {
                         appUser: getCurrentUser())
                 sceneService.save(scene)
                 return R.ok("场景创建成功")
-            case SceneType.PRE_INSTALL_TEMPLATE:
-                return handPreInstallTemplate(addSceneForm)
             default: return R.error("场景类型不支持")
 
         }
-    }
-
-    /**
-     * 模板中的数据类型设备全部是HTTP协议
-     * @param addSceneForm
-     * @param preInstallTemplate
-     * @return
-     */
-
-    private R handPreInstallTemplate(AddSceneForm addSceneForm) {
-        switch (addSceneForm.preInstallTemplate) {
-            case PreInstallTemplate.HUMIDITY_TEMPERATURE_TEMPLATE:
-                Scene scene = new Scene(name: addSceneForm.getName(),
-                        sceneType: SceneType.PRE_INSTALL_TEMPLATE,
-                        info: addSceneForm.info,
-                        appUser: getCurrentUser())
-                sceneService.save(scene)
-                //默认创建10个设备
-                for (int i = 0; i < 10; i++) {
-                    HTTPDevice httpDevice = new HTTPDevice(name: "温湿度检测模块[${i}]",
-                            info: "温湿度检测模块[${i}]",
-                            deviceType: DeviceType.VALUE,
-                            appUser: getCurrentUser(),
-                            scene: scene,
-                            deviceProtocol: DeviceProtocol.HTTP)
-                    deviceService.create(httpDevice)
-                }
-
-                return R.ok("场景创建成功")
-            case PreInstallTemplate.GPS_TEMPLATE:
-                /**
-                 * GPS有2个坐标，默认是HTTP设备
-                 */
-                Scene scene = new Scene(name: addSceneForm.getName(),
-                        sceneType: SceneType.PRE_INSTALL_TEMPLATE,
-                        info: addSceneForm.info,
-                        appUser: getCurrentUser())
-                sceneService.save(scene)
-                //默认创建10个设备
-                for (int i = 0; i < 10; i++) {
-                    HTTPDevice httpDevice = new HTTPDevice(name: "GPS跟踪模块[${i}]",
-                            info: "GPS跟踪模块[${i}]",
-                            deviceType: DeviceType.VALUE,
-                            appUser: getCurrentUser(),
-                            scene: scene,
-                            deviceProtocol: DeviceProtocol.HTTP)
-                    deviceService.create(httpDevice)
-                }
-
-                return R.ok("场景创建成功")
-
-            case PreInstallTemplate.GENERAL_SWITCH_TEMPLATE:
-                /**
-                 * 通用开关是MQTT类型的设备
-                 */
-
-                Scene scene = new Scene(name: addSceneForm.getName(),
-                        sceneType: SceneType.PRE_INSTALL_TEMPLATE,
-                        info: addSceneForm.info,
-                        appUser: getCurrentUser())
-                sceneService.save(scene)
-                //默认创建10个设备
-                for (int i = 0; i < 10; i++) {
-                    MQTTDevice mqttDevice = new MQTTDevice(name: "通用开关模块模板[${i}]",
-                            info: "通用开关模块模板[${i}]",
-                            clientId: UUID.randomUUID().toString().replace("-", ""),
-                            password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
-                            username: UUID.randomUUID().toString().replace("-", ""),
-                            deviceType: DeviceType.VALUE,
-                            appUser: getCurrentUser(),
-                            scene: scene,
-                            deviceProtocol: DeviceProtocol.MQTT)
-                    deviceService.create(mqttDevice)
-
-                }
-                return R.ok("场景创建成功")
-
-            case PreInstallTemplate.SERIAL_DISPLAY_TEMPLATE:
-                /**
-                 * 串口屏是文本类型的设备
-                 */
-                Scene scene = new Scene(name: addSceneForm.getName(),
-                        sceneType: SceneType.PRE_INSTALL_TEMPLATE,
-                        info: addSceneForm.info,
-                        appUser: getCurrentUser())
-                sceneService.save(scene)
-                //默认创建10个设备
-                for (int i = 0; i < 10; i++) {
-                    MQTTDevice mqttDevice = new MQTTDevice(name: "通用串口显示屏[${i}]",
-                            info: "通用串口显示屏[${i}]",
-                            clientId: UUID.randomUUID().toString().replace("-", ""),
-                            password: DigestUtil.sha256Hex(UUID.randomUUID().toString()),
-                            username: UUID.randomUUID().toString().replace("-", ""),
-                            deviceType: DeviceType.TEXT,
-                            appUser: getCurrentUser(),
-                            scene: scene,
-                            deviceProtocol: DeviceProtocol.MQTT)
-                    deviceService.create(mqttDevice)
-                }
-                return R.ok("场景创建成功")
-
-            default:
-                return R.error("场景创建失败")
-        }
-
     }
 
     /**

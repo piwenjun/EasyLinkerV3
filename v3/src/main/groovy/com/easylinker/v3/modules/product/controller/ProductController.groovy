@@ -1,8 +1,8 @@
 package com.easylinker.v3.modules.product.controller
 
+import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.web.R
 import com.easylinker.v3.common.controller.AbstractController
-import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.product.form.AddProductForm

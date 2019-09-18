@@ -1,11 +1,10 @@
 package com.easylinker.v3.modules.test
 
 import com.easylinker.framework.common.model.DeviceData
+import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.web.R
 import com.easylinker.v3.common.controller.AbstractController
 import com.easylinker.v3.common.model.AbstractDevice
-import com.easylinker.v3.common.model.DeviceProtocol
-import com.easylinker.v3.common.model.DeviceType
 import com.easylinker.v3.config.security.RequireAuthRoles
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService

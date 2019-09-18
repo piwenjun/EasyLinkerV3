@@ -1,10 +1,9 @@
 package com.easylinker.v3.modules.ext.controller
 
-
+import com.easylinker.framework.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.common.web.ReturnEnum
-import com.easylinker.v3.common.model.DeviceProtocol
-import com.easylinker.v3.common.model.DeviceType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -69,10 +68,14 @@ class ExtController {
                 protocolList.add([key: DeviceProtocol.MQTT, name: DeviceProtocol.MQTT.getName()])
                 protocolList.add([key: DeviceProtocol.TCP, name: DeviceProtocol.TCP.getName()])
                 break
+            case DeviceType.TERMINAL_HOST:
+                protocolList.add([key: DeviceProtocol.MQTT, name: DeviceProtocol.MQTT.getName()])
+                break
             case DeviceType.FILE:
                 protocolList.add([key: DeviceProtocol.HTTP, name: DeviceProtocol.HTTP.getName()])
                 break
         }
+
         return R.okWithData(protocolList)
 
 
