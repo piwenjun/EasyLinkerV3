@@ -1,14 +1,15 @@
 package com.easylinker.v3.modules.entry.controller
 
 import cn.hutool.json.JSONArray
-import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.exception.XException
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.common.web.ReturnEnum
 import com.easylinker.framework.utils.RedisUtils
 import com.easylinker.v3.common.controller.AbstractController
+import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.modules.entry.form.LoginForm
 import com.easylinker.v3.modules.entry.form.SignUpForm
+import com.easylinker.v3.modules.sysconfig.service.UserSystemConfigService
 import com.easylinker.v3.modules.syslog.model.SystemLog
 import com.easylinker.v3.modules.user.model.AppUser
 import com.easylinker.v3.modules.user.model.Role
@@ -24,6 +25,9 @@ import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
+
+import static com.alibaba.fastjson.JSON.parseArray
+import static com.alibaba.fastjson.JSON.toJSONString
 
 /**
  * @author wwhai* @date 2019/6/4 21:43
@@ -54,7 +58,7 @@ class EntryController extends AbstractController {
 
     @PostMapping("/login")
     @Transactional
-    R login(@Valid @RequestBody LoginForm loginForm) {
+    R login(  @RequestBody LoginForm loginForm) {
         if (!captchaUtils.validate(loginForm.uuid, loginForm.captchaCode)) {
 
             throw new XException("验证码识别失败!")
@@ -80,7 +84,7 @@ class EntryController extends AbstractController {
             dataMap.put("token", JwtUtils.token(jwtMap))
             //redis缓存
             try {
-                redisUtils.set("USER:" + appUser.securityId, JSONObject.toJSONString(dataMap), 3_600_0000L)
+                redisUtils.set("USER:" + appUser.securityId, toJSONString(dataMap), 3_600_0000L)
                 mongoTemplate.save(new SystemLog(reason: "登陆", info: "用户:" + appUser.name + " 登陆成功,登陆IP:" + getHttpServletRequest().getRemoteHost(), userSecurityId: appUser.securityId), "SYSTEMLOG")
                 return R.okWithData(dataMap)
 
@@ -100,9 +104,12 @@ class EntryController extends AbstractController {
      * @param baseForm
      * @return
      */
+    @Autowired
+    UserSystemConfigService userSystemConfigService
 
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/signUp")
-    R signUp(@Valid @RequestBody SignUpForm signUpForm) {
+    R signUp(  @RequestBody SignUpForm signUpForm) {
 
         if (userService.findByPrinciple(signUpForm.principle) != null) {
             return R.error("用户名已经存在!")
@@ -117,6 +124,20 @@ class EntryController extends AbstractController {
                 email: signUpForm.email,
                 name: signUpForm.getName()
         )
+        /**
+         * 生成默认配置
+         */
+        List<Map<String, Object>> list = new ArrayList<>()
+        for (DeviceProtocol deviceProtocol : DeviceProtocol.values()) {
+            Map<String, Object> map = new HashMap<>()
+            map.put("name", deviceProtocol.name)
+            map.put("key", deviceProtocol)
+            map.put("display", true)
+            list.add(map)
+        }
+
+        userSystemConfigService.updateConfig(appUser, parseArray(toJSONString(list)))
+
         userService.save(appUser)
         roleService.save(new Role(name: "BASE_ROLE", info: "基本权限", appUser: appUser))
         mongoTemplate.save(new SystemLog(reason: "注册", info: "用户:" + appUser.name + " 注册成功", userSecurityId: ""), "SYSTEMLOG")

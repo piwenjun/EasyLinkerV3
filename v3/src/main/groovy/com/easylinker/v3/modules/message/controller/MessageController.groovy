@@ -7,6 +7,7 @@ import com.easylinker.v3.modules.message.model.Message
 import com.easylinker.v3.modules.message.model.MessageState
 import com.easylinker.v3.modules.message.service.MessageService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.*
@@ -42,8 +43,10 @@ class MessageController extends AbstractController {
            @RequestParam(required = true) int page,
            @RequestParam(required = true) MessageState messageState) {
 
-        return R.okWithData(messageService.listByUser(getCurrentUser(), messageState,
-                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"))))
+        Page<Message> messagePage = messageService.listByUser(getCurrentUser(), messageState,
+                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")))
+
+        return R.okWithData(messagePage)
     }
     /**
      * 获取消息的状态
@@ -62,7 +65,7 @@ class MessageController extends AbstractController {
     @PutMapping("/markRead")
     R markRead(@RequestParam(required = true) String securityId) {
 
-        Message message = messageService.getByUserSecurityId(securityId)
+        Message message = messageService.getBySecurityId(securityId)
         if (message) {
             messageService.markRead(message)
             return R.ok()

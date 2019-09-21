@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
-import javax.validation.Valid
 
 /**
  * @author wwhai* @date 2019/6/29 23:00
@@ -50,7 +49,7 @@ class DeviceController extends AbstractController {
      */
 
     @PostMapping("/addHTTP")
-    R addHTTP(@RequestBody @Valid HTTPDeviceForm httpDeviceForm) {
+    R addHTTP(@RequestBody   HTTPDeviceForm httpDeviceForm) {
         if (httpDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(httpDeviceForm.sceneSecurityId)
             if (scene) {
@@ -63,8 +62,18 @@ class DeviceController extends AbstractController {
                         scene: scene,
                         deviceProtocol: DeviceProtocol.HTTP)
 
+                /**
+                 * 配置数据字段参数
+                 */
                 if (httpDeviceForm.dataFields.size() > 0) {
                     httpDevice.setDataFields(httpDeviceForm.dataFields)
+                }
+                /**
+                 * 配置设备属性【2019-9-7日更新】
+                 */
+                if (httpDeviceForm.deviceParam.size() > 0) {
+                    httpDevice.setDeviceParam(httpDeviceForm.dataFields)
+
                 }
                 deviceService.create(httpDevice)
                 return R.ok("添加成功")
@@ -85,6 +94,13 @@ class DeviceController extends AbstractController {
             if (httpDeviceForm.dataFields.size() > 0) {
                 httpDevice.setDataFields(httpDeviceForm.dataFields)
             }
+            /**
+             * 配置设备属性【2019-9-7日更新】
+             */
+            if (httpDeviceForm.deviceParam.size() > 0) {
+                httpDevice.setDeviceParam(httpDeviceForm.dataFields)
+
+            }
             deviceService.create(httpDevice)
             return R.ok("添加成功")
 
@@ -100,7 +116,7 @@ class DeviceController extends AbstractController {
      */
 
     @PostMapping("/addCoAP")
-    R addCoAP(@RequestBody @Valid CoAPDeviceForm coAPDeviceForm) {
+    R addCoAP(@RequestBody   CoAPDeviceForm coAPDeviceForm) {
         if (coAPDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(coAPDeviceForm.sceneSecurityId)
             if (scene) {
@@ -114,6 +130,13 @@ class DeviceController extends AbstractController {
 
                 if (coAPDeviceForm.dataFields.size() > 0) {
                     coAPDevice.setDataFields(coAPDeviceForm.dataFields)
+                }
+                /**
+                 * 配置设备属性【2019-9-7日更新】
+                 */
+                if (coAPDeviceForm.deviceParam.size() > 0) {
+                    coAPDevice.setDeviceParam(coAPDeviceForm.dataFields)
+
                 }
                 deviceService.create(coAPDevice)
                 return R.ok("添加成功")
@@ -132,6 +155,13 @@ class DeviceController extends AbstractController {
                     deviceProtocol: DeviceProtocol.CoAP)
             if (coAPDeviceForm.dataFields.size() > 0) {
                 coAPDevice.setDataFields(coAPDeviceForm.dataFields)
+            }
+            /**
+             * 配置设备属性【2019-9-7日更新】
+             */
+            if (coAPDeviceForm.deviceParam.size() > 0) {
+                coAPDevice.setDeviceParam(coAPDeviceForm.dataFields)
+
             }
             deviceService.create(coAPDevice)
 
@@ -153,7 +183,7 @@ class DeviceController extends AbstractController {
 
     @PostMapping("/addMQTT")
     @Transactional(rollbackFor = Exception.class)
-    R addMQTT(@RequestBody @Valid MQTTDeviceForm mqttDeviceForm) {
+    R addMQTT(@RequestBody   MQTTDeviceForm mqttDeviceForm) {
 
         if (mqttDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(mqttDeviceForm.sceneSecurityId)
@@ -170,6 +200,13 @@ class DeviceController extends AbstractController {
 
                 if (mqttDeviceForm.dataFields.size() > 0) {
                     mqttDevice.setDataFields(mqttDeviceForm.dataFields)
+                }
+                /**
+                 * 配置设备属性【2019-9-7日更新】
+                 */
+                if (mqttDevice.deviceParam.size() > 0) {
+                    mqttDevice.setDeviceParam(mqttDeviceForm.dataFields)
+
                 }
                 deviceService.create(mqttDevice)
                 return R.ok("添加成功")
@@ -192,6 +229,13 @@ class DeviceController extends AbstractController {
             if (mqttDeviceForm.dataFields.size() > 0) {
                 mqttDevice.setDataFields(mqttDeviceForm.dataFields)
             }
+            /**
+             * 配置设备属性【2019-9-7日更新】
+             */
+            if (mqttDevice.deviceParam.size() > 0) {
+                mqttDevice.setDeviceParam(mqttDeviceForm.dataFields)
+
+            }
             deviceService.create(mqttDevice)
             return R.ok("添加成功")
         }
@@ -207,7 +251,7 @@ class DeviceController extends AbstractController {
  */
     @PostMapping("/addTerminal")
     @Transactional(rollbackFor = Exception.class)
-    R addTerminal(@RequestBody @Valid TerminalHostDeviceForm terminalHostDeviceForm) {
+    R addTerminal(@RequestBody   TerminalHostDeviceForm terminalHostDeviceForm) {
         if (terminalHostDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(terminalHostDeviceForm.sceneSecurityId)
             if (scene) {
@@ -223,6 +267,13 @@ class DeviceController extends AbstractController {
 
                 if (terminalHostDeviceForm.dataFields.size() > 0) {
                     terminalHostDevice.setDataFields(terminalHostDeviceForm.dataFields)
+                }
+                /**
+                 * 配置设备属性【2019-9-7日更新】
+                 */
+                if (terminalHostDevice.deviceParam.size() > 0) {
+                    terminalHostDevice.setDeviceParam(terminalHostDeviceForm.dataFields)
+
                 }
                 deviceService.create(terminalHostDevice)
                 return R.ok("添加成功")
@@ -245,6 +296,13 @@ class DeviceController extends AbstractController {
             if (terminalHostDeviceForm.dataFields.size() > 0) {
                 terminalHostDevice.setDataFields(terminalHostDeviceForm.dataFields)
             }
+            /**
+             * 配置设备属性【2019-9-7日更新】
+             */
+            if (terminalHostDevice.deviceParam.size() > 0) {
+                terminalHostDevice.setDeviceParam(terminalHostDeviceForm.dataFields)
+
+            }
             deviceService.create(terminalHostDevice)
             return R.ok("添加成功")
         }
@@ -259,7 +317,7 @@ class DeviceController extends AbstractController {
  */
     @PostMapping("/addTCP")
     @Transactional(rollbackFor = Exception.class)
-    R addTCP(@RequestBody @Valid TCPDeviceForm tcpDeviceForm) {
+    R addTCP(@RequestBody   TCPDeviceForm tcpDeviceForm) {
 
         if (tcpDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(tcpDeviceForm.sceneSecurityId)
@@ -275,6 +333,13 @@ class DeviceController extends AbstractController {
 
                 if (tcpDeviceForm.dataFields.size() > 0) {
                     tcpDevice.setDataFields(tcpDeviceForm.dataFields)
+                }
+                /**
+                 * 配置设备属性【2019-9-7日更新】
+                 */
+                if (tcpDeviceForm.deviceParam.size() > 0) {
+                    tcpDevice.setDeviceParam(tcpDeviceForm.dataFields)
+
                 }
                 deviceService.create(tcpDevice)
                 return R.ok("添加成功")
@@ -296,6 +361,13 @@ class DeviceController extends AbstractController {
             if (tcpDeviceForm.dataFields.size() > 0) {
                 tcpDevice.setDataFields(tcpDeviceForm.dataFields)
             }
+            /**
+             * 配置设备属性【2019-9-7日更新】
+             */
+            if (tcpDeviceForm.deviceParam.size() > 0) {
+                tcpDevice.setDeviceParam(tcpDeviceForm.dataFields)
+
+            }
             deviceService.create(tcpDevice)
             return R.ok("添加成功")
         }
@@ -309,7 +381,7 @@ class DeviceController extends AbstractController {
  */
     @PostMapping("/addUDP")
     @Transactional(rollbackFor = Exception.class)
-    R addUDP(@RequestBody @Valid UDPDeviceForm udpDeviceForm) {
+    R addUDP(@RequestBody   UDPDeviceForm udpDeviceForm) {
 
         if (udpDeviceForm.sceneSecurityId) {
             Scene scene = sceneService.findBySecurityId(udpDeviceForm.sceneSecurityId)
@@ -322,6 +394,13 @@ class DeviceController extends AbstractController {
                         deviceProtocol: DeviceProtocol.UDP)
                 if (udpDeviceForm.dataFields.size() > 0) {
                     udpDevice.setDataFields(udpDeviceForm.dataFields)
+                }
+                /**
+                 * 配置设备属性【2019-9-7日更新】
+                 */
+                if (udpDeviceForm.deviceParam.size() > 0) {
+                    udpDevice.setDeviceParam(udpDeviceForm.dataFields)
+
                 }
                 deviceService.create(udpDevice)
                 return R.ok("添加成功")
@@ -340,6 +419,13 @@ class DeviceController extends AbstractController {
 
             if (udpDeviceForm.dataFields.size() > 0) {
                 udpDevice.setDataFields(udpDeviceForm.dataFields)
+            }
+            /**
+             * 配置设备属性【2019-9-7日更新】
+             */
+            if (udpDeviceForm.deviceParam.size() > 0) {
+                udpDevice.setDeviceParam(udpDeviceForm.dataFields)
+
             }
             deviceService.create(udpDevice)
             return R.ok("添加成功")
@@ -409,7 +495,7 @@ class DeviceController extends AbstractController {
  * @return
  */
     @GetMapping("/detail")
-    R detail(@RequestParam @Valid String securityId, @RequestParam DeviceProtocol deviceProtocol) {
+    R detail(@RequestParam   String securityId, @RequestParam DeviceProtocol deviceProtocol) {
         AbstractDevice abstractDevice = deviceService.detail(securityId, deviceProtocol)
         if (abstractDevice) {
             return R.okWithData(abstractDevice)
@@ -551,7 +637,7 @@ class DeviceController extends AbstractController {
  * @return
  */
     @PostMapping("/update")
-    R update(@RequestBody @Valid UpdateForm updateForm) {
+    R update(@RequestBody   UpdateForm updateForm) {
 
         AbstractDevice abstractDevice = deviceService.detail(updateForm.securityId, updateForm.deviceProtocol)
         Scene scene = sceneService.findBySecurityId(updateForm.sceneSecurityId)
@@ -577,7 +663,7 @@ class DeviceController extends AbstractController {
                     return R.ok("更新成功")
 
                 case DeviceProtocol.HTTP:
-                    device = abstractDevice as MQTTDevice
+                    device = abstractDevice as HTTPDevice
                     device.setName(updateForm.getName())
                     device.setInfo(updateForm.info)
                     if (scene)

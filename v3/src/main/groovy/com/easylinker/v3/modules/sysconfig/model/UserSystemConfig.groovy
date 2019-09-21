@@ -1,9 +1,12 @@
 package com.easylinker.v3.modules.sysconfig.model
 
-
-import com.alibaba.fastjson.JSONObject
+import com.alibaba.fastjson.JSONArray
 import com.easylinker.v3.common.model.AbstractModel
+import com.vladmihalcea.hibernate.type.json.JsonStringType
+import org.hibernate.annotations.Type
+import org.hibernate.annotations.TypeDef
 
+import javax.persistence.Column
 import javax.persistence.Entity
 
 /**
@@ -12,28 +15,24 @@ import javax.persistence.Entity
  * 瞅啥瞅？代码拿过来我看看有没有BUG。
  *
  */
-//用户系统配置
 @Entity
-class UserSystemConfig extends AbstractModel {
-    /**
-     * 这里可以控制显示设备页面的Tabs,格式如下
-     *{*     "data": [
-     *{*             "name": "HTTP协议设备",
-     *             "key": "HTTP"
-     *}*     ]
-     *}*/
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 
-    private JSONObject displayTabs
+class UserSystemConfig extends AbstractModel {
+
+    @Type(type = "json")
+    @Column(columnDefinition = "json")
+    private JSONArray displayTabs
     /**
      * 用户ID
      */
     private String userSecurityId
 
-    String getDisplayTabs() {
+    JSONArray getDisplayTabs() {
         return displayTabs
     }
 
-    void setDisplayTabs(JSONObject displayTabs) {
+    void setDisplayTabs(JSONArray displayTabs) {
         this.displayTabs = displayTabs
     }
 

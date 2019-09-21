@@ -1,4 +1,4 @@
-package com.easylinker.v3.modules.syslog.controller
+package com.easylinker.v3.modules.controller
 
 
 import com.easylinker.framework.common.web.R

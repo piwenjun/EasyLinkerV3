@@ -9,8 +9,8 @@ enum DeviceProtocol {
     CoAP("CoAP协议设备"),
     MQTT("MQTT协议设备"),
     UDP("UDP协议设备"),
-    TCP("TCP协议设备"),
-    PLACEHOLDER("暂不选择协议")
+    TCP("TCP协议设备")
+    //PLACEHOLDER("暂不选择协议")
     String name
 
     DeviceProtocol(String name) {
@@ -24,11 +24,11 @@ enum DeviceType {
     VALUE("数值型设备"),
     TEXT("文本型设备"),
     BOOLEAN("布尔型设备"),
-    SWITCH("开关型设备"),
+    SWITCH("开关型设备")
 //    FILE("文件型设备"),
 //    STREAM("流媒体型设备"),
 //    TERMINAL_HOST("终端型设备"),
-    PLACEHOLDER("暂不选择类型")
+    //PLACEHOLDER("暂不选择类型")
     String name
 
     DeviceType(String name) {

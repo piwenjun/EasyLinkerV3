@@ -1,5 +1,7 @@
 package com.easylinker.framework.common.model
 
+import com.alibaba.fastjson.JSONObject
+
 /**
  * 设备数据抽象
  */
@@ -29,7 +31,7 @@ class DeviceData {
     /**
      * 数据
      */
-    private String data
+    private JSONObject data
     /**
      * 单位
      */
@@ -47,11 +49,11 @@ class DeviceData {
      */
     private DeviceType deviceType
 
-    String getData() {
+    JSONObject getData() {
         return data
     }
 
-    void setData(String data) {
+    void setData(JSONObject data) {
         this.data = data
     }
 
@@ -119,4 +121,8 @@ class DeviceData {
         this.deviceSecurityId = deviceSecurityId
     }
 
+    public static void main(String[] args) {
+        println(System.currentTimeMillis())
+        println(new Date().toString())
+    }
 }
