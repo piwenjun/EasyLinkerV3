@@ -3,6 +3,7 @@ package com.easylinker.v3
 import cn.hutool.crypto.digest.DigestUtil
 import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.model.DeviceData
+import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
@@ -159,7 +160,7 @@ class V3ApplicationTests {
      */
     @Test
     void addData() {
-        for (int i = 0; i < 33; i++) {
+        for (int i = 0; i < 150; i++) {
             //
             Map<String, Object> dataMap = new HashMap<>()
             //
