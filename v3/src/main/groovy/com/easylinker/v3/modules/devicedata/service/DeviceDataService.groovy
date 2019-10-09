@@ -5,6 +5,8 @@ import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.utils.MongoDBDateUtils
 import org.apache.commons.lang.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -77,6 +79,56 @@ class DeviceDataService {
 
 
     }
+
+    /**
+     * 原始数据
+     * @param deviceSecurityId
+     * @param startDate
+     * @param endDate
+     * @param deviceType
+     * @param pageable
+     * @return
+     */
+
+    Page<DeviceData> listOriginData(String deviceSecurityId, String startDate, String endDate, DeviceType deviceType, Pageable pageable) {
+
+        Query query = new Query()
+        //开始结束时间 ，都传
+
+        if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
+            query.addCriteria(Criteria.where("deviceSecurityId").is(deviceSecurityId)
+                    .and("deviceType").is(deviceType)
+                    .and("createTime").lt(MongoDBDateUtils.formatD(endDate)).gte((MongoDBDateUtils.formatD(startDate))))
+        }
+        //只传了开始时间
+
+        if (StringUtils.isNotEmpty(startDate) && !StringUtils.isNotEmpty(endDate)) {
+            query.addCriteria(Criteria.where("deviceSecurityId").is(deviceSecurityId)
+                    .and("deviceType").is(deviceType)
+                    .and("createTime").gte((MongoDBDateUtils.formatD(startDate))))
+        }
+        //只传了结束时间
+
+        if (!StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
+            query.addCriteria(Criteria.where("deviceSecurityId").is(deviceSecurityId)
+                    .and("deviceType").is(deviceType)
+                    .and("createTime").lt((MongoDBDateUtils.formatD(endDate))))
+        }
+        //开始结束时间都没传
+        if (!StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
+            query.addCriteria(Criteria.where("deviceSecurityId").is(deviceSecurityId)
+                    .and("deviceType").is(deviceType))
+        }
+        query.with(new Sort(new Sort.Order(Sort.Direction.DESC, "createTime")))
+        query.with(pageable)
+        List<DeviceData> deviceDataList = mongoTemplate.find(query, DeviceData.class, "DEVICE_DATA")
+        long total = mongoTemplate.count(query, DeviceData.class)
+
+        return new PageImpl<DeviceData>(deviceDataList, pageable, total)
+
+
+    }
+
 
     /**
      * 加工数据

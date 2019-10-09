@@ -46,11 +46,10 @@
             <version>2.1.6.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-mongodb</artifactId>
-            <version>LATEST</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+            <version>RELEASE</version>
         </dependency>
-
         <dependency>
             <groupId>com.easylinker</groupId>
             <artifactId>framework</artifactId>
