@@ -37,8 +37,8 @@ class DeviceDataController extends AbstractController {
      * @param dataQueryForm
      * @return
      */
-    @GetMapping("/list")
-    R list(@RequestParam int page,
+    @GetMapping("/chartData")
+    R chartData(@RequestParam int page,
            @RequestParam int size,
            @RequestParam(required = false) String startDate,
            @RequestParam(required = false) String endDate,
@@ -62,11 +62,9 @@ class DeviceDataController extends AbstractController {
         }
         if (endDate != null) {
             try {
-                Date date = MongoDBDateUtils.formatD(endDate)
-                println(date.toString())
+                MongoDBDateUtils.formatD(endDate)
 
             } catch (Exception e) {
-                e.printStackTrace()
 
                 logger.error(endDate + " 时间格式错误，正确格式：yyyy-MM-dd HH:mm:ss")
 
@@ -93,7 +91,7 @@ class DeviceDataController extends AbstractController {
      * @param deviceType
      * @return
      */
-    @GetMapping("/listOriginData")
+    @GetMapping("/list")
     R listOriginData(@RequestParam int page,
                      @RequestParam int size,
                      @RequestParam(required = false) String startDate,
@@ -115,11 +113,9 @@ class DeviceDataController extends AbstractController {
         }
         if (endDate != null) {
             try {
-                Date date = MongoDBDateUtils.formatD(endDate)
-                println(date.toString())
+                MongoDBDateUtils.formatD(endDate)
 
             } catch (Exception e) {
-                e.printStackTrace()
 
                 logger.error(endDate + " 时间格式错误，正确格式：yyyy-MM-dd HH:mm:ss")
 
