@@ -1,10 +1,10 @@
 package com.easylinker.v3.modules.device.service
 
 import com.alibaba.fastjson.JSONObject
+import com.easylinker.framework.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.utils.DeviceTokenUtils
 import com.easylinker.v3.common.model.AbstractDevice
-import com.easylinker.v3.common.model.DeviceProtocol
-import com.easylinker.v3.common.model.DeviceType
 import com.easylinker.v3.modules.device.dao.*
 import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.scene.dao.SceneRepository
@@ -141,12 +141,22 @@ class DeviceService {
 
                 break
             case DeviceProtocol.MQTT:
-                MQTTDevice device = abstractDevice as MQTTDevice
-                if (device.scene) {
-                    device.setSceneSecurityId(device.scene.securityId)
+                if (abstractDevice.deviceType == DeviceType.TERMINAL_HOST) {
+                    TerminalHostDevice device = abstractDevice as TerminalHostDevice
+                    if (device.scene) {
+                        device.setSceneSecurityId(device.scene.securityId)
+                    }
+
+                    addTerminal(device)
+                } else {
+                    MQTTDevice device = abstractDevice as MQTTDevice
+                    if (device.scene) {
+                        device.setSceneSecurityId(device.scene.securityId)
+                    }
+                    mqttRepository.save(device)
+                    addMqttAcls(device)
+
                 }
-                mqttRepository.save(device)
-                addDefaultAcls(device)
 
                 break
             case DeviceProtocol.TCP:
@@ -196,7 +206,7 @@ class DeviceService {
         typeCountMap.put("TEXT", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.TEXT))
         typeCountMap.put("BOOLEAN", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.BOOLEAN))
         typeCountMap.put("SWITCH", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.SWITCH))
-        typeCountMap.put("FILE", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.FILE))
+        // typeCountMap.put("FILE", mqttRepository.countByAppUserAndDeviceType(appUser, DeviceType.FILE))
 
         Map<String, Object> countMap = new HashMap<>()
         countMap.put("deviceCount", deviceCountMap)
@@ -207,21 +217,40 @@ class DeviceService {
 
 
     /**
+     * 专门写个保存 Terminal的
+     * @param mqttDevice
+     */
+    void addTerminal(TerminalHostDevice terminalHostDevice) {
+
+        terminalHostDeviceRepository.save(terminalHostDevice)
+        addTerminalAcls(terminalHostDevice)
+
+    }
+    /**
      * 添加默认的ACL
      * @param mqttDevice
      */
 
-    private void addDefaultAcls(MQTTDevice mqttDevice) {
+    private void addMqttAcls(MQTTDevice mqttDevice) {
 
         //auth.mysql.acl_query = select allow,ip AS ipaddr, username, client_id AS clientid, access, topic from topic_acl where  username = '%u' or username = '$all'  or client_id = '%c';
         //1: subscribe, 2: publish, 3: pubsub
         List<TopicAcl> topicAcls = new ArrayList<>()
         //接受数据的TOPIC
-        TopicAcl inAcl = new TopicAcl(ip: "", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/s2c", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+        TopicAcl inAcl = new TopicAcl(ip: "", access: 1, topic: "/device/" + mqttDevice.getSecurityId() + "/s2c",
+                clientId: mqttDevice.clientId,
+                username: mqttDevice.username,
+                mqttDevice: mqttDevice)
         //发送数据的TOPIC
-        TopicAcl outAcl = new TopicAcl(ip: "", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/c2s", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+        TopicAcl outAcl = new TopicAcl(ip: "", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/c2s",
+                clientId: mqttDevice.clientId,
+                username: mqttDevice.username,
+                mqttDevice: mqttDevice)
         //上报状态的
-        TopicAcl statusAcl = new TopicAcl(ip: "", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/status", clientId: mqttDevice.clientId, username: mqttDevice.username, mqttDevice: mqttDevice)
+        TopicAcl statusAcl = new TopicAcl(ip: "", access: 2, topic: "/device/" + mqttDevice.getSecurityId() + "/status",
+                clientId: mqttDevice.clientId,
+                username: mqttDevice.username,
+                mqttDevice: mqttDevice)
 
         topicAcls.add(inAcl)
         topicAcls.add(outAcl)
@@ -232,6 +261,45 @@ class DeviceService {
         topicAclRepository.save(statusAcl)
 
     }
+
+    /**
+     * 添加终端设备的ACL规则
+     * WebShell topic规则：
+     * 1.所有的客户端，连接的端点规定为： 【/client/terminal/{方向}/{user_id}/{client_id}】
+     * 例如：/client/terminal/IN/1/1
+     * 方向有2个，而且这个方向以服务器为参照:
+     * 1:IN:客户端发来的消息
+     * 2:OUT：从服务器出去的消息
+     * @param terminalHostDevice
+     */
+    @Autowired
+    TerminalHostTopicAclRepository terminalHostTopicAclRepository
+
+    private void addTerminalAcls(TerminalHostDevice terminalHostDevice) {
+
+        //auth.mysql.acl_query = select allow,ip AS ipaddr, username, client_id AS clientid, access, topic from topic_acl where  username = '%u' or username = '$all'  or client_id = '%c';
+        //1: subscribe, 2: publish, 3: pubsub
+        List<TerminalTopicAcl> topicAcls = new ArrayList<>()
+        //接受数据的TOPIC
+        TerminalTopicAcl inAcl = new TerminalTopicAcl(ip: "", access: 1, topic: "/client/terminal/s2c/" + terminalHostDevice.appUser.securityId + "/" + terminalHostDevice.securityId,
+                username: terminalHostDevice.sshUsername, terminalHostDevice: terminalHostDevice)
+        //发送数据的TOPIC
+        TerminalTopicAcl outAcl = new TerminalTopicAcl(ip: "", access: 2, topic: "/client/terminal/c2s/" + terminalHostDevice.appUser.securityId + "/" + terminalHostDevice.securityId,
+                username: terminalHostDevice.sshUsername, terminalHostDevice: terminalHostDevice)
+
+        //上报状态的
+        TerminalTopicAcl statusAcl = new TerminalTopicAcl(ip: "", access: 2, topic: "/client/terminal/status/" + terminalHostDevice.appUser.securityId + "/" + terminalHostDevice.securityId,
+                username: terminalHostDevice.sshUsername, terminalHostDevice: terminalHostDevice)
+
+        topicAcls.add(inAcl)
+        topicAcls.add(outAcl)
+        topicAcls.add(statusAcl)
+        terminalHostTopicAclRepository.save(inAcl)
+        terminalHostTopicAclRepository.save(outAcl)
+        terminalHostTopicAclRepository.save(statusAcl)
+
+    }
+
 
     /**
      * 根据协议类型查询

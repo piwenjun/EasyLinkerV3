@@ -180,5 +180,77 @@ class TopicAcl extends AbstractModel {
         this.mqttDevice = mqttDevice
     }
 }
+/**
+ * 终端设备
+ */
+@Entity
+class TerminalTopicAcl extends AbstractModel {
+    private String ip
+    private String username
+    private String clientId
+    private String topic
+    //0: deny, 1: allow
+    private int allow = 1
+    //1: subscribe, 2: publish, 3: pubsub
+    private int access = 0
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private TerminalHostDevice terminalHostDevice
 
+    String getIp() {
+        return ip
+    }
+
+    void setIp(String ip) {
+        this.ip = ip
+    }
+
+    String getUsername() {
+        return username
+    }
+
+    void setUsername(String username) {
+        this.username = username
+    }
+
+    String getClientId() {
+        return clientId
+    }
+
+    void setClientId(String clientId) {
+        this.clientId = clientId
+    }
+
+    String getTopic() {
+        return topic
+    }
+
+    void setTopic(String topic) {
+        this.topic = topic
+    }
+
+    int getAllow() {
+        return allow
+    }
+
+    void setAllow(int allow) {
+        this.allow = allow
+    }
+
+    int getAccess() {
+        return access
+    }
+
+    void setAccess(int access) {
+        this.access = access
+    }
+
+    TerminalHostDevice getTerminalHostDevice() {
+        return terminalHostDevice
+    }
+
+    void setTerminalHostDevice(TerminalHostDevice terminalHostDevice) {
+        this.terminalHostDevice = terminalHostDevice
+    }
+}
 

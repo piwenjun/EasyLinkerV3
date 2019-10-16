@@ -1,13 +1,11 @@
 package com.easylinker.framework.common.model
-
-import com.alibaba.fastjson.JSONObject
-
 /**
  * 设备数据抽象
  */
 
 class DeviceData {
 
+    String id
     /**
      * 安全ID，对外如果用到数据库id的时候用词ID代替
      * 主要是为了考虑被人猜测破解规律
@@ -31,7 +29,7 @@ class DeviceData {
     /**
      * 数据
      */
-    private JSONObject data
+    private Map<String, Object> data
     /**
      * 单位
      */
@@ -49,11 +47,11 @@ class DeviceData {
      */
     private DeviceType deviceType
 
-    JSONObject getData() {
+    Map<String, Object> getData() {
         return data
     }
 
-    void setData(JSONObject data) {
+    void setData(Map<String, Object> data) {
         this.data = data
     }
 
@@ -121,8 +119,13 @@ class DeviceData {
         this.deviceSecurityId = deviceSecurityId
     }
 
-    public static void main(String[] args) {
-        println(System.currentTimeMillis())
-        println(new Date().toString())
+    String getId() {
+        return id
     }
+
+    void setId(String id) {
+        this.id = id
+    }
+
+
 }

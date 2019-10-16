@@ -1,7 +1,6 @@
 package com.easylinker.v3.modules.scene.form
 
-
-import com.easylinker.v3.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.v3.modules.scene.model.PreInstallTemplate
 import com.easylinker.v3.modules.scene.model.SceneType
 

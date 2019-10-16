@@ -3,8 +3,8 @@ package com.easylinker.v3
 import cn.hutool.crypto.digest.DigestUtil
 import com.alibaba.fastjson.JSONObject
 import com.easylinker.framework.common.model.DeviceData
-import com.easylinker.v3.common.model.DeviceProtocol
-import com.easylinker.v3.common.model.DeviceType
+import com.easylinker.framework.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.v3.modules.device.model.MQTTDevice
 import com.easylinker.v3.modules.device.service.DeviceService
 import com.easylinker.v3.modules.devicedata.service.DeviceDataService
@@ -160,62 +160,39 @@ class V3ApplicationTests {
      */
     @Test
     void addData() {
-        for (int i = 0; i < 236; i++) {
-            DeviceData data0 = new DeviceData()
-            Thread.sleep(2000)
-            DeviceData data1 = new DeviceData()
-            Thread.sleep(2000)
-
-            DeviceData data2 = new DeviceData()
-            Thread.sleep(2000)
-
-            DeviceData data3 = new DeviceData()
-            Thread.sleep(2000)
-
-            data0.deviceSecurityId = "e3aad2c17b444a1fb835dc966976b99b"
-            data1.deviceSecurityId = "e3aad2c17b444a1fb835dc966976b99b"
-            data2.deviceSecurityId = "e3aad2c17b444a1fb835dc966976b99b"
-            data3.deviceSecurityId = "e3aad2c17b444a1fb835dc966976b99b"
-
+        for (int i = 0; i < 150; i++) {
+            //
+            Map<String, Object> dataMap = new HashMap<>()
             //
             JSONObject dataJson0 = new JSONObject()
-            dataJson0.put("createTime", new Date())
             dataJson0.put("field", "hum")
             dataJson0.put("value", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
             //
             JSONObject dataJson1 = new JSONObject()
-            dataJson1.put("createTime", new Date())
             dataJson1.put("field", "tmp")
             dataJson1.put("value", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
             //
             JSONObject dataJson2 = new JSONObject()
-            dataJson2.put("createTime", new Date())
             dataJson2.put("field", "co2")
             dataJson2.put("value", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
             //
             JSONObject dataJson3 = new JSONObject()
-            dataJson3.put("createTime", new Date())
             dataJson3.put("field", "lex")
             dataJson3.put("value", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
-            //
-            data0.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
-            data1.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
-            data2.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
-            data3.setDeviceType(com.easylinker.framework.common.model.DeviceType.VALUE)
-            //
-            data0.setData(dataJson0)
-
-            data1.setData(dataJson1)
-
-            data2.setData(dataJson2)
-
-            data3.setData(dataJson3)
 
             //
-            deviceDataService.save(data0)
-            deviceDataService.save(data1)
-            deviceDataService.save(data2)
-            deviceDataService.save(data3)
+
+            dataMap.put("hum", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
+            dataMap.put("tmp", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
+            dataMap.put("co2", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
+            dataMap.put("lex", new DecimalFormat("#.00").format(Math.random() * (100 - 1) + 1).toDouble())
+            DeviceData deviceData = new DeviceData()
+            deviceData.data = dataMap
+            deviceData.deviceType = DeviceType.VALUE
+            deviceData.deviceSecurityId = "0437d947647d442e95e632c02c17b649"
+            deviceData.createTime = new Date()
+            deviceDataService.save(deviceData)
+
 
         }
 

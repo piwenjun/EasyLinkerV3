@@ -1,10 +1,9 @@
 package com.easylinker.v3.modules.ext.controller
 
-
+import com.easylinker.framework.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.common.web.ReturnEnum
-import com.easylinker.v3.common.model.DeviceProtocol
-import com.easylinker.v3.common.model.DeviceType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -48,31 +47,36 @@ class ExtController {
         List<HashMap<String, Object>> protocolList = new ArrayList<>()
         switch (deviceType) {
             case DeviceType.VALUE:
+                //TODO 这里为了推进第一个版本, 暂时把其他的屏蔽了 ,后期迭代 ,更新时间:2019-9-18
                 protocolList.add([key: DeviceProtocol.MQTT, name: DeviceProtocol.MQTT.getName()])
-                protocolList.add([key: DeviceProtocol.TCP, name: DeviceProtocol.TCP.getName()])
-                protocolList.add([key: DeviceProtocol.UDP, name: DeviceProtocol.TCP.getName()])
-                protocolList.add([key: DeviceProtocol.HTTP, name: DeviceProtocol.TCP.getName()])
-                protocolList.add([key: DeviceProtocol.CoAP, name: DeviceProtocol.TCP.getName()])
+//                protocolList.add([key: DeviceProtocol.TCP, name: DeviceProtocol.TCP.getName()])
+//                protocolList.add([key: DeviceProtocol.UDP, name: DeviceProtocol.UDP.getName()])
+//                protocolList.add([key: DeviceProtocol.HTTP, name: DeviceProtocol.HTTP.getName()])
+                protocolList.add([key: DeviceProtocol.CoAP, name: DeviceProtocol.CoAP.getName()])
                 break
             case DeviceType.TEXT:
                 protocolList.add([key: DeviceProtocol.MQTT, name: DeviceProtocol.MQTT.getName()])
-                protocolList.add([key: DeviceProtocol.TCP, name: DeviceProtocol.TCP.getName()])
-                protocolList.add([key: DeviceProtocol.UDP, name: DeviceProtocol.TCP.getName()])
-                protocolList.add([key: DeviceProtocol.HTTP, name: DeviceProtocol.TCP.getName()])
-                protocolList.add([key: DeviceProtocol.CoAP, name: DeviceProtocol.TCP.getName()])
+//                protocolList.add([key: DeviceProtocol.TCP, name: DeviceProtocol.TCP.getName()])
+//                protocolList.add([key: DeviceProtocol.UDP, name: DeviceProtocol.UDP.getName()])
+//                protocolList.add([key: DeviceProtocol.HTTP, name: DeviceProtocol.HTTP.getName()])
+                protocolList.add([key: DeviceProtocol.CoAP, name: DeviceProtocol.CoAP.getName()])
                 break
             case DeviceType.BOOLEAN:
                 protocolList.add([key: DeviceProtocol.MQTT, name: DeviceProtocol.MQTT.getName()])
-                protocolList.add([key: DeviceProtocol.TCP, name: DeviceProtocol.TCP.getName()])
+                // protocolList.add([key: DeviceProtocol.TCP, name: DeviceProtocol.TCP.getName()])
                 break
             case DeviceType.SWITCH:
                 protocolList.add([key: DeviceProtocol.MQTT, name: DeviceProtocol.MQTT.getName()])
-                protocolList.add([key: DeviceProtocol.TCP, name: DeviceProtocol.TCP.getName()])
+                // protocolList.add([key: DeviceProtocol.TCP, name: DeviceProtocol.TCP.getName()])
                 break
-            case DeviceType.FILE:
-                protocolList.add([key: DeviceProtocol.HTTP, name: DeviceProtocol.HTTP.getName()])
-                break
+//            case DeviceType.TERMINAL_HOST:
+//                protocolList.add([key: DeviceProtocol.MQTT, name: DeviceProtocol.MQTT.getName()])
+//                break
+//            case DeviceType.FILE:
+//                protocolList.add([key: DeviceProtocol.HTTP, name: DeviceProtocol.HTTP.getName()])
+//                break
         }
+
         return R.okWithData(protocolList)
 
 

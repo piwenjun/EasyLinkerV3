@@ -1,8 +1,8 @@
 package com.easylinker.v3.modules.device.dao
 
-import com.easylinker.v3.common.model.DeviceProtocol
-import com.easylinker.v3.common.model.DeviceStatus
-import com.easylinker.v3.common.model.DeviceType
+import com.easylinker.framework.common.model.DeviceProtocol
+import com.easylinker.framework.common.model.DeviceStatus
+import com.easylinker.framework.common.model.DeviceType
 import com.easylinker.v3.modules.device.model.*
 import com.easylinker.v3.modules.scene.model.Scene
 import com.easylinker.v3.modules.user.model.AppUser

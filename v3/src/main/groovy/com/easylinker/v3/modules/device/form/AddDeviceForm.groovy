@@ -1,7 +1,7 @@
 package com.easylinker.v3.modules.device.form
 
+import com.easylinker.framework.common.model.DeviceType
 
-import com.easylinker.v3.common.model.DeviceType
 
 /**
  * @author wwhai* @date 2019/6/29 23:14
@@ -9,12 +9,12 @@ import com.easylinker.v3.common.model.DeviceType
  * 瞅啥瞅？代码拿过来我看看有没有BUG。
  *
  */
-class BaseDeviceForm{
+class BaseDeviceForm {
     private String token
     /**
      * 设备的数据字段
      */
-    private List<String>dataFields
+    private List<String> dataFields
     /**
      * 设备的属性字段
      */
@@ -81,20 +81,21 @@ class BaseDeviceForm{
         this.token = token
     }
 }
-class HTTPDeviceForm extends BaseDeviceForm{
+
+class HTTPDeviceForm extends BaseDeviceForm {
 
 }
 /**
  *
  */
-class CoAPDeviceForm extends BaseDeviceForm{
+class CoAPDeviceForm extends BaseDeviceForm {
 
 }
 
 /**
  *
  */
-class TCPDeviceForm extends BaseDeviceForm{
+class TCPDeviceForm extends BaseDeviceForm {
 
     private String username
     private String password
@@ -127,24 +128,24 @@ class TCPDeviceForm extends BaseDeviceForm{
 /**
  *
  */
-class UDPDeviceForm extends BaseDeviceForm{
+class UDPDeviceForm extends BaseDeviceForm {
 
 }
 
 /**
  *
  */
-class MQTTDeviceForm extends BaseDeviceForm{
+class MQTTDeviceForm extends BaseDeviceForm {
 
 }
 /**
  *
  */
-class TerminalHostDeviceForm extends BaseDeviceForm{
+class TerminalHostDeviceForm extends BaseDeviceForm {
     private String sceneSecurityId
     private String sshUsername
     private String sshPassword
-    private String sshPort
+    private String sshPort = 22
     private String pemKey
 
     String getSceneSecurityId() {

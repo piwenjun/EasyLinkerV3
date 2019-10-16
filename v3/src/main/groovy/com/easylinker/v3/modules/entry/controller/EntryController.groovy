@@ -2,11 +2,11 @@ package com.easylinker.v3.modules.entry.controller
 
 import cn.hutool.json.JSONArray
 import com.easylinker.framework.common.exception.XException
+import com.easylinker.framework.common.model.DeviceProtocol
 import com.easylinker.framework.common.web.R
 import com.easylinker.framework.common.web.ReturnEnum
 import com.easylinker.framework.utils.RedisUtils
 import com.easylinker.v3.common.controller.AbstractController
-import com.easylinker.v3.common.model.DeviceProtocol
 import com.easylinker.v3.modules.entry.form.LoginForm
 import com.easylinker.v3.modules.entry.form.SignUpForm
 import com.easylinker.v3.modules.sysconfig.service.UserSystemConfigService
@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 
 import javax.servlet.http.HttpServletRequest
-import javax.validation.Valid
 
 import static com.alibaba.fastjson.JSON.parseArray
 import static com.alibaba.fastjson.JSON.toJSONString
